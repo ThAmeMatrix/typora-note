@@ -28,6 +28,14 @@ conda update conda
 conda update --all 
 ```
 
+```shell
+//pip安装依赖
+pip install -r requirements.txt
+
+//pip生成依赖
+pip freeze > requirements.txt
+```
+
 
 
 python模块安装，使用国内源可以提高下载速度。
