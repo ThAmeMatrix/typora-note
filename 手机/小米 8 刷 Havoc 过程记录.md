@@ -1,12 +1,12 @@
 # 小米 8 刷 Havoc-OS 过程记录
 
-由于鄙人实在忍受不了 miui 设计清奇的界面风格，以及和谷歌服务整合得非常糟糕的系统服务，还是决定尝尝原生。由于鄙人是小白，刚开始用twrp差点翻车，于是把过程也记录一下，有说错的麻烦酷友指正。
+由于鄙人实在忍受不了 miui 设计清奇的界面风格(国产仿IOS圆角和配色)，以及和谷歌服务整合得非常糟糕的小米系统服务，决定尝尝原生。鄙人是刷机小白，刚开始用twrp不小心四清了手机(System, Cache, Data, Internal Stroage)差点把手机变砖了，于是把过程也记录一下，错漏的地方麻烦酷友指正。
 
 ## 环境：
 
-MI 8 普通版
+MI 8 普通版 * 1
 
-Win 10电脑
+Windows 电脑 * 1
 
 ## 解锁 BootLoader
 
@@ -37,8 +37,9 @@ Backup your data !
 1. MIUI 国际版最新开发版 ROM，下载地址：http://en.miui.com/thread-4970588-1-1.html
 2. Disable_Dm-Verity_ForceEncrypt，下载地址：https://drive.google.com/open?id=1CqEOK1mOkxeVbj2S3TBz10IutBl4FZBI
 3. Havoc-OS ROM，下载地址：https://sourceforge.net/projects/havoc-os/files/dipper/
-4. Gapps，下载地址：https://opengapps.org/，需要科学上网，网盘：https://pan.baidu.com/s/1PWZjbVZTYuLVcj6L2IhNKw    提取码：uvrr 
-5. Magisk，可选，最新 TWRP 中也自带了 Magsisk，下载地址：https://forum.xda-developers.com/apps/magisk/official-magisk-v7-universal-systemless-t3473445
+4. Gapps，下载地址：https://opengapps.org/  
+需要科学上网，网盘：https://pan.baidu.com/s/1PWZjbVZTYuLVcj6L2IhNKw   提取码：uvrr 
+5. Magisk，可选，最新 TWRP 中也自带了 Magsisk，可以直接在 TWRP 中完成 ROOT. 下载地址：https://forum.xda-developers.com/apps/magisk/official-magisk-v7-universal-systemless-t3473445
 
 然后，进入 TWRP后：
 
@@ -47,11 +48,15 @@ Backup your data !
 3. 再次点击 wipe 选项**清除 System，Data，Cache分区
 4. 安装 HavocRom，Gapps
 
-重启系统，就可以享受了…
+重启系统，就可以享受了… 
+(一开始因为是电信卡还有点虚…没想到不需要配置 WIFI , Mobile Data 和 HostSpot 就都能完美使用，瞬间舒服了！)
+
+## 开启 Google Feed
+请参考这位大佬的教程：https://www.coolapk.com/feed/8901701
 
 ## 爬坑
 
-由于操作失误，我在 TWRP 中清除了内部存储和 System 分区后，既没有系统也没有刷机包，TWRP 中的 MTP 也无法正常传输电脑上的刷机包，陷入非常的尴尬的情况…我折腾了好久，最后在油管中找到了解决方案，原来 **adb 指令**可以直接拷贝而且速度很快，指令如下：
+由于操作失误，我在 TWRP 中清除了内部存储和 System 分区后，既没有系统也没有刷机包，TWRP 中的 MTP 也无法正常传输电脑上的刷机包，陷入非常的尴尬的情况…我折腾了好久，最后在油管中找到了解决方案，原来 **adb 指令**可以直接拷贝(命令行大法好)而且速度很快，指令如下：
 
 ```shell
 $ adb push <Your-PackageName> /sdcard/.
@@ -59,5 +64,5 @@ $ adb push <Your-PackageName> /sdcard/.
 
 这条指令将文件拷贝到 Android Phone 的 /sdcard 目录下。
 
-最后的一点心得…第一次接触 TWRP，感觉这东西简直神器啊，手机没系统了一点不慌，只要能进 fastboot 刷个 twrp 后分分钟帮你把系统重刷回来…
+最后的一点心得…第一次接触 TWRP，感觉这东西简直神器啊，手机没系统了一点不慌，只要能进 fastboot 刷个 twrp 后分分钟帮你把系统重刷回来…希望自己能不那么快回 miui 把…
 
