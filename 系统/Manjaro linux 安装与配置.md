@@ -19,6 +19,28 @@ Posted on 2018-08-22
 
 
 
+Manjaro 安装驱动，如安装 USB to UART Driver：
+
+ref: https://bbs.archlinux.org/viewtopic.php?id=182033
+
+if you did
+
+```
+modprobe cp210x
+```
+
+and there was no error then you loaded the driver successfully (there is such a driver in the kernel package)
+it should then be listed if you do
+
+```
+lsmod
+```
+
+edit:
+should add modprobe would also exit without error if the module was already loaded ( due to auto detection and it did not need to do anything )
+
+
+
 ### 一、Manjaro的安装
 
 #### 镜像下载
