@@ -1,0 +1,5109 @@
+1
+00:01:02,960 --> 00:01:07,310
+ok let's get started so the theme of
+好吧，让我们开始这样 的主题
+
+2
+00:01:07,310 --> 00:01:07,320
+ok let's get started so the theme of
+本周谈论优化
+
+3
+00:01:07,320 --> 00:01:09,520
+ok let's get started so the theme of
+this week is talking about optimizing
+我们创建的汇编输出也可以
+
+4
+00:01:09,520 --> 00:01:09,530
+this week is talking about optimizing
+采取我们所拥有的这些计划
+
+5
+00:01:09,530 --> 00:01:12,500
+this week is talking about optimizing
+the assembly output we create so can we
+输入并在前往结果的路上
+
+6
+00:01:12,500 --> 00:01:12,510
+the assembly output we create so can we
+装配我们可以做智能事情
+
+7
+00:01:12,510 --> 00:01:15,650
+the assembly output we create so can we
+take these programs that we have as
+避免产生这么多
+
+8
+00:01:15,650 --> 00:01:15,660
+take these programs that we have as
+说明或我们可以生成更聪明的
+
+9
+00:01:15,660 --> 00:01:19,100
+take these programs that we have as
+input and on their way to the resulting
+指令使用更少的内存所有这些
+
+10
+00:01:19,100 --> 00:01:19,110
+input and on their way to the resulting
+各种各样的事情 ，今天我 想
+
+11
+00:01:19,110 --> 00:01:22,190
+input and on their way to the resulting
+assembly can we do intelligent things to
+谈谈有三种想法
+
+12
+00:01:22,190 --> 00:01:22,200
+assembly can we do intelligent things to
+三个不同的 想法落入
+
+13
+00:01:22,200 --> 00:01:24,620
+assembly can we do intelligent things to
+avoid either generating so many
+三种不同类别 的编译器
+
+14
+00:01:24,620 --> 00:01:24,630
+avoid either generating so many
+优化有三种
+
+15
+00:01:24,630 --> 00:01:27,560
+avoid either generating so many
+instructions or can we generate smarter
+表面上的小想法，如果你
+
+16
+00:01:27,560 --> 00:01:27,570
+instructions or can we generate smarter
+我想投入大量详细的工作
+
+17
+00:01:27,570 --> 00:01:30,109
+instructions or can we generate smarter
+instructions use less memory all these
+或写GCC团队想要投入
+
+18
+00:01:30,109 --> 00:01:30,119
+instructions use less memory all these
+你可以看到多年的详细工作
+
+19
+00:01:30,119 --> 00:01:33,590
+instructions use less memory all these
+kinds of things and so today I want to
+轨迹跨越你的方式
+
+20
+00:01:33,590 --> 00:01:33,600
+kinds of things and so today I want to
+越来越多的精力投入到这件事情
+
+21
+00:01:33,600 --> 00:01:37,310
+kinds of things and so today I want to
+talk about three ideas there's sort of
+在 131我们 真的很好
+
+22
+00:01:37,310 --> 00:01:37,320
+talk about three ideas there's sort of
+没有成千上万的男人
+
+23
+00:01:37,320 --> 00:01:39,410
+talk about three ideas there's sort of
+three different ideas that fall into
+和女人的时间 投入 我们的
+
+24
+00:01:39,410 --> 00:01:39,420
+three different ideas that fall into
+编译器是什么进入了
+
+25
+00:01:39,420 --> 00:01:43,190
+three different ideas that fall into
+three different categories of compiler
+像GCC 这样的编译器有很多
+
+26
+00:01:43,190 --> 00:01:43,200
+three different categories of compiler
+思考许多不同的案例
+
+27
+00:01:43,200 --> 00:01:48,590
+three different categories of compiler
+optimization there are three sort of
+所以我们要谈谈 一些
+
+28
+00:01:48,590 --> 00:01:48,600
+optimization there are three sort of
+今天 几个 有趣的案例
+
+29
+00:01:48,600 --> 00:01:52,310
+optimization there are three sort of
+little ideas on the surface that if you
+不同 种类的编译器
+
+30
+00:01:52,310 --> 00:01:52,320
+little ideas on the surface that if you
+我们可能尝试优化，这些是
+
+31
+00:01:52,320 --> 00:01:53,990
+little ideas on the surface that if you
+wanted to put in lots of detailed work
+其实类似的事情 ，
+
+32
+00:01:53,990 --> 00:01:54,000
+wanted to put in lots of detailed work
+海湾合作委员会只做了第一件事
+
+33
+00:01:54,000 --> 00:01:58,460
+wanted to put in lots of detailed work
+or write the GCC team wanted to put in
+我们要谈论 的 实际
+
+34
+00:01:58,460 --> 00:01:58,470
+or write the GCC team wanted to put in
+前两 件事是GCC的事情
+
+35
+00:01:58,470 --> 00:02:01,070
+or write the GCC team wanted to put in
+years of detailed work you can see a
+特别是我所拥有的
+
+36
+00:02:01,070 --> 00:02:01,080
+years of detailed work you can see a
+屏幕在这里是在左侧我
+
+37
+00:02:01,080 --> 00:02:04,010
+years of detailed work you can see a
+trajectory spanning out of how you'd put
+刚刚复制了我们的代码
+
+38
+00:02:04,010 --> 00:02:04,020
+trajectory spanning out of how you'd put
+参考实现 ii-if from
+
+39
+00:02:04,020 --> 00:02:06,139
+trajectory spanning out of how you'd put
+more and more effort into this thing to
+像眼镜蛇和 响尾蛇 ， 它的
+
+40
+00:02:06,139 --> 00:02:06,149
+more and more effort into this thing to
+如果需要做的话，做什么编译
+
+41
+00:02:06,149 --> 00:02:09,889
+more and more effort into this thing to
+make things really really good in 131 we
+这里调用 的条件 表达式
+
+42
+00:02:09,889 --> 00:02:09,899
+make things really really good in 131 we
+如果exper检查它是否是布尔值
+
+43
+00:02:09,899 --> 00:02:12,890
+make things really really good in 131 we
+don't have hundreds of thousands of men
+因为在我们的
+
+44
+00:02:12,890 --> 00:02:12,900
+don't have hundreds of thousands of men
+我们的语言我们关心 这些
+
+45
+00:02:12,900 --> 00:02:14,780
+don't have hundreds of thousands of men
+and women hours to put into our
+欺负ins 然后它有代码
+
+46
+00:02:14,780 --> 00:02:14,790
+and women hours to put into our
+当时的分支， 该代码
+
+47
+00:02:14,790 --> 00:02:16,850
+and women hours to put into our
+compilers that's what goes into a
+else分支，它检查 真实性
+
+48
+00:02:16,850 --> 00:02:16,860
+compilers that's what goes into a
+我 的 右手 也是如此
+
+49
+00:02:16,860 --> 00:02:20,360
+compilers that's what goes into a
+compiler like GCC it has lots of
+方是一个更详细的模式匹配
+
+50
+00:02:20,360 --> 00:02:20,370
+compiler like GCC it has lots of
+e如果那时在左侧 a
+
+51
+00:02:20,370 --> 00:02:22,490
+compiler like GCC it has lots of
+thinking about many many different cases
+更详细的模式匹配比什么
+
+52
+00:02:22,490 --> 00:02:22,500
+thinking about many many different cases
+在左手边这么 左手
+
+53
+00:02:22,500 --> 00:02:24,170
+thinking about many many different cases
+so we're going to talk about some
+边匹配将匹配看起来的程序
+
+54
+00:02:24,170 --> 00:02:24,180
+so we're going to talk about some
+就像X，然后一些II 1 LC 2他们会
+
+55
+00:02:24,180 --> 00:02:27,380
+so we're going to talk about some
+interesting cases today across a few
+匹配看起来像某些东西的东西
+
+56
+00:02:27,380 --> 00:02:27,390
+interesting cases today across a few
+函数调用某个值 所以匹配任何 值
+
+57
+00:02:27,390 --> 00:02:28,960
+interesting cases today across a few
+different kinds of compiler
+如果表达 我们可以
+
+58
+00:02:28,960 --> 00:02:28,970
+different kinds of compiler
+写一个 你写的表达式if if
+
+59
+00:02:28,970 --> 00:02:31,490
+different kinds of compiler
+optimizations we might try and these are
+你解析它把它变成抽象的
+
+60
+00:02:31,490 --> 00:02:31,500
+optimizations we might try and these are
+语法并将其与该案例进行匹配
+
+61
+00:02:31,500 --> 00:02:34,059
+optimizations we might try and these are
+actually quite similar to things that
+它会匹配，这就是编译
+
+62
+00:02:34,059 --> 00:02:34,069
+actually quite similar to things that
+对于它， 只有 右手边的情况
+
+63
+00:02:34,069 --> 00:02:36,620
+actually quite similar to things that
+GCC does but one of the first things
+如果表达式看起来匹配
+
+64
+00:02:36,620 --> 00:02:36,630
+GCC does but one of the first things
+喜欢 这里 的 名字 保持 不变
+
+65
+00:02:36,630 --> 00:02:37,729
+GCC does but one of the first things
+we're going to talk about actually the
+一些表达， 然后在其他
+
+66
+00:02:37,729 --> 00:02:37,739
+we're going to talk about actually the
+拥有它只会 匹配
+
+67
+00:02:37,739 --> 00:02:39,740
+we're going to talk about actually the
+first two things are things that GCC
+事情呐喊 更大而不是更少
+
+68
+00:02:39,740 --> 00:02:39,750
+first two things are things that GCC
+只会去匹配的地方
+
+69
+00:02:39,750 --> 00:02:43,010
+first two things are things that GCC
+does in particular so what I have on the
+条件位置的东西有一个
+
+70
+00:02:43,010 --> 00:02:43,020
+does in particular so what I have on the
+大于第一个问题可以吗？
+
+71
+00:02:43,020 --> 00:02:46,089
+does in particular so what I have on the
+screen here is on the left-hand side I
+谈谈我们可能会有什么
+
+72
+00:02:46,089 --> 00:02:46,099
+screen here is on the left-hand side I
+如果我们知道的话，可以做得更好
+
+73
+00:02:46,099 --> 00:02:49,250
+screen here is on the left-hand side I
+just copied the code that we have in our
+如果我们知道的话，与这种情况相匹
+
+74
+00:02:49,250 --> 00:02:49,260
+just copied the code that we have in our
+我们只是匹配ifs
+
+75
+00:02:49,260 --> 00:02:52,970
+just copied the code that we have in our
+reference implementation for ii-if from
+这种情况我们有一个大于
+
+76
+00:02:52,970 --> 00:02:52,980
+reference implementation for ii-if from
+我们能做些什么才能做得更好
+
+77
+00:02:52,980 --> 00:02:58,150
+reference implementation for ii-if from
+like cobra and Diamondback and it's
+那会更聪明
+
+78
+00:02:58,150 --> 00:02:58,160
+like cobra and Diamondback and it's
+我们正在生成的指令
+
+79
+00:02:58,160 --> 00:03:01,910
+like cobra and Diamondback and it's
+doing what if needs to do it compiles
+所有通用案例都是这样的
+
+80
+00:03:01,910 --> 00:03:01,920
+doing what if needs to do it compiles
+只需30秒 左右我们能做 什么
+
+81
+00:03:01,920 --> 00:03:04,699
+doing what if needs to do it compiles
+the conditional expression here called
+那样做会更聪明
+
+82
+00:03:04,699 --> 00:03:04,709
+the conditional expression here called
+右侧
+
+83
+00:03:04,709 --> 00:03:07,430
+the conditional expression here called
+if exper checks if it's a boolean
+有没有讲谈 了谈
+
+84
+00:03:07,430 --> 00:03:07,440
+if exper checks if it's a boolean
+关于它谈谈谈话
+
+85
+00:03:07,440 --> 00:03:09,180
+if exper checks if it's a boolean
+because in our
+好的想法有一些不同的 想法
+
+86
+00:03:09,180 --> 00:03:09,190
+because in our
+在这个空间，但如果我们有想法的想法
+
+87
+00:03:09,190 --> 00:03:11,100
+because in our
+our language we care about these being
+这些额外的信息我们可以做些什么
+
+88
+00:03:11,100 --> 00:03:11,110
+our language we care about these being
+做的更好什么 有一些想法， 我看
+
+89
+00:03:11,110 --> 00:03:13,830
+our language we care about these being
+bully ins and then it has the code for
+点头的想法，如果哦所以你说是否
+
+90
+00:03:13,830 --> 00:03:13,840
+bully ins and then it has the code for
+我们对1和2有所了解
+
+91
+00:03:13,840 --> 00:03:15,330
+bully ins and then it has the code for
+the then branch and the code for the
+让我们想象一下 让我们得到 更多
+
+92
+00:03:15,330 --> 00:03:15,340
+the then branch and the code for the
+具体你说 另一个
+
+93
+00:03:15,340 --> 00:03:16,680
+the then branch and the code for the
+else branch and it checks for trueness
+想法所以我只是 要去把虚线
+
+94
+00:03:16,680 --> 00:03:16,690
+else branch and it checks for trueness
+这里，所以我们知道我们在谈论
+
+95
+00:03:16,690 --> 00:03:20,520
+else branch and it checks for trueness
+too so what I have on the right-hand
+更具体的东西 但如果我们想要的话
+
+96
+00:03:20,520 --> 00:03:20,530
+too so what I have on the right-hand
+谈 事情，其中一个或多个
+
+97
+00:03:20,530 --> 00:03:25,340
+too so what I have on the right-hand
+side is a more detailed pattern match on
+在这种情况下，这些是数字
+
+98
+00:03:25,340 --> 00:03:25,350
+side is a more detailed pattern match on
+在这种情况下，我们可以说我们很好
+
+99
+00:03:25,350 --> 00:03:29,810
+side is a more detailed pattern match on
+e if then is on the left-hand side a
+绝对只需要说明
+
+100
+00:03:29,810 --> 00:03:29,820
+e if then is on the left-hand side a
+对于else 分支，因为这是
+
+101
+00:03:29,820 --> 00:03:34,230
+e if then is on the left-hand side a
+more detailed pattern match than what's
+总是要评价 为假
+
+102
+00:03:34,230 --> 00:03:34,240
+more detailed pattern match than what's
+这就是你正确得到的
+
+103
+00:03:34,240 --> 00:03:37,200
+more detailed pattern match than what's
+on the left-hand side so this left hand
+如果我们知道的话更加正确
+
+104
+00:03:37,200 --> 00:03:37,210
+on the left-hand side so this left hand
+我可以进行更详细的比赛
+
+105
+00:03:37,210 --> 00:03:40,110
+on the left-hand side so this left hand
+side match will match programs that look
+写在哪里而不是有一个e1和
+
+106
+00:03:40,110 --> 00:03:40,120
+side match will match programs that look
+e2在这里我可以写出 类似的东西
+
+107
+00:03:40,120 --> 00:03:45,420
+side match will match programs that look
+like if X then some II 1 LC 2 they'll
+如果这两个数字都正确怎么办？
+
+108
+00:03:45,420 --> 00:03:45,430
+like if X then some II 1 LC 2 they'll
+这是一个 想法，我们 很酷
+
+109
+00:03:45,430 --> 00:03:49,530
+like if X then some II 1 LC 2 they'll
+match things that look like if some
+可能会使用实际上 会使用这个想法
+
+110
+00:03:49,530 --> 00:03:49,540
+match things that look like if some
+与后来 在后面的
+
+111
+00:03:49,540 --> 00:03:53,940
+match things that look like if some
+function call on some value so match any
+但是如果 我们不知道怎么办呢
+
+112
+00:03:53,940 --> 00:03:53,950
+function call on some value so match any
+E还有更多的东西 -
+
+113
+00:03:53,950 --> 00:03:55,860
+function call on some value so match any
+possible if expression that we could
+耶可以节省一个布尔检查 ÿ 请
+
+114
+00:03:55,860 --> 00:03:55,870
+possible if expression that we could
+我们可以保存一个布尔检查， 也许我们
+
+115
+00:03:55,870 --> 00:03:58,080
+possible if expression that we could
+write an e if expression you write if
+可以保存布尔检查其他想法
+
+116
+00:03:58,080 --> 00:03:58,090
+write an e if expression you write if
+什么也可以节省一个
+
+117
+00:03:58,090 --> 00:03:59,940
+write an e if expression you write if
+you parse it turn it into the abstract
+分支也可能保存分支
+
+118
+00:03:59,940 --> 00:03:59,950
+you parse it turn it into the abstract
+保存布尔检查保存的想法
+
+119
+00:03:59,950 --> 00:04:01,770
+you parse it turn it into the abstract
+syntax and match it against that case
+分支我们会回到其他人那里
+
+120
+00:04:01,770 --> 00:04:01,780
+syntax and match it against that case
+想法其他想法
+
+121
+00:04:01,780 --> 00:04:04,440
+syntax and match it against that case
+it'll match and that's what will compile
+好吧，我会回来说为什么可以
+
+122
+00:04:04,440 --> 00:04:04,450
+it'll match and that's what will compile
+我们跳过 布尔检查为什么会这样
+
+123
+00:04:04,450 --> 00:04:07,530
+it'll match and that's what will compile
+for it this right hand case is only
+好的 ，如果有 错误 的话会怎样
+
+124
+00:04:07,530 --> 00:04:07,540
+for it this right hand case is only
+如果您想要 导致错误怎么办？
+
+125
+00:04:07,540 --> 00:04:11,670
+for it this right hand case is only
+going to match if expressions that look
+那么我怎么知道啊所以大于
+
+126
+00:04:11,670 --> 00:04:11,680
+going to match if expressions that look
+II 1或e 2产生错误或
+
+127
+00:04:11,680 --> 00:04:21,780
+going to match if expressions that look
+like keep the names the same here with
+他们的非数字大于
+
+128
+00:04:21,780 --> 00:04:21,790
+like keep the names the same here with
+产生错误，在这种情况下
+
+129
+00:04:21,790 --> 00:04:23,550
+like keep the names the same here with
+some expression and then in else
+程序完成后我们不用 担心
+
+130
+00:04:23,550 --> 00:04:23,560
+some expression and then in else
+关于这个子表达的答案
+
+131
+00:04:23,560 --> 00:04:25,470
+some expression and then in else
+possession it's only going to match
+因为我们得到了一个错误 ，这个
+
+132
+00:04:25,470 --> 00:04:25,480
+possession it's only going to match
+在许多语言中都是如此
+
+133
+00:04:25,480 --> 00:04:28,140
+possession it's only going to match
+things whoops a greater not less it's
+Java 你不再担心了
+
+134
+00:04:28,140 --> 00:04:28,150
+things whoops a greater not less it's
+回答这个子表达式和一个if
+
+135
+00:04:28,150 --> 00:04:30,450
+things whoops a greater not less it's
+only going to match things where the
+如果抛出一些异常
+
+136
+00:04:30,450 --> 00:04:30,460
+only going to match things where the
+异常处理程序会处理你
+
+137
+00:04:30,460 --> 00:04:32,190
+only going to match things where the
+thing in conditional position has a
+不必担心本地
+
+138
+00:04:32,190 --> 00:04:32,200
+thing in conditional position has a
+这里大于总是返回一个
+
+139
+00:04:32,200 --> 00:04:36,600
+thing in conditional position has a
+greater than sign first question can you
+布尔总是把一个布尔值在EAX 作为
+
+140
+00:04:36,600 --> 00:04:36,610
+greater than sign first question can you
+只要它成功， 我们不必
+
+141
+00:04:36,610 --> 00:04:41,550
+greater than sign first question can you
+talk about what might be something we
+担心失败的情况因为
+
+142
+00:04:41,550 --> 00:04:41,560
+talk about what might be something we
+我们在这里生成的代码不是
+
+143
+00:04:41,560 --> 00:04:43,740
+talk about what might be something we
+could do better if we knew we were
+代码不是代码
+
+144
+00:04:43,740 --> 00:04:43,750
+could do better if we knew we were
+处理错误所以我们 知道，因为我们知道
+
+145
+00:04:43,750 --> 00:04:46,080
+could do better if we knew we were
+matching against this case if we knew
+那个结果 必须更大
+
+146
+00:04:46,080 --> 00:04:46,090
+matching against this case if we knew
+一个 布尔值 ，我们不需要这个整个测试
+
+147
+00:04:46,090 --> 00:04:47,970
+matching against this case if we knew
+that we were only matching ifs against
+bool chunk 这部分插入
+
+148
+00:04:47,970 --> 00:04:47,980
+that we were only matching ifs against
+测试池的代码以及我们添加它的位置
+
+149
+00:04:47,980 --> 00:04:49,050
+that we were only matching ifs against
+this case where we had a greater than
+在这里的列表中
+
+150
+00:04:49,050 --> 00:04:49,060
+this case where we had a greater than
+这些不需要成为其中的一部分
+
+151
+00:04:49,060 --> 00:04:52,410
+this case where we had a greater than
+what could we do better what could we do
+比赛
+
+152
+00:04:52,410 --> 00:04:52,420
+what could we do better what could we do
+如果我们只是 考虑 移动
+
+153
+00:04:52,420 --> 00:04:53,820
+what could we do better what could we do
+that would be smarter than the
+代码结束 并实现它
+
+154
+00:04:53,820 --> 00:04:53,830
+that would be smarter than the
+在这里匹配案例现在 我们还在
+
+155
+00:04:53,830 --> 00:04:55,560
+that would be smarter than the
+instructions we're generating for if in
+要去必须做一些东西 ， 有
+
+156
+00:04:55,560 --> 00:04:55,570
+instructions we're generating for if in
+用if和 then 和else做
+
+157
+00:04:55,570 --> 00:04:57,780
+instructions we're generating for if in
+all the generic cases like what this
+以及那些编译它们的东西
+
+158
+00:04:57,780 --> 00:04:57,790
+all the generic cases like what this
+子表达式，但我们不需要
+
+159
+00:04:57,790 --> 00:05:00,600
+all the generic cases like what this
+just for 30 seconds or so what could we
+测试池你 建议我们
+
+160
+00:05:00,600 --> 00:05:00,610
+just for 30 seconds or so what could we
+可以摆脱一个分支机构 是一个
+
+161
+00:05:00,610 --> 00:05:01,740
+just for 30 seconds or so what could we
+do that would be smarter on the
+从中间的建议是 什么
+
+162
+00:05:01,740 --> 00:05:01,750
+do that would be smarter on the
+分支案例， 你建议我们可以
+
+163
+00:05:01,750 --> 00:05:40,030
+do that would be smarter on the
+right-hand side
+摆脱，如果我们实施大于
+
+164
+
+
+有分支哦，所以你说 我们喜欢
+
+165
+00:05:40,040 --> 00:05:43,180
+there's no talking talk about it talk
+里面大于操作那里
+
+166
+00:05:43,180 --> 00:05:43,190
+there's no talking talk about it talk
+可能是那里的一个分支，我们可以
+
+167
+00:05:43,190 --> 00:06:31,290
+there's no talking talk about it talk
+about it talk about it talk talk
+让那个分支改为做if事
+
+168
+
+
+所以也许我们可以弄巧 用
+
+169
+00:06:31,300 --> 00:06:34,050
+okay ideas there's a few different ideas
+编译大于此类
+
+170
+00:06:34,050 --> 00:06:34,060
+okay ideas there's a few different ideas
+与if同时如此
+
+171
+00:06:34,060 --> 00:06:37,650
+okay ideas there's a few different ideas
+in this space but ideas ideas if we have
+那里有一些机会没关系
+
+172
+00:06:37,650 --> 00:06:37,660
+in this space but ideas ideas if we have
+所以也许我们可以深入研究
+
+173
+00:06:37,660 --> 00:06:39,690
+in this space but ideas ideas if we have
+this extra information what can we maybe
+探索那个选项 的重点我
+
+174
+00:06:39,690 --> 00:06:39,700
+this extra information what can we maybe
+当我提出这个问题时，请记住
+
+175
+00:06:39,700 --> 00:06:49,770
+this extra information what can we maybe
+do better what are some ideas I see
+有趣的想法我没有这个想法
+
+176
+00:06:49,770 --> 00:06:49,780
+do better what are some ideas I see
+当我选择这个例子的时候
+
+177
+00:06:49,780 --> 00:07:03,600
+do better what are some ideas I see
+nodding idea if oh so you're saying if
+我挑选的时候我 想到的主要事情
+
+178
+00:07:03,600 --> 00:07:03,610
+nodding idea if oh so you're saying if
+这个例子指出了这个bool
+
+179
+00:07:03,610 --> 00:07:05,610
+nodding idea if oh so you're saying if
+we know something about a 1 and a 2 so
+我们可以摆脱这个布尔值的情况
+
+180
+00:07:05,610 --> 00:07:05,620
+we know something about a 1 and a 2 so
+凭借我们知道的事实来检查
+
+181
+00:07:05,620 --> 00:07:07,170
+we know something about a 1 and a 2 so
+let's imagine let's get even more
+如果我们在 if中 做得更好
+
+182
+00:07:07,170 --> 00:07:07,180
+let's imagine let's get even more
+它会有条件的位置
+
+183
+00:07:07,180 --> 00:07:11,190
+let's imagine let's get even more
+specific right you're saying another
+产生一个布尔值，所以没有必要
+
+184
+00:07:11,190 --> 00:07:11,200
+specific right you're saying another
+检查没有办法省略这个
+
+185
+00:07:11,200 --> 00:07:12,780
+specific right you're saying another
+idea so I'm just gonna put a dotted line
+代码可能导致该程序有一个
+
+186
+00:07:12,780 --> 00:07:12,790
+idea so I'm just gonna put a dotted line
+不同的答案或有错误的时候
+
+187
+00:07:12,790 --> 00:07:14,040
+idea so I'm just gonna put a dotted line
+here so we know that we're talking about
+它 之前没有错误
+
+188
+00:07:14,040 --> 00:07:14,050
+here so we know that we're talking about
+会有相同的答案，所以
+
+189
+00:07:14,050 --> 00:07:16,800
+here so we know that we're talking about
+something more specific but if we wanted
+非常有趣它意味着我们
+
+190
+00:07:16,800 --> 00:07:16,810
+something more specific but if we wanted
+可以写出这些更详细的比赛
+
+191
+00:07:16,810 --> 00:07:19,050
+something more specific but if we wanted
+to talk about things where one or more
+关于当前一些表达的案例
+
+192
+00:07:19,050 --> 00:07:19,060
+to talk about things where one or more
+编译器，我们有这个特别
+
+193
+00:07:19,060 --> 00:07:24,780
+to talk about things where one or more
+of these was numbers then in this case
+在执行这些标记的表达式中很有用
+
+194
+00:07:24,780 --> 00:07:24,790
+of these was numbers then in this case
+检查错误， 但还有其他 错误
+
+195
+00:07:24,790 --> 00:07:27,060
+of these was numbers then in this case
+in this case we could say well we're
+情况下，这可能是 有用的 ，以及
+
+196
+00:07:27,060 --> 00:07:27,070
+in this case we could say well we're
+我们可以写出这些更详细的匹配
+
+197
+00:07:27,070 --> 00:07:28,590
+in this case we could say well we're
+definitely just need the instructions
+病例和选择做一个更好的工作
+
+198
+00:07:28,590 --> 00:07:28,600
+definitely just need the instructions
+我们为a生成的指令
+
+199
+00:07:28,600 --> 00:07:30,510
+definitely just need the instructions
+for the else branch because this is
+给出表达所以这个网站这个想法
+
+200
+00:07:30,510 --> 00:07:30,520
+for the else branch because this is
+有一个名字，我只是要把它写下来
+
+201
+00:07:30,520 --> 00:07:33,000
+for the else branch because this is
+always gonna evaluate to false right
+在这里， 这个 想法 很好
+
+202
+00:07:33,000 --> 00:07:33,010
+always gonna evaluate to false right
+真的 - 这是 一个庞大的 家庭
+
+203
+00:07:33,010 --> 00:07:34,140
+always gonna evaluate to false right
+that's what you're getting at right
+这里 的 技术， 但总体思路是
+
+204
+00:07:34,140 --> 00:07:34,150
+that's what you're getting at right
+称为指令选择，这是
+
+205
+00:07:34,150 --> 00:07:36,180
+that's what you're getting at right
+right so if we knew even more right
+现在就明白这个想法
+
+206
+00:07:36,180 --> 00:07:36,190
+right so if we knew even more right
+我们为每个人写了一个案例
+
+207
+00:07:36,190 --> 00:07:37,620
+right so if we knew even more right
+there's a more detailed match I could
+用我们的语言表达右EF
+
+208
+00:07:37,620 --> 00:07:37,630
+there's a more detailed match I could
+有与 它 匹配 的 一个案例
+
+209
+00:07:37,630 --> 00:07:40,560
+there's a more detailed match I could
+write where instead of having a e1 and
+编译器EBU欺负数量 应用程序的一切
+
+210
+00:07:40,560 --> 00:07:40,570
+write where instead of having a e1 and
+有一个案例匹配 它
+
+211
+00:07:40,570 --> 00:07:42,560
+write where instead of having a e1 and
+e2 here I could write something like
+编译器，只有一个 选项
+
+212
+00:07:42,560 --> 00:07:42,570
+e2 here I could write something like
+我们为每个人生成哪些指令
+
+213
+00:07:42,570 --> 00:07:45,690
+e2 here I could write something like
+what if these are both numbers right
+表达我们生成它和想法
+
+214
+00:07:45,690 --> 00:07:45,700
+what if these are both numbers right
+如果我们 ，教学选择很好
+
+215
+00:07:45,700 --> 00:07:49,560
+what if these are both numbers right
+that's an idea it's a cool idea that we
+有关正在发生的 事情的 更多信息
+
+216
+00:07:49,560 --> 00:07:49,570
+that's an idea it's a cool idea that we
+在表达式上我们可以 做一些
+
+217
+00:07:49,570 --> 00:07:51,960
+that's an idea it's a cool idea that we
+might use actually gonna use the idea
+我们生成代码时更聪明的事情
+
+218
+00:07:51,960 --> 00:07:51,970
+might use actually gonna use the idea
+省略省略这样的检查是
+
+219
+00:07:51,970 --> 00:07:53,970
+might use actually gonna use the idea
+related to that later in a later in the
+一个想法， 所以我想谈谈这个
+
+220
+00:07:53,970 --> 00:07:53,980
+related to that later in a later in the
+更普遍的，但之前我说说
+
+221
+00:07:53,980 --> 00:07:55,950
+related to that later in a later in the
+lecture but what about if we don't know
+更普遍的是我想提几个
+
+222
+00:07:55,950 --> 00:07:55,960
+lecture but what about if we don't know
+这里的例子是另一套
+
+223
+00:07:55,960 --> 00:07:58,170
+lecture but what about if we don't know
+anything more still about a 1 in E -
+这里的示例是嵌套匹配
+
+224
+00:07:58,170 --> 00:07:58,180
+anything more still about a 1 in E -
+加上他们需要一些信件
+
+225
+00:07:58,180 --> 00:08:02,520
+anything more still about a 1 in E -
+yeah can save a boolean check Y please
+我要问 的问题 是
+
+226
+00:08:02,520 --> 00:08:02,530
+yeah can save a boolean check Y please
+这些
+
+227
+00:08:02,530 --> 00:08:04,530
+yeah can save a boolean check Y please
+can we save a boolean check ok maybe we
+其中哪些不会让我们跳过标签
+
+228
+00:08:04,530 --> 00:08:04,540
+can we save a boolean check ok maybe we
+检查正确，所以我们只是看到了如果我们
+
+229
+00:08:04,540 --> 00:08:07,140
+can we save a boolean check ok maybe we
+can save a boolean check other ideas
+知道 有条件的东西
+
+230
+00:08:07,140 --> 00:08:07,150
+can save a boolean check other ideas
+在if中的位置比我们大
+
+231
+00:08:07,150 --> 00:08:11,730
+can save a boolean check other ideas
+what's that also potentially save a
+可以跳过 标签检查 布尔值
+
+232
+00:08:11,730 --> 00:08:11,740
+what's that also potentially save a
+它有什么关于这个所以 这些 在这里的四
+
+233
+00:08:11,740 --> 00:08:14,220
+what's that also potentially save a
+branch also potentially save a branch so
+嵌套嵌套二进制文件的选项
+
+234
+00:08:14,220 --> 00:08:14,230
+branch also potentially save a branch so
+运营商
+
+235
+00:08:14,230 --> 00:08:15,960
+branch also potentially save a branch so
+ideas of saving boolean check saving a
+好吧，让我们这样做应该说得好
+
+236
+00:08:15,960 --> 00:08:15,970
+ideas of saving boolean check saving a
+这应该说EEPROM 约对不起
+
+237
+00:08:15,970 --> 00:08:17,370
+ideas of saving boolean check saving a
+branch we'll come back to those other
+那只是为了那种方式的一致性
+
+238
+00:08:17,370 --> 00:08:17,380
+branch we'll come back to those other
+五四三二一
+
+239
+00:08:17,380 --> 00:08:24,159
+branch we'll come back to those other
+ideas other ideas
+好吧， 有 一种奇怪的感觉
+
+240
+
+
+这些选项所以我想让你 谈谈
+
+241
+00:08:24,169 --> 00:08:26,080
+okay I'm gonna come back and say why can
+关于它只是 20 或 30秒
+
+242
+00:08:26,080 --> 00:08:26,090
+okay I'm gonna come back and say why can
+简单地谈谈它
+
+243
+00:08:26,090 --> 00:08:27,309
+okay I'm gonna come back and say why can
+we skip the boolean check why is that
+好吧那么首先是什么呢
+
+244
+00:08:27,309 --> 00:08:27,319
+we skip the boolean check why is that
+这里 或者 至少 是什么 答案
+
+245
+00:08:27,319 --> 00:08:37,659
+we skip the boolean check why is that
+okay yeah what if there's like an error
+就像 这里 最明显的 答案一样
+
+246
+00:08:37,659 --> 00:08:37,669
+okay yeah what if there's like an error
+好吧在 B和C 我们正在做一个加号 和
+
+247
+00:08:37,669 --> 00:08:39,430
+okay yeah what if there's like an error
+what if you wanna need to cause an error
+那么我们知道 第 一个论点是
+
+248
+00:08:39,430 --> 00:08:39,440
+what if you wanna need to cause an error
+无论是数字还是其他加上 我们
+
+249
+00:08:39,440 --> 00:08:46,180
+what if you wanna need to cause an error
+then how do I know yeah so greater than
+知道数字不好
+
+250
+00:08:46,180 --> 00:08:46,190
+then how do I know yeah so greater than
+需要检查数字和
+
+251
+00:08:46,190 --> 00:08:50,620
+then how do I know yeah so greater than
+either II 1 or e 2 produces an error or
+我们知道plus plus表达式
+
+252
+00:08:50,620 --> 00:08:50,630
+either II 1 or e 2 produces an error or
+我们可以在B和C中返回数字
+
+253
+00:08:50,630 --> 00:08:52,120
+either II 1 or e 2 produces an error or
+their non numbers so greater than
+绝对省略标签检查
+
+254
+00:08:52,120 --> 00:08:52,130
+their non numbers so greater than
+第一个参数我们没有检查
+
+255
+00:08:52,130 --> 00:08:54,400
+their non numbers so greater than
+produces an error in which case the
+这个表达式的标签或者这个
+
+256
+00:08:54,400 --> 00:08:54,410
+produces an error in which case the
+表达我们 可以跳过它，也许
+
+257
+00:08:54,410 --> 00:08:56,769
+produces an error in which case the
+program's done we don't need to worry
+甚至产生 更加智能
+
+258
+00:08:56,769 --> 00:08:56,779
+program's done we don't need to worry
+在第一种情况下的说明
+
+259
+00:08:56,779 --> 00:08:59,230
+program's done we don't need to worry
+about the answer for this sub expression
+如果我们有一个功能，请回答
+
+260
+00:08:59,230 --> 00:08:59,240
+about the answer for this sub expression
+申请我们不知道那么多
+
+261
+00:08:59,240 --> 00:09:01,960
+about the answer for this sub expression
+because we got an error right and this
+本地到这个模式 匹配 什么
+
+262
+00:09:01,960 --> 00:09:01,970
+because we got an error right and this
+可能会从那里归还
+
+263
+00:09:01,970 --> 00:09:03,460
+because we got an error right and this
+would be true in many languages right in
+以我们编译器的方式运行
+
+264
+00:09:03,460 --> 00:09:03,470
+would be true in many languages right in
+设置我们根本不知道 多少
+
+265
+00:09:03,470 --> 00:09:05,470
+would be true in many languages right in
+Java you would no longer worry about the
+函数的返回值 直到我们
+
+266
+00:09:05,470 --> 00:09:05,480
+Java you would no longer worry about the
+称他们为选项 A这 真的很难
+
+267
+00:09:05,480 --> 00:09:07,329
+Java you would no longer worry about the
+answer for this sub expression and an if
+看看我们如何跳过支票检查
+
+268
+00:09:07,329 --> 00:09:07,339
+answer for this sub expression and an if
+通过 使用选项我们必须 做
+
+269
+00:09:07,339 --> 00:09:09,280
+answer for this sub expression and an if
+if an exception was thrown some
+函数调用看看 回来了什么
+
+270
+00:09:09,280 --> 00:09:09,290
+if an exception was thrown some
+然后做加法与它 使
+
+271
+00:09:09,290 --> 00:09:10,750
+if an exception was thrown some
+exception handlers gonna handle that you
+这里最明显的答案 是a和 它
+
+272
+00:09:10,750 --> 00:09:10,760
+exception handlers gonna handle that you
+一些预期的答案， 但D是
+
+273
+00:09:10,760 --> 00:09:12,160
+exception handlers gonna handle that you
+don't have to worry about it locally
+故意怪异的B是故意的
+
+274
+00:09:12,160 --> 00:09:12,170
+don't have to worry about it locally
+很奇怪D的奇怪之处是什么
+
+275
+00:09:12,170 --> 00:09:16,630
+don't have to worry about it locally
+here so greater than always returns a
+关于D是的是的，是 的， 是的
+
+276
+00:09:16,630 --> 00:09:16,640
+here so greater than always returns a
+肯定会产生一个布尔值
+
+277
+00:09:16,640 --> 00:09:19,870
+here so greater than always returns a
+boolean always puts a boolean in EAX as
+意味着加号表达肯定
+
+278
+00:09:19,870 --> 00:09:19,880
+boolean always puts a boolean in EAX as
+在运行时会导致错误
+
+279
+00:09:19,880 --> 00:09:21,790
+boolean always puts a boolean in EAX as
+long as it succeeds and we don't have to
+这就像一个已知的错误案例
+
+280
+00:09:21,790 --> 00:09:21,800
+long as it succeeds and we don't have to
+这肯定会导致一个
+
+281
+00:09:21,800 --> 00:09:23,439
+long as it succeeds and we don't have to
+worry about the failure case because the
+错误 所以 有趣的事情
+
+282
+00:09:23,439 --> 00:09:23,449
+worry about the failure case because the
+这是等我们有一点点
+
+283
+00:09:23,449 --> 00:09:25,000
+worry about the failure case because the
+code we're generating here isn't the
+设计决定 如果我们做 什么
+
+284
+00:09:25,000 --> 00:09:25,010
+code we're generating here isn't the
+是为了匹配我们的表达
+
+285
+00:09:25,010 --> 00:09:26,620
+code we're generating here isn't the
+code for that isn't the code that
+知道会导致错误
+
+286
+00:09:26,620 --> 00:09:26,630
+code for that isn't the code that
+运行时根据我们的定义
+
+287
+00:09:26,630 --> 00:09:29,860
+code for that isn't the code that
+handles errors so we know since we know
+优化我们应该怎样做，我们
+
+288
+00:09:29,860 --> 00:09:29,870
+handles errors so we know since we know
+我们有一个优化的定义
+
+289
+00:09:29,870 --> 00:09:31,689
+handles errors so we know since we know
+that the results of greater then must be
+周一给了我们应该怎么做
+
+290
+00:09:31,689 --> 00:09:31,699
+that the results of greater then must be
+是的， 也许可以调用错误
+
+291
+00:09:31,699 --> 00:09:36,220
+that the results of greater then must be
+a boolean we don't need this entire test
+马上就马上马上吧
+
+292
+00:09:36,220 --> 00:09:36,230
+a boolean we don't need this entire test
+我们应该做这个时间概念
+
+293
+00:09:36,230 --> 00:09:43,420
+a boolean we don't need this entire test
+bool chunk this part of inserting the
+它在编译器中
+
+294
+00:09:43,420 --> 00:09:43,430
+bool chunk this part of inserting the
+会是，也许就像马上一样
+
+295
+00:09:43,430 --> 00:09:46,240
+bool chunk this part of inserting the
+code for test pool and where we add it
+尽可能正确
+
+296
+00:09:46,240 --> 00:09:46,250
+code for test pool and where we add it
+失败与坏的权利让我们给一个
+
+297
+00:09:46,250 --> 00:09:47,199
+code for test pool and where we add it
+in the list here
+优化 的编译器定义 说
+
+298
+00:09:47,199 --> 00:09:47,209
+in the list here
+虽然这个
+
+299
+00:09:47,209 --> 00:09:51,250
+in the list here
+these don't need to be part of this
+那是什么，所以我们的 定义
+
+300
+00:09:51,250 --> 00:09:51,260
+these don't need to be part of this
+优化关键部分是有
+
+301
+00:09:51,260 --> 00:09:57,410
+these don't need to be part of this
+match
+同样的答案和效果是
+
+302
+
+
+哎呀，这是我们的关键部分
+
+303
+00:09:57,420 --> 00:09:59,610
+if we were just thinking about moving
+优化定义就是我们
+
+304
+00:09:59,610 --> 00:09:59,620
+if we were just thinking about moving
+可能生成不同的指令
+
+305
+00:09:59,620 --> 00:10:01,920
+if we were just thinking about moving
+the code over and implementing this
+这可能会做些不同的事情
+
+306
+00:10:01,920 --> 00:10:01,930
+the code over and implementing this
+速度或内存使用方面但是
+
+307
+00:10:01,930 --> 00:10:04,110
+the code over and implementing this
+match case over here now we're still
+我们生成的程序应该有
+
+308
+00:10:04,110 --> 00:10:04,120
+match case over here now we're still
+同样的答案 和相同的效果 ，让
+
+309
+00:10:04,120 --> 00:10:05,430
+match case over here now we're still
+gonna have to do some stuff that has to
+我们有几个地方
+
+310
+00:10:05,430 --> 00:10:05,440
+gonna have to do some stuff that has to
+我们 可能有答案和 未来 的影响
+
+311
+00:10:05,440 --> 00:10:07,320
+gonna have to do some stuff that has to
+do with the if and the then and the else
+在这里所以并在 特定 的 一个
+
+312
+00:10:07,320 --> 00:10:07,330
+do with the if and the then and the else
+我们可能有些有趣的地方
+
+313
+00:10:07,330 --> 00:10:09,120
+do with the if and the then and the else
+and things like that to compile those
+发生了，他们就像是强调了
+
+314
+00:10:09,120 --> 00:10:09,130
+and things like that to compile those
+现在就在这里，我们要走了
+
+315
+00:10:09,130 --> 00:10:10,500
+and things like that to compile those
+sub expressions but we don't need to
+这 比两个人的操作 更重要
+
+316
+00:10:10,500 --> 00:10:10,510
+sub expressions but we don't need to
+表达式如果有 效果会 怎样
+
+317
+00:10:10,510 --> 00:10:12,300
+sub expressions but we don't need to
+test pool you had suggested that we
+如果它们有效果会怎么样？
+
+318
+00:10:12,300 --> 00:10:12,310
+test pool you had suggested that we
+程序员期待着什么
+
+319
+00:10:12,310 --> 00:10:13,950
+test pool you had suggested that we
+could get rid of a branch case to was a
+发生在那里我想让你思考
+
+320
+00:10:13,950 --> 00:10:13,960
+could get rid of a branch case to was a
+约 一分钟什么的例子
+
+321
+00:10:13,960 --> 00:10:16,140
+could get rid of a branch case to was a
+suggestion from the middle what was the
+一个程序这是一个 程序 的示例
+
+322
+00:10:16,140 --> 00:10:16,150
+suggestion from the middle what was the
+这有更大的影响
+
+323
+00:10:16,150 --> 00:10:17,640
+suggestion from the middle what was the
+branch case you're suggesting we could
+位置谈论这个对我来说有什么用
+
+324
+00:10:17,640 --> 00:10:17,650
+branch case you're suggesting we could
+我的意思是 说 什么的一个例子
+
+325
+00:10:17,650 --> 00:10:25,500
+branch case you're suggesting we could
+get rid of if we implement greater than
+程序有在那里我已经影响
+
+326
+00:10:25,500 --> 00:10:25,510
+get rid of if we implement greater than
+将这两个下划线圈在附近
+
+327
+00:10:25,510 --> 00:10:29,250
+get rid of if we implement greater than
+with branch oh so are you saying we like
+更大的是 一个程序 的 例子
+
+328
+00:10:29,250 --> 00:10:29,260
+with branch oh so are you saying we like
+这 有影响 ，谈论这个
+
+329
+00:10:29,260 --> 00:10:31,380
+with branch oh so are you saying we like
+inside the greater than operation there
+一分钟
+
+330
+00:10:31,380 --> 00:10:31,390
+inside the greater than operation there
+好的，所以这里是这里的一个
+
+331
+00:10:31,390 --> 00:10:33,180
+inside the greater than operation there
+might be a branch in there and we can
+我 是一个 更简单的例子
+
+332
+00:10:33,180 --> 00:10:33,190
+might be a branch in there and we can
+可以想到说明这个或在
+
+333
+00:10:33,190 --> 00:10:36,300
+might be a branch in there and we can
+make that branch do the if thing instead
+如果我们有一个，那么至少是最短的
+
+334
+00:10:36,300 --> 00:10:36,310
+make that branch do the if thing instead
+程序是这样的
+
+335
+00:10:36,310 --> 00:10:37,740
+make that branch do the if thing instead
+so maybe we could get clever with
+我们是一个添加结果的程序
+
+336
+00:10:37,740 --> 00:10:37,750
+so maybe we could get clever with
+大于打印一些
+
+337
+00:10:37,750 --> 00:10:40,350
+so maybe we could get clever with
+compiling the greater than at this sort
+表达式现在这意味着如果
+
+338
+00:10:40,350 --> 00:10:40,360
+compiling the greater than at this sort
+我们 运行了一个未经授权的编译器
+
+339
+00:10:40,360 --> 00:10:42,330
+compiling the greater than at this sort
+of at the same time as the if right so
+会打印一张打印件来比较它们
+
+340
+00:10:42,330 --> 00:10:42,340
+of at the same time as the if right so
+大于然后错误
+
+341
+00:10:42,340 --> 00:10:44,730
+of at the same time as the if right so
+there'd be some opportunities there okay
+再加上我认为 这就是 这个程序
+
+342
+00:10:44,730 --> 00:10:44,740
+there'd be some opportunities there okay
+如果我们在未经优化的情况下运行它会怎么做
+
+343
+00:10:44,740 --> 00:10:47,540
+there'd be some opportunities there okay
+so maybe we could go deeper into
+编译器如果我们的优化排序
+
+344
+00:10:47,540 --> 00:10:47,550
+so maybe we could go deeper into
+拿出来或取出那个操作
+
+345
+00:10:47,550 --> 00:10:51,450
+so maybe we could go deeper into
+exploring that option the the point I
+或者我们会在一开始就失败了
+
+346
+00:10:51,450 --> 00:10:51,460
+exploring that option the the point I
+切换到优化编译器和
+
+347
+00:10:51,460 --> 00:10:53,280
+exploring that option the the point I
+had in mind when I put this up that's an
+事情会有所不同
+
+348
+00:10:53,280 --> 00:10:53,290
+had in mind when I put this up that's an
+他们是 我们的计划， 如果我们 不运行
+
+349
+00:10:53,290 --> 00:10:54,780
+had in mind when I put this up that's an
+interesting idea I didn't have that idea
+刚刚在这里失败，如果我们跳过了
+
+350
+00:10:54,780 --> 00:10:54,790
+interesting idea I didn't have that idea
+这样做是因为它是
+
+351
+00:10:54,790 --> 00:10:56,820
+interesting idea I didn't have that idea
+in mind when I picked this example the
+我们 只会看到 一个错误
+
+352
+00:10:56,820 --> 00:10:56,830
+in mind when I picked this example the
+不同的答案出来可能会看到一个
+
+353
+00:10:56,830 --> 00:10:58,200
+in mind when I picked this example the
+main thing I had in mind when I picked
+如果 曾经是一个错误，那就 回答
+
+354
+00:10:58,200 --> 00:10:58,210
+main thing I had in mind when I picked
+我们要坚持 这个定义
+
+355
+00:10:58,210 --> 00:10:59,700
+main thing I had in mind when I picked
+this example is pointing out this bool
+我正在争论的优化是一个
+
+356
+00:10:59,700 --> 00:10:59,710
+this example is pointing out this bool
+好主意我们 可能会跳过一些
+
+357
+00:10:59,710 --> 00:11:02,250
+this example is pointing out this bool
+case that we can get rid of this boolean
+在这里工作就像我们知道如果更大
+
+358
+00:11:02,250 --> 00:11:02,260
+case that we can get rid of this boolean
+我们应该最终得到答案
+
+359
+00:11:02,260 --> 00:11:05,340
+case that we can get rid of this boolean
+check by virtue of the fact that we know
+错误， 所以我们可以跳过
+
+360
+00:11:05,340 --> 00:11:05,350
+check by virtue of the fact that we know
+做实际的加，因为我们知道
+
+361
+00:11:05,350 --> 00:11:08,820
+check by virtue of the fact that we know
+that if we're doing a greater in if in
+这会 产生一个错误，但我们
+
+362
+00:11:08,820 --> 00:11:08,830
+that if we're doing a greater in if in
+不应该完全避免编译
+
+363
+00:11:08,830 --> 00:11:10,440
+that if we're doing a greater in if in
+the conditional position it's gonna
+这或将其变成编译错误
+
+364
+00:11:10,440 --> 00:11:10,450
+the conditional position it's gonna
+这可能是我们做出的设计决定
+
+365
+00:11:10,450 --> 00:11:11,970
+the conditional position it's gonna
+produce a boolean so there's no need to
+关于尝试和报告 的 语言
+
+366
+00:11:11,970 --> 00:11:11,980
+produce a boolean so there's no need to
+像这样的错误 ，现在说
+
+367
+00:11:11,980 --> 00:11:14,160
+produce a boolean so there's no need to
+check there's no way that omitting this
+语言被更改 并报告这些
+
+368
+00:11:14,160 --> 00:11:14,170
+check there's no way that omitting this
+编译器中的各种错误，但我们
+
+369
+00:11:14,170 --> 00:11:16,740
+check there's no way that omitting this
+code could cause this program to have a
+不应该改变优化器
+
+370
+00:11:16,740 --> 00:11:16,750
+code could cause this program to have a
+该 程序的 程序 的行为
+
+371
+00:11:16,750 --> 00:11:18,480
+code could cause this program to have a
+different answer or have an error when
+用来打印出来的东西
+
+372
+00:11:18,480 --> 00:11:18,490
+different answer or have an error when
+优化它应该仍然打印相同
+
+373
+00:11:18,490 --> 00:11:20,490
+different answer or have an error when
+there wasn't an error before etc it's
+事情没关系 所以这个 整体想法
+
+374
+00:11:20,490 --> 00:11:20,500
+there wasn't an error before etc it's
+整体想法出现在我们的
+
+375
+00:11:20,500 --> 00:11:22,980
+there wasn't an error before etc it's
+gonna have the same answers so that's
+编译器作为这些详细模式
+
+376
+00:11:22,980 --> 00:11:22,990
+gonna have the same answers so that's
+匹配并使用这些 信息
+
+377
+00:11:22,990 --> 00:11:24,330
+gonna have the same answers so that's
+pretty interesting it means that we
+详细的模式匹配， 以使更好
+
+378
+00:11:24,330 --> 00:11:24,340
+pretty interesting it means that we
+决定
+
+379
+00:11:24,340 --> 00:11:25,890
+pretty interesting it means that we
+could write these more detailed match
+它被称为指令选择和
+
+380
+00:11:25,890 --> 00:11:25,900
+could write these more detailed match
+有一种可视化的思考方式
+
+381
+00:11:25,900 --> 00:11:28,620
+could write these more detailed match
+cases on some expressions in the current
+关于它，所以如果我们采取我们的一个 if
+
+382
+00:11:28,620 --> 00:11:28,630
+cases on some expressions in the current
+从上面我们可以想到 的方案
+
+383
+00:11:28,630 --> 00:11:30,210
+cases on some expressions in the current
+compilers we have this is particularly
+程序正在编写，我们已经 完成了
+
+384
+00:11:30,210 --> 00:11:30,220
+compilers we have this is particularly
+你可以考虑这个
+
+385
+00:11:30,220 --> 00:11:33,060
+compilers we have this is particularly
+useful in expressions that do these tag
+一种类似于递归的数据结构
+
+386
+00:11:33,060 --> 00:11:33,070
+useful in expressions that do these tag
+就像我们的抽象语法树 和我们一样
+
+387
+00:11:33,070 --> 00:11:36,120
+useful in expressions that do these tag
+checks for errors but there's other
+通常不会这样画它们
+
+388
+00:11:36,120 --> 00:11:36,130
+checks for errors but there's other
+类，但它是 有用 的绘制它
+
+389
+00:11:36,130 --> 00:11:37,410
+checks for errors but there's other
+cases where this can be useful as well
+方式有时让我们想象一下
+
+390
+00:11:37,410 --> 00:11:37,420
+cases where this can be useful as well
+如果 表达式是树，则 绘制此图
+
+391
+00:11:37,420 --> 00:11:39,300
+cases where this can be useful as well
+we can write these more detailed match
+所以我们匹配的ifs
+
+392
+00:11:39,300 --> 00:11:39,310
+we can write these more detailed match
+细节有一个if在根然后 a
+
+393
+00:11:39,310 --> 00:11:42,270
+we can write these more detailed match
+cases and do a better job of selecting
+大于这 比 符号 少
+
+394
+00:11:42,270 --> 00:11:42,280
+cases and do a better job of selecting
+然后比这边更大，
+
+395
+00:11:42,280 --> 00:11:44,130
+cases and do a better job of selecting
+which instructions we generate for a
+然后有两个表达式并在
+
+396
+00:11:44,130 --> 00:11:44,140
+which instructions we generate for a
+Noah 是一个别的表达 和E 1
+
+397
+00:11:44,140 --> 00:11:48,150
+which instructions we generate for a
+given expression so this site this idea
+和E 2， 然后我们可以想到的其他
+
+398
+00:11:48,150 --> 00:11:48,160
+given expression so this site this idea
+因为那些是完整的子树
+
+399
+00:11:48,160 --> 00:11:52,710
+given expression so this site this idea
+has a name I'm just gonna write it over
+可能是整个子表达式所以
+
+400
+00:11:52,710 --> 00:11:52,720
+has a name I'm just gonna write it over
+如果匹配则整体if匹配
+
+401
+00:11:52,720 --> 00:11:57,870
+has a name I'm just gonna write it over
+here this idea is called well it's
+与我们的任何可能表达相匹配
+
+402
+00:11:57,870 --> 00:11:57,880
+here this idea is called well it's
+可以把 它 想象 成 只是处理
+
+403
+00:11:57,880 --> 00:11:59,820
+here this idea is called well it's
+really--it's there's a huge family of
+树的这个节点然后它
+
+404
+00:11:59,820 --> 00:11:59,830
+really--it's there's a huge family of
+处理一切这 整个左
+
+405
+00:11:59,830 --> 00:12:03,960
+really--it's there's a huge family of
+techniques here but the overall idea is
+手侧子树和 这两个子
+
+406
+00:12:03,960 --> 00:12:03,970
+techniques here but the overall idea is
+树木分开 然后这些分开
+
+407
+00:12:03,970 --> 00:12:07,740
+techniques here but the overall idea is
+called instruction selection and this is
+子树会被其他树分解
+
+408
+00:12:07,740 --> 00:12:07,750
+called instruction selection and this is
+自然 ，这是我们的
+
+409
+00:12:07,750 --> 00:12:09,660
+called instruction selection and this is
+getting at this idea that right now
+编译器现在每次 我们 做
+
+410
+00:12:09,660 --> 00:12:09,670
+getting at this idea that right now
+看着这棵树我们来看看 在 一个节点
+
+411
+00:12:09,670 --> 00:12:12,300
+getting at this idea that right now
+we've written sort of one case for each
+树弄清楚如何处理做
+
+412
+00:12:12,300 --> 00:12:12,310
+we've written sort of one case for each
+一个节点， 然后递归处理所有
+
+413
+00:12:12,310 --> 00:12:15,930
+we've written sort of one case for each
+expression in in our language right EF
+子树更好有一些
+
+414
+00:12:15,930 --> 00:12:15,940
+expression in in our language right EF
+表达我们更详细的匹配
+
+415
+00:12:15,940 --> 00:12:18,420
+expression in in our language right EF
+has one case that matches it in the
+正在挑选一大块树
+
+416
+00:12:18,420 --> 00:12:18,430
+has one case that matches it in the
+处理更大块的时间
+
+417
+00:12:18,430 --> 00:12:22,470
+has one case that matches it in the
+compiler EBU bully num e app everything
+那个树一次处理和你
+
+418
+00:12:22,470 --> 00:12:22,480
+compiler EBU bully num e app everything
+能想到我上面所做的一切
+
+419
+00:12:22,480 --> 00:12:23,880
+compiler EBU bully num e app everything
+has one case that matches it in the
+这个匹配的加法表达式
+
+420
+00:12:23,880 --> 00:12:23,890
+has one case that matches it in the
+加上表达是不同的部分
+
+421
+00:12:23,890 --> 00:12:26,190
+has one case that matches it in the
+compiler and there's only one option for
+从根开始的表达式
+
+422
+00:12:26,190 --> 00:12:26,200
+compiler and there's only one option for
+是匹配的 ，然后是递归的
+
+423
+00:12:26,200 --> 00:12:27,750
+compiler and there's only one option for
+which instructions we generate for each
+最终得到了处理
+
+424
+00:12:27,750 --> 00:12:27,760
+which instructions we generate for each
+递归调用所以其中一 件事
+
+425
+00:12:27,760 --> 00:12:31,200
+which instructions we generate for each
+expression we generate it and the idea
+你会在关于教学的文献中看到
+
+426
+00:12:31,200 --> 00:12:31,210
+expression we generate it and the idea
+选择， 我不会进去
+
+427
+00:12:31,210 --> 00:12:34,050
+expression we generate it and the idea
+of instruction selection is well if we
+深入到这一点，我想指出 ，以
+
+428
+00:12:34,050 --> 00:12:34,060
+of instruction selection is well if we
+你这个存在，但我们有有限
+
+429
+00:12:34,060 --> 00:12:37,590
+of instruction selection is well if we
+use more information about what's going
+时间131 1 这张照片得到了这个
+
+430
+00:12:37,590 --> 00:12:37,600
+use more information about what's going
+在教学选择中的想法是 什么
+
+431
+00:12:37,600 --> 00:12:39,720
+use more information about what's going
+on around an expression we can do some
+我们正在做，我将继续前进
+
+432
+00:12:39,720 --> 00:12:39,730
+on around an expression we can do some
+这个例子下来所以我可以得到这个
+
+433
+00:12:39,730 --> 00:12:41,000
+on around an expression we can do some
+smarter things when we generate code
+这幅画旁边的照片是我们的
+
+434
+00:12:41,000 --> 00:12:41,010
+smarter things when we generate code
+当 我们选择指令 时， 我们 正在做
+
+435
+00:12:41,010 --> 00:12:44,580
+smarter things when we generate code
+omitting omitting checks like this is
+有一些代表我们的树
+
+436
+00:12:44,580 --> 00:12:44,590
+omitting omitting checks like this is
+计划，我们已经得到了所有的 这些
+
+437
+00:12:44,590 --> 00:12:48,510
+omitting omitting checks like this is
+one idea so I want to talk about this
+不同的方式 ，我只是去
+
+438
+00:12:48,510 --> 00:12:48,520
+one idea so I want to talk about this
+将它们作为这些抽象形状绘制出来
+
+439
+00:12:48,520 --> 00:12:49,920
+one idea so I want to talk about this
+more generally but before I talk about
+在一边编译节点的子集
+
+440
+00:12:49,920 --> 00:12:49,930
+more generally but before I talk about
+在树中 进入有用的组装
+
+441
+00:12:49,930 --> 00:12:51,930
+more generally but before I talk about
+it more generally I want to put a few
+指令进入有用的目标机器
+
+442
+00:12:51,930 --> 00:12:51,940
+it more generally I want to put a few
+说明和我们的编译器是什么
+
+443
+00:12:51,940 --> 00:12:54,780
+it more generally I want to put a few
+examples up here so another set of
+试图用一种方式来查看我们的
+
+444
+00:12:54,780 --> 00:12:54,790
+examples up here so another set of
+编译器的作业是要 找到一个完整的
+
+445
+00:12:54,790 --> 00:12:56,670
+examples up here so another set of
+examples here these are nested matches
+覆盖这棵树的平铺
+
+446
+00:12:56,670 --> 00:12:56,680
+examples here these are nested matches
+我们知道 如何编译的 不同方式
+
+447
+00:12:56,680 --> 00:13:03,330
+examples here these are nested matches
+on on plus and they need some letters
+注意所以可能有一个平铺
+
+448
+00:13:03,330 --> 00:13:03,340
+on on plus and they need some letters
+涉及用这种颜色抓住这些
+
+449
+00:13:03,340 --> 00:13:08,760
+on on plus and they need some letters
+and the question I want to ask is which
+抓住这些颜色 抓住 这些
+
+450
+00:13:08,760 --> 00:13:08,770
+and the question I want to ask is which
+用这种颜色然后这些
+
+451
+00:13:08,770 --> 00:13:22,900
+and the question I want to ask is which
+of these
+在这里，这可能是一种可能的方式
+
+452
+
+
+考虑整理这整棵树
+
+453
+00:13:22,910 --> 00:13:25,280
+which of these won't let us skip a tag
+通过我们知道的方式将节点转换为
+
+454
+00:13:25,280 --> 00:13:25,290
+which of these won't let us skip a tag
+说明，如果你眯着眼睛看我们的
+
+455
+00:13:25,290 --> 00:13:27,260
+which of these won't let us skip a tag
+check right so we just saw how if we
+您可以想象的模式匹配
+
+456
+00:13:27,260 --> 00:13:27,270
+check right so we just saw how if we
+这里的紫色区域和 红色
+
+457
+00:13:27,270 --> 00:13:29,000
+check right so we just saw how if we
+know that the thing in conditional
+这里我们的嵌套匹配区域
+
+458
+00:13:29,000 --> 00:13:29,010
+know that the thing in conditional
+匹配更多信息， 然后
+
+459
+00:13:29,010 --> 00:13:31,190
+know that the thing in conditional
+position in an if is a greater than we
+最底层的叶子节点就是东西
+
+460
+00:13:31,190 --> 00:13:31,200
+position in an if is a greater than we
+就像我们刚才的数字和布尔一样
+
+461
+00:13:31,200 --> 00:13:32,690
+position in an if is a greater than we
+can skip the tag check for boolean's in
+直接编译和 策略
+
+462
+00:13:32,690 --> 00:13:32,700
+can skip the tag check for boolean's in
+我们在编译器中实现了一个
+
+463
+00:13:32,700 --> 00:13:34,580
+can skip the tag check for boolean's in
+it what about this so these here's four
+从开始贪婪策略
+
+464
+00:13:34,580 --> 00:13:34,590
+it what about this so these here's four
+我们的编译器根本就是贪婪的
+
+465
+00:13:34,590 --> 00:13:36,920
+it what about this so these here's four
+options of nested nested binary
+匹配从根开始的东西
+
+466
+00:13:36,920 --> 00:13:36,930
+options of nested nested binary
+挑选可以找到的东西
+
+467
+00:13:36,930 --> 00:13:38,920
+options of nested nested binary
+operators
+根和重复的碎片和
+
+468
+00:13:38,920 --> 00:13:38,930
+operators
+如果有一整套文学作品
+
+469
+00:13:38,930 --> 00:13:42,650
+operators
+well this let us do this should say well
+如果你像毕业生一样思考的话
+
+470
+00:13:42,650 --> 00:13:42,660
+well this let us do this should say well
+当然在编译器中或深入研究
+
+471
+00:13:42,660 --> 00:13:44,360
+well this let us do this should say well
+this should say EEPROM to sorry about
+编译器优化有一个完整的
+
+472
+00:13:44,360 --> 00:13:44,370
+this should say EEPROM to sorry about
+关于思维方式的文献体
+
+473
+00:13:44,370 --> 00:14:18,140
+this should say EEPROM to sorry about
+that just for consistency that way
+这是一个平铺问题
+
+474
+
+
+表达你所 知道 的不同方式
+
+475
+00:14:18,150 --> 00:14:24,280
+five four three two one
+如何编译节点的子集和
+
+476
+00:14:24,280 --> 00:14:24,290
+five four three two one
+试图拿出 一个最佳的平铺
+
+477
+00:14:24,290 --> 00:14:28,160
+five four three two one
+okay there's sort of a weirdness in one
+这棵树，这是一个有趣的
+
+478
+00:14:28,160 --> 00:14:28,170
+okay there's sort of a weirdness in one
+合理地向前推进的方法
+
+479
+00:14:28,170 --> 00:14:29,360
+okay there's sort of a weirdness in one
+of these options so I want you to talk
+实现这一点的直截了当的方式
+
+480
+00:14:29,360 --> 00:14:29,370
+of these options so I want you to talk
+这也 与GCC的 做法 有关
+
+481
+00:14:29,370 --> 00:14:31,970
+of these options so I want you to talk
+about it just for 20 or 30 seconds just
+这是一堆手写的
+
+482
+00:14:31,970 --> 00:14:31,980
+about it just for 20 or 30 seconds just
+这从根开始贪婪的规则和
+
+483
+00:14:31,980 --> 00:15:03,500
+about it just for 20 or 30 seconds just
+talk about it briefly
+走下去， 这真的是我们的模式
+
+484
+
+
+匹配在编译函数和
+
+485
+00:15:03,510 --> 00:15:06,410
+okay so what's so first of all what's
+这就是GCC为一个体面的大块做的事情
+
+486
+00:15:06,410 --> 00:15:06,420
+okay so what's so first of all what's
+它的指令选择等我
+
+487
+00:15:06,420 --> 00:15:09,769
+okay so what's so first of all what's
+the what's the answer here or at least
+只是想把这张照片 放在 这里
+
+488
+00:15:09,769 --> 00:15:09,779
+the what's the answer here or at least
+告诉你， 有这个东西
+
+489
+00:15:09,779 --> 00:15:11,449
+the what's the answer here or at least
+like the the most obvious answer here
+我们正在 做的是一个实现
+
+490
+00:15:11,449 --> 00:15:11,459
+like the the most obvious answer here
+战略 ，有一个整体
+
+491
+00:15:11,459 --> 00:15:15,769
+like the the most obvious answer here
+well in B and C we're doing a plus and
+你可以在编译器中完成研究生课程
+
+492
+00:15:15,769 --> 00:15:15,779
+well in B and C we're doing a plus and
+谈谈这个人写的
+
+493
+00:15:15,779 --> 00:15:17,720
+well in B and C we're doing a plus and
+then we know that the first argument is
+关于如何做聪明的论文
+
+494
+00:15:17,720 --> 00:15:17,730
+then we know that the first argument is
+指导选择，但我们是我们
+
+495
+00:15:17,730 --> 00:15:20,660
+then we know that the first argument is
+either a number or another plus and we
+这种贪婪可以走得很远
+
+496
+00:15:20,660 --> 00:15:20,670
+either a number or another plus and we
+策略从根使用 的 起始
+
+497
+00:15:20,670 --> 00:15:22,310
+either a number or another plus and we
+know that numbers well numbers don't
+更多信息
+
+498
+00:15:22,310 --> 00:15:22,320
+know that numbers well numbers don't
+这样的指令选择和
+
+499
+00:15:22,320 --> 00:15:23,629
+know that numbers well numbers don't
+need to be checked for being numbers and
+这是我们可以 采取我们可以看到的一种方式
+
+500
+00:15:23,629 --> 00:15:23,639
+need to be checked for being numbers and
+从我们现有的编译器和实现
+
+501
+00:15:23,639 --> 00:15:25,430
+need to be checked for being numbers and
+we know that plus plus expressions have
+它自己如何做一点点
+
+502
+00:15:25,430 --> 00:15:25,440
+we know that plus plus expressions have
+更好地生成汇编代码
+
+503
+00:15:25,440 --> 00:15:27,949
+we know that plus plus expressions have
+to return numbers so in B and C we can
+关于这个想法的问题
+
+504
+00:15:27,949 --> 00:15:27,959
+to return numbers so in B and C we can
+高层次的 想法
+
+505
+00:15:27,959 --> 00:15:29,810
+to return numbers so in B and C we can
+definitely omit the tag check for the
+好吧所以一个好， 所以我要忍受
+
+506
+00:15:29,810 --> 00:15:29,820
+definitely omit the tag check for the
+一些汇编代码
+
+507
+00:15:29,820 --> 00:15:32,150
+definitely omit the tag check for the
+first argument we don't have to check
+我只是想强调我实际上只是
+
+508
+00:15:32,150 --> 00:15:32,160
+first argument we don't have to check
+我想突出其中的一部分
+
+509
+00:15:32,160 --> 00:15:35,300
+first argument we don't have to check
+the tag of this expression or this
+想要它，因为我想通过
+
+510
+00:15:35,300 --> 00:15:35,310
+the tag of this expression or this
+今天所有这三个想法都非常 值得强调
+
+511
+00:15:35,310 --> 00:15:38,329
+the tag of this expression or this
+expression we can just skip it and maybe
+只是一个小片 我 的意思是这
+
+512
+00:15:38,329 --> 00:15:38,339
+expression we can just skip it and maybe
+类似于 我所拥有 的 代码
+
+513
+00:15:38,339 --> 00:15:40,009
+expression we can just skip it and maybe
+even generate even more intelligent
+周一我要 强调的是
+
+514
+00:15:40,009 --> 00:15:40,019
+even generate even more intelligent
+就在这里，这是你的代码
+
+515
+00:15:40,019 --> 00:15:43,280
+even generate even more intelligent
+instructions there in the first case in
+可能已经在生成的 代码中 看到了
+
+516
+00:15:43,280 --> 00:15:43,290
+instructions there in the first case in
+您的编译器 很多， 但模式
+
+517
+00:15:43,290 --> 00:15:46,400
+instructions there in the first case in
+answer a like if we have a function
+一遍 又一 遍地 出现
+
+518
+00:15:46,400 --> 00:15:46,410
+answer a like if we have a function
+在我们的编译器的生成代码中
+
+519
+00:15:46,410 --> 00:15:50,590
+answer a like if we have a function
+application we don't know that much
+我们采取斧头中的值来移动它
+
+520
+00:15:50,590 --> 00:15:50,600
+application we don't know that much
+到堆栈 然后我们采取
+
+521
+00:15:50,600 --> 00:15:53,569
+application we don't know that much
+locally to this pattern match about what
+在 这个堆栈地址值并将其移动
+
+522
+00:15:53,569 --> 00:15:53,579
+locally to this pattern match about what
+回到EAX 并且非常高兴
+
+523
+00:15:53,579 --> 00:15:55,400
+locally to this pattern match about what
+could possibly be returned from that
+在那个额外的工作，所以 有一个
+
+524
+00:15:55,400 --> 00:15:55,410
+could possibly be returned from that
+非常直率的直截了当
+
+525
+00:15:55,410 --> 00:15:57,500
+could possibly be returned from that
+function the way we have our compiler
+方法来处理这种
+
+526
+00:15:57,500 --> 00:15:57,510
+function the way we have our compiler
+这是 关于编译输出的问题
+
+527
+00:15:57,510 --> 00:15:58,670
+function the way we have our compiler
+set up we don't know much at all about
+因为我不知道 它是否值得
+
+528
+00:15:58,670 --> 00:15:58,680
+set up we don't know much at all about
+称它为蛮力， 但它就像
+
+529
+00:15:58,680 --> 00:16:00,740
+set up we don't know much at all about
+the return values of functions until we
+这是一个 聪明 的解决方案
+
+530
+00:16:00,740 --> 00:16:00,750
+the return values of functions until we
+只有它的简单才是这样的一种方式
+
+531
+00:16:00,750 --> 00:16:04,220
+the return values of functions until we
+call them so option A it's really hard
+谈谈让这更好地避免
+
+532
+00:16:04,220 --> 00:16:04,230
+call them so option A it's really hard
+这种情况和编译输出是让我们的
+
+533
+00:16:04,230 --> 00:16:06,259
+call them so option A it's really hard
+to see how we would skip a check check
+想象写一个叫做的函数
+
+534
+00:16:06,259 --> 00:16:06,269
+to see how we would skip a check check
+提高接受一个指令
+
+535
+00:16:06,269 --> 00:16:08,240
+to see how we would skip a check check
+by using option a we kind of have to do
+指令清单，它会去
+
+536
+00:16:08,240 --> 00:16:08,250
+by using option a we kind of have to do
+产生一个新的指令列表就这样了
+
+537
+00:16:08,250 --> 00:16:09,620
+by using option a we kind of have to do
+the function call see what comes back
+只是做出指示
+
+538
+00:16:09,620 --> 00:16:09,630
+the function call see what comes back
+更好，这个想法就是这样
+
+539
+00:16:09,630 --> 00:16:12,230
+the function call see what comes back
+and then do the addition with it so the
+提高说明会去的
+
+540
+00:16:12,230 --> 00:16:12,240
+and then do the addition with it so the
+打印出来之前的编译器
+
+541
+00:16:12,240 --> 00:16:15,829
+and then do the addition with it so the
+most obvious answer here is a and it's
+说明正确，我们如何做
+
+542
+00:16:15,829 --> 00:16:15,839
+most obvious answer here is a and it's
+编译器工作我们解析我们编译到
+
+543
+00:16:15,839 --> 00:16:17,689
+most obvious answer here is a and it's
+sort of the intended answer but D is
+得到一个指令清单，然后我们
+
+544
+00:16:17,689 --> 00:16:17,699
+sort of the intended answer but D is
+打印出所有说明吧
+
+545
+00:16:17,699 --> 00:16:20,000
+sort of the intended answer but D is
+intentionally weird B is intentionally
+这是最后一步， 让我们想象一下
+
+546
+00:16:20,000 --> 00:16:20,010
+intentionally weird B is intentionally
+之前改进了教学清单
+
+547
+00:16:20,010 --> 00:16:22,490
+intentionally weird B is intentionally
+weird what's weird about D that's weird
+将它打印出来让它成为一个
+
+548
+00:16:22,490 --> 00:16:22,500
+weird what's weird about D that's weird
+更好的教学清单，这是一种方法
+
+549
+00:16:22,500 --> 00:16:30,920
+weird what's weird about D that's weird
+about D yeah yeah yeah a one is
+这就是这 几乎是一个
+
+550
+00:16:30,920 --> 00:16:30,930
+about D yeah yeah yeah a one is
+很多我告诉你的 是
+
+551
+00:16:30,930 --> 00:16:35,090
+about D yeah yeah yeah a one is
+definitely gonna produce a boolean which
+简单的一件事是在实践中完成 ，
+
+552
+00:16:35,090 --> 00:16:35,100
+definitely gonna produce a boolean which
+工作让我们的指令匹配
+
+553
+00:16:35,100 --> 00:16:38,090
+definitely gonna produce a boolean which
+means the plus expression is definitely
+与和说明，让我们想象一下，
+
+554
+00:16:38,090 --> 00:16:38,100
+means the plus expression is definitely
+在指令列表中，我们 的前方
+
+555
+00:16:38,100 --> 00:16:40,269
+means the plus expression is definitely
+going to cause an error when it runs
+有一个reg偏移的眼睛移动
+
+556
+00:16:40,269 --> 00:16:40,279
+going to cause an error when it runs
+EBP 和一些数字N 和Reg ya X.
+
+557
+00:16:40,279 --> 00:16:44,319
+going to cause an error when it runs
+right this is like a known error case
+然后是注册斧头和a的眼睛移动
+
+558
+00:16:44,319 --> 00:16:44,329
+right this is like a known error case
+reg偏移相同的数字
+
+559
+00:16:44,329 --> 00:16:46,579
+right this is like a known error case
+right it's definitely going to cause an
+那里
+
+560
+00:16:46,579 --> 00:16:46,589
+right it's definitely going to cause an
+让我在右边写这个
+
+561
+00:16:46,589 --> 00:16:49,189
+right it's definitely going to cause an
+error so one interesting thing about
+模式棘轮风格好吧这样
+
+562
+00:16:49,189 --> 00:16:49,199
+error so one interesting thing about
+与此事相关联的事情
+
+563
+00:16:49,199 --> 00:16:52,850
+error so one interesting thing about
+this is wait we have a little bit of a
+其余的说明如果
+
+564
+00:16:52,850 --> 00:16:52,860
+this is wait we have a little bit of a
+我们到堆栈移动和 EAX
+
+565
+00:16:52,860 --> 00:16:54,800
+this is wait we have a little bit of a
+design decision about what to do if we
+然后我们将价值从中移开
+
+566
+00:16:54,800 --> 00:16:54,810
+design decision about what to do if we
+堆叠回EAX 我们知道哪个
+
+567
+00:16:54,810 --> 00:16:56,389
+design decision about what to do if we
+were to match on an expression that we
+指令是冗余的，其
+
+568
+00:16:56,389 --> 00:16:56,399
+were to match on an expression that we
+指令是第一个冗余
+
+569
+00:16:56,399 --> 00:16:58,160
+were to match on an expression that we
+know is going to cause an error at
+第二条指令的说明
+
+570
+00:16:58,160 --> 00:16:58,170
+know is going to cause an error at
+第二个权利我们要把它 移到
+
+571
+00:16:58,170 --> 00:17:02,240
+know is going to cause an error at
+runtime according to our definition of
+堆栈 ，因为我们可以看看它
+
+572
+00:17:02,240 --> 00:17:02,250
+runtime according to our definition of
+后来我们 绝对不需要 移动
+
+573
+00:17:02,250 --> 00:17:03,920
+runtime according to our definition of
+an optimization what should we do we
+它从堆栈中退回到EAX中
+
+574
+00:17:03,920 --> 00:17:03,930
+an optimization what should we do we
+现在我们可以采取这个，然后转身
+
+575
+00:17:03,930 --> 00:17:05,780
+an optimization what should we do we
+have a definition of an optimization we
+这是第一条指令
+
+576
+00:17:05,780 --> 00:17:05,790
+have a definition of an optimization we
+我用Reg移动第一个
+
+577
+00:17:05,790 --> 00:17:07,069
+have a definition of an optimization we
+gave on Monday what should we do
+一
+
+578
+00:17:07,069 --> 00:17:07,079
+gave on Monday what should we do
+链接到休息说明链接
+
+579
+00:17:07,079 --> 00:17:11,059
+gave on Monday what should we do
+yeah maybe make maybe call an error
+intereste 回答 所以只是放下第二个
+
+580
+00:17:11,059 --> 00:17:11,069
+yeah maybe make maybe call an error
+指令列表中的指令
+
+581
+00:17:11,069 --> 00:17:12,319
+yeah maybe make maybe call an error
+right away oh right away right away
+在打印之前应该调整一下
+
+582
+00:17:12,319 --> 00:17:12,329
+right away oh right away right away
+使其更有用，如 一个调整
+
+583
+00:17:12,329 --> 00:17:14,210
+right away oh right away right away
+there's this notion of time should we do
+在这里我可以做到这一点
+
+584
+00:17:14,210 --> 00:17:14,220
+there's this notion of time should we do
+更有用的是 呼叫提高
+
+585
+00:17:14,220 --> 00:17:17,199
+there's this notion of time should we do
+it in the compiler
+再说一遍，我可以
+
+586
+
+
+递归调用改进指令
+
+587
+00:17:17,209 --> 00:17:18,490
+would be and maybe as right away as
+其余 只是休息所以
+
+588
+00:17:18,490 --> 00:17:18,500
+would be and maybe as right away as
+在这里， 我可以改进说明
+
+589
+00:17:18,500 --> 00:17:20,289
+would be and maybe as right away as
+possible right as right away as possible
+其余的指示是的，是的
+
+590
+00:17:20,289 --> 00:17:20,299
+possible right as right away as possible
+去吧啊有趣 但所以为什么
+
+591
+00:17:20,299 --> 00:17:26,829
+possible right as right away as possible
+is fail with bad right let's give a
+为什么我没有说 什么
+
+592
+00:17:26,829 --> 00:17:26,839
+is fail with bad right let's give a
+关于这些引导 指令如此
+
+593
+00:17:26,839 --> 00:17:36,580
+is fail with bad right let's give a
+compiler definition of optimization say
+正如我 所说 ，这里发生了什么
+
+594
+00:17:36,580 --> 00:17:36,590
+compiler definition of optimization say
+它正在 这个递归中出现
+
+595
+00:17:36,590 --> 00:17:44,250
+compiler definition of optimization say
+about this though
+打电话是我们说我们 要去的
+
+596
+
+
+从 前面处理说明
+
+597
+00:17:44,260 --> 00:17:52,960
+well what yeah so our definition of
+如果我们得到指令的前缀
+
+598
+00:17:52,960 --> 00:17:52,970
+well what yeah so our definition of
+在这里，我们认识到我们可以做到
+
+599
+00:17:52,970 --> 00:17:56,230
+well what yeah so our definition of
+optimization the key part was having the
+我们会 更好地 将它们切掉
+
+600
+00:17:56,230 --> 00:17:56,240
+optimization the key part was having the
+我们会把它们砍掉来回答 你的问题
+
+601
+00:17:56,240 --> 00:18:04,920
+optimization the key part was having the
+same answer and effects that was the
+问是的所以我们正在 谈论
+
+602
+00:18:04,920 --> 00:18:04,930
+same answer and effects that was the
+这 是我现在的 递归电话
+
+603
+00:18:04,930 --> 00:18:08,260
+same answer and effects that was the
+whoops that was the key part of our
+那种说法 好吧好吧所以我们要去
+
+604
+00:18:08,260 --> 00:18:08,270
+whoops that was the key part of our
+然后对其余的进行 递归调用
+
+605
+00:18:08,270 --> 00:18:10,870
+whoops that was the key part of our
+optimization definition was that we
+这个问题就像我们一样
+
+606
+00:18:10,870 --> 00:18:10,880
+optimization definition was that we
+删除第一个指令是什么
+
+607
+00:18:10,880 --> 00:18:12,400
+optimization definition was that we
+might generate different instructions
+发生在第一个指令
+
+608
+00:18:12,400 --> 00:18:12,410
+might generate different instructions
+对， 我们要谈谈
+
+609
+00:18:12,410 --> 00:18:13,780
+might generate different instructions
+which might do something different in
+这个功能有点 的结构
+
+610
+00:18:13,780 --> 00:18:13,790
+which might do something different in
+更多，所以我们肯定会再次发生
+
+611
+00:18:13,790 --> 00:18:16,150
+which might do something different in
+terms of speed or memory usage but the
+这样我们就可以循环其他什么呢
+
+612
+00:18:16,150 --> 00:18:16,160
+terms of speed or memory usage but the
+我们需要 担心 的是啊是啊
+
+613
+00:18:16,160 --> 00:18:17,530
+terms of speed or memory usage but the
+program we generate ought to have the
+所以我们可以打电话给改进
+
+614
+00:18:17,530 --> 00:18:17,540
+program we generate ought to have the
+关于整件事的说明正确
+
+615
+00:18:17,540 --> 00:18:21,930
+program we generate ought to have the
+same answer and the same effects so
+因为我们可能已经嘎吱嘎吱
+
+616
+00:18:21,930 --> 00:18:21,940
+same answer and the same effects so
+指令一起在前面 那个
+
+617
+00:18:21,940 --> 00:18:24,850
+same answer and the same effects so
+we're so there's a couple places where
+然后再做一个模式匹配我们
+
+618
+00:18:24,850 --> 00:18:24,860
+we're so there's a couple places where
+也可以改善我们的权利
+
+619
+00:18:24,860 --> 00:18:27,550
+we're so there's a couple places where
+we might have answers and effects coming
+这样做可能是另一个
+
+620
+00:18:27,550 --> 00:18:27,560
+we might have answers and effects coming
+这里的方法就是打电话来打电话
+
+621
+00:18:27,560 --> 00:18:30,370
+we might have answers and effects coming
+out here so and in particular one of the
+改善对这件事的指示
+
+622
+00:18:30,370 --> 00:18:30,380
+out here so and in particular one of the
+是的，让我们一定要做
+
+623
+00:18:30,380 --> 00:18:32,590
+out here so and in particular one of the
+places we might have interesting things
+当我们这样做时，列表会变小，所以我们
+
+624
+00:18:32,590 --> 00:18:32,600
+places we might have interesting things
+不必 担心它是一个
+
+625
+00:18:32,600 --> 00:18:34,660
+places we might have interesting things
+happening and they're like underscored
+无限循环， 因为 我们只要我们
+
+626
+00:18:34,660 --> 00:18:34,670
+happening and they're like underscored
+最终使列表变小
+
+627
+00:18:34,670 --> 00:18:40,330
+happening and they're like underscored
+out right now is right here we're going
+我们会坐下来 一个 空的列表 或 一些
+
+628
+00:18:40,330 --> 00:18:40,340
+out right now is right here we're going
+固定大小的列表， 但我们可以
+
+629
+00:18:40,340 --> 00:18:43,590
+out right now is right here we're going
+to do this greater than operation on two
+只是 在 整个事情 上 调用 它
+
+630
+00:18:43,590 --> 00:18:43,600
+to do this greater than operation on two
+也许这表明了一些新的模式
+
+631
+00:18:43,600 --> 00:18:46,810
+to do this greater than operation on two
+expressions what if they have effects
+这将 是真正的问题是什么
+
+632
+00:18:46,810 --> 00:18:46,820
+expressions what if they have effects
+如果没有模式匹配，但 我认为是
+
+633
+00:18:46,820 --> 00:18:49,810
+expressions what if they have effects
+what if they have effects what if the
+我认为其实什么 是
+
+634
+00:18:49,810 --> 00:18:49,820
+what if they have effects what if the
+你的问题正确，因为
+
+635
+00:18:49,820 --> 00:18:51,070
+what if they have effects what if the
+programmer was expecting something to
+如果我们这样做 ，我们会怎么做
+
+636
+00:18:51,070 --> 00:18:51,080
+programmer was expecting something to
+只是这整个名单上的功能它
+
+637
+00:18:51,080 --> 00:18:53,080
+programmer was expecting something to
+happen there what I want you to think
+只会说好的 没有比赛没有比赛
+
+638
+00:18:53,080 --> 00:18:53,090
+happen there what I want you to think
+工作正确你说它说移动EBP
+
+639
+00:18:53,090 --> 00:18:54,760
+happen there what I want you to think
+about for a minute what's an example of
+顶部的ESP 无关
+
+640
+00:18:54,760 --> 00:18:54,770
+about for a minute what's an example of
+你建议的比赛所以
+
+641
+00:18:54,770 --> 00:19:09,920
+about for a minute what's an example of
+a program it's an example of a program
+我们要做的事情是我们需要的，我们可能
+
+642
+
+
+有更多的情况我们知道如何
+
+643
+00:19:09,930 --> 00:19:12,870
+that has effects in this greater
+改善这里的指示， 但我们
+
+644
+00:19:12,870 --> 00:19:12,880
+that has effects in this greater
+我们需要一些结局案例
+
+645
+00:19:12,880 --> 00:19:14,820
+that has effects in this greater
+position talk about this for me what do
+指令与其他部分相关联
+
+646
+00:19:14,820 --> 00:19:14,830
+position talk about this for me what do
+说明和我们说 没事
+
+647
+00:19:14,830 --> 00:19:16,890
+position talk about this for me what do
+I mean by that what is an example of a
+没有任何匹配让我们向前迈进
+
+648
+00:19:16,890 --> 00:19:16,900
+I mean by that what is an example of a
+列表，让我们把它 变成我
+
+649
+00:19:16,900 --> 00:19:19,290
+I mean by that what is an example of a
+program that has effects where I've
+联系以 改善指示骚乱
+
+650
+00:19:19,290 --> 00:19:19,300
+program that has effects where I've
+因为我们无法 做到
+
+651
+00:19:19,300 --> 00:19:22,110
+program that has effects where I've
+circled these two underscores for near
+如果它不匹配的话
+
+652
+00:19:22,110 --> 00:19:22,120
+circled these two underscores for near
+任何我们可以工作 的 模式
+
+653
+00:19:22,120 --> 00:19:23,610
+circled these two underscores for near
+greater what's an example of a program
+所以这里的想法就是这样
+
+654
+00:19:23,610 --> 00:19:23,620
+greater what's an example of a program
+我们将遍历整个 列表
+
+655
+00:19:23,620 --> 00:19:25,260
+greater what's an example of a program
+that has effects there talk about this
+说明 ，每次我们找到
+
+656
+00:19:25,260 --> 00:19:25,270
+that has effects there talk about this
+我们知道怎么做的小前缀
+
+657
+00:19:25,270 --> 00:20:05,900
+that has effects there talk about this
+for a minute
+改善 我们会缩小那个然后
+
+658
+
+
+我们会看到，如果我们 可以做的更好 的
+
+659
+00:20:05,910 --> 00:20:08,640
+okay so here's here's one of the here's
+还剩下什么，所以这是非常的
+
+660
+00:20:08,640 --> 00:20:08,650
+okay so here's here's one of the here's
+具体非常类似我 猜的直率
+
+661
+00:20:08,650 --> 00:20:10,289
+okay so here's here's one of the here's
+sort of one of the simpler examples I
+这是个好词， 有一个列表
+
+662
+00:20:10,289 --> 00:20:10,299
+sort of one of the simpler examples I
+说明 ，我们看到说明
+
+663
+00:20:10,299 --> 00:20:13,320
+sort of one of the simpler examples I
+can think of to illustrate this or at
+彼此相邻，我们可以改进
+
+664
+00:20:13,320 --> 00:20:13,330
+can think of to illustrate this or at
+让我们改进 它们并把新的
+
+665
+00:20:13,330 --> 00:20:15,930
+can think of to illustrate this or at
+least the shortest what if we have a
+在地方和更好的说明
+
+666
+00:20:15,930 --> 00:20:15,940
+least the shortest what if we have a
+这里的想法是我们 运行一点点
+
+667
+00:20:15,940 --> 00:20:27,390
+least the shortest what if we have a
+program like this
+窗口我们可以把它想象成 一 点点
+
+668
+
+
+沿着序列的一个小窗口
+
+669
+00:20:27,400 --> 00:20:30,430
+we're a program that adds the result of
+说明 ，这是一个小点
+
+670
+00:20:30,430 --> 00:20:30,440
+we're a program that adds the result of
+我们偷窥并尝试使用的地方
+
+671
+00:20:30,440 --> 00:20:31,779
+we're a program that adds the result of
+greater than on printing some
+非常非常本地化的信息
+
+672
+00:20:31,779 --> 00:20:31,789
+greater than on printing some
+一个，两个或 三个或四个 指令
+
+673
+00:20:31,789 --> 00:20:36,850
+greater than on printing some
+expressions now this would mean that if
+时间让事情变得更好 一点点
+
+674
+00:20:36,850 --> 00:20:36,860
+expressions now this would mean that if
+这个想法 有一个名字peephole
+
+675
+00:20:36,860 --> 00:20:39,610
+expressions now this would mean that if
+we ran on an unauthorized compiler this
+优化，这是一个超级
+
+676
+00:20:39,610 --> 00:20:39,620
+we ran on an unauthorized compiler this
+普通它也相对一个不错
+
+677
+00:20:39,620 --> 00:20:41,710
+we ran on an unauthorized compiler this
+would print one print to compare them
+这个特点就是它没有
+
+678
+00:20:41,710 --> 00:20:41,720
+would print one print to compare them
+要求了解 其余部分
+
+679
+00:20:41,720 --> 00:20:43,659
+would print one print to compare them
+for greater than and then error on the
+编译器中的一些 知道嵌套
+
+680
+00:20:43,659 --> 00:20:43,669
+for greater than and then error on the
+匹配需要了解很多
+
+681
+00:20:43,669 --> 00:20:45,340
+for greater than and then error on the
+plus I thought it's what this program
+关于每个表达式的假设
+
+682
+00:20:45,340 --> 00:20:45,350
+plus I thought it's what this program
+做什么以及它可能有什么错误
+
+683
+00:20:45,350 --> 00:20:46,750
+plus I thought it's what this program
+would do if we ran it on the unoptimized
+它可以拥有什么标签
+
+684
+00:20:46,750 --> 00:20:46,760
+would do if we ran it on the unoptimized
+通过了解x86是什么来实现
+
+685
+00:20:46,760 --> 00:20:49,510
+would do if we ran it on the unoptimized
+compiler if our optimization sort of
+应该做对你只需要
+
+686
+00:20:49,510 --> 00:20:49,520
+compiler if our optimization sort of
+知道x86这样做 是因为你
+
+687
+00:20:49,520 --> 00:20:52,299
+compiler if our optimization sort of
+took that out or took out that operation
+只需要知道那 不可能
+
+688
+00:20:52,299 --> 00:20:52,309
+took that out or took out that operation
+第二条指令不可能
+
+689
+00:20:52,309 --> 00:20:54,340
+took that out or took out that operation
+or just failed in the beginning we would
+有用， 因为它只是在做
+
+690
+00:20:54,340 --> 00:20:54,350
+or just failed in the beginning we would
+不必要的工作，所以它是那种
+
+691
+00:20:54,350 --> 00:20:56,260
+or just failed in the beginning we would
+switch to the optimizing compiler and
+独立于编译器的其余部分
+
+692
+00:20:56,260 --> 00:20:56,270
+switch to the optimizing compiler and
+这很好，而且非常好
+
+693
+00:20:56,270 --> 00:20:58,090
+switch to the optimizing compiler and
+things would just be way different than
+只是循环遍历指令
+
+694
+00:20:58,090 --> 00:20:58,100
+things would just be way different than
+看着 几个 旁边， 是 每个
+
+695
+00:20:58,100 --> 00:21:00,520
+things would just be way different than
+they were our program wouldn't run if we
+其他 一次是的
+
+696
+00:21:00,520 --> 00:21:00,530
+they were our program wouldn't run if we
+所以，让我们记住让我们留下来
+
+697
+00:21:00,530 --> 00:21:02,980
+they were our program wouldn't run if we
+just failed with here and if we skipped
+请注意，你的评论 是 正确的
+
+698
+00:21:02,980 --> 00:21:02,990
+just failed with here and if we skipped
+也许我们可以完成 整个过程
+
+699
+00:21:02,990 --> 00:21:05,140
+just failed with here and if we skipped
+doing this operation because it was
+列表 ，我们没有找到任何说明
+
+700
+00:21:05,140 --> 00:21:05,150
+doing this operation because it was
+改进，但我想指出
+
+701
+00:21:05,150 --> 00:21:07,600
+doing this operation because it was
+known to be an error we would just see
+花在那里的 时间不是编译时间
+
+702
+00:21:07,600 --> 00:21:07,610
+known to be an error we would just see
+运行时间正确，这很漂亮
+
+703
+00:21:07,610 --> 00:21:09,520
+known to be an error we would just see
+different answers come out might see an
+这实际上是一个重要的区别
+
+704
+00:21:09,520 --> 00:21:09,530
+different answers come out might see an
+在所有这些权利中，这些
+
+705
+00:21:09,530 --> 00:21:12,520
+different answers come out might see an
+answer when it used to be an error so if
+匹配更多的优化
+
+706
+00:21:12,520 --> 00:21:12,530
+answer when it used to be an error so if
+一些喜欢平铺或做的东西
+
+707
+00:21:12,530 --> 00:21:14,470
+answer when it used to be an error so if
+we're going to uphold this definition of
+这种人优化都是成本
+
+708
+00:21:14,470 --> 00:21:14,480
+we're going to uphold this definition of
+编译时间， 我们正在交易
+
+709
+00:21:14,480 --> 00:21:16,299
+we're going to uphold this definition of
+an optimization which I'm arguing is a
+努力， 以便最终的计划
+
+710
+00:21:16,299 --> 00:21:16,309
+an optimization which I'm arguing is a
+我经常给出的例子运行得更快
+
+711
+00:21:16,309 --> 00:21:18,909
+an optimization which I'm arguing is a
+good idea we might be able to skip some
+因为如果你是你知道的话
+
+712
+00:21:18,909 --> 00:21:18,919
+good idea we might be able to skip some
+适合Firefox的项目经理
+
+713
+00:21:18,919 --> 00:21:21,570
+good idea we might be able to skip some
+work here like we know that if greater
+你会，你应该能够并且 应该
+
+714
+00:21:21,570 --> 00:21:21,580
+work here like we know that if greater
+如果你是 某人的权衡
+
+715
+00:21:21,580 --> 00:21:24,789
+work here like we know that if greater
+produces an answer we should eventually
+给你一个优化编译器
+
+716
+00:21:24,789 --> 00:21:24,799
+produces an answer we should eventually
+花了一个星期的时间 来运行但是让Firefox如此
+
+717
+00:21:24,799 --> 00:21:26,860
+produces an answer we should eventually
+error right so we might be able to skip
+你可以并且应该雇用服务器
+
+718
+00:21:26,860 --> 00:21:26,870
+error right so we might be able to skip
+编译Firefox一周然后
+
+719
+00:21:26,870 --> 00:21:28,480
+error right so we might be able to skip
+doing the actual plus because we know
+二进制一次发布的那个
+
+720
+00:21:28,480 --> 00:21:28,490
+doing the actual plus because we know
+为您的数百万用户提供更快的权利
+
+721
+00:21:28,490 --> 00:21:30,399
+doing the actual plus because we know
+this is going to produce an error but we
+所以这是你的 问题 非常好
+
+722
+00:21:30,399 --> 00:21:30,409
+this is going to produce an error but we
+因为它 正是如此
+
+723
+00:21:30,409 --> 00:21:32,919
+this is going to produce an error but we
+shouldn't completely avoid compiling
+权衡权利Mozilla应该感到高兴
+
+724
+00:21:32,919 --> 00:21:32,929
+shouldn't completely avoid compiling
+运行最好的窥视孔优化器
+
+725
+00:21:32,929 --> 00:21:36,840
+shouldn't completely avoid compiling
+this or turn it into a compile error
+在这个世界上，如果能节省我一天的话
+
+726
+00:21:36,840 --> 00:21:36,850
+this or turn it into a compile error
+第二个权利，因为我是数百万之一
+
+727
+00:21:36,850 --> 00:21:39,130
+this or turn it into a compile error
+that might be a design decision we make
+用户可以， 所以让我们看到最后
+
+728
+00:21:39,130 --> 00:21:39,140
+that might be a design decision we make
+我想谈谈的 想法
+
+729
+00:21:39,140 --> 00:21:40,720
+that might be a design decision we make
+about the language to try and report
+今天是我想的 几个
+
+730
+00:21:40,720 --> 00:21:40,730
+about the language to try and report
+房间的不同区域 长大了
+
+731
+00:21:40,730 --> 00:21:42,159
+about the language to try and report
+errors like this and say now the
+周一 我们刚刚说话的时候
+
+732
+00:21:42,159 --> 00:21:42,169
+errors like this and say now the
+有点头脑风暴的改进方法
+
+733
+00:21:42,169 --> 00:21:44,289
+errors like this and say now the
+language is changed and reports these
+改进编译器并且有
+
+734
+00:21:44,289 --> 00:21:44,299
+language is changed and reports these
+事情就像这样， 这是
+
+735
+00:21:44,299 --> 00:21:46,210
+language is changed and reports these
+kinds of errors in the compiler but we
+在例子中出现的东西
+
+736
+00:21:46,210 --> 00:21:46,220
+kinds of errors in the compiler but we
+我是在课堂上画的第一个
+
+737
+00:21:46,220 --> 00:21:48,549
+kinds of errors in the compiler but we
+should not have the optimizer changing
+我们写的程序就是这样的
+
+738
+00:21:48,549 --> 00:21:48,559
+should not have the optimizer changing
+这就像第二周 或者回来的那样
+
+739
+00:21:48,559 --> 00:21:51,010
+should not have the optimizer changing
+the behavior of the program the program
+三 ，你们 很多 人都像乔一样
+
+740
+00:21:51,010 --> 00:21:51,020
+the behavior of the program the program
+我知道这就产生了 八个原因
+
+741
+00:21:51,020 --> 00:21:52,810
+the behavior of the program the program
+used to print something out when it's
+编译二进制权，就像那样
+
+742
+00:21:52,810 --> 00:21:52,820
+used to print something out when it's
+你没有在那里取得多少成就
+
+743
+00:21:52,820 --> 00:21:54,399
+used to print something out when it's
+optimized it should still print the same
+编译该程序然后运行
+
+744
+00:21:54,399 --> 00:21:54,409
+optimized it should still print the same
+并有两个观察使
+
+745
+00:21:54,409 --> 00:21:58,990
+optimized it should still print the same
+thing okay so this overall idea this
+关于这个程序， 一个就是那个
+
+746
+00:21:58,990 --> 00:21:59,000
+thing okay so this overall idea this
+在这里它是一个表达式
+
+747
+00:21:59,000 --> 00:22:01,930
+thing okay so this overall idea this
+overall idea which shows up in our
+添加两个常数，然后是
+
+748
+00:22:01,930 --> 00:22:01,940
+overall idea which shows up in our
+另一个稍微微妙的事情
+
+749
+00:22:01,940 --> 00:22:03,789
+overall idea which shows up in our
+compiler as these detailed pattern
+在这里 这是一个使用
+
+750
+00:22:03,789 --> 00:22:03,799
+compiler as these detailed pattern
+变量，我们知道它的价值，而我
+
+751
+00:22:03,799 --> 00:22:05,560
+compiler as these detailed pattern
+matches and using information from these
+把知识放在引号中因为我们是
+
+752
+00:22:05,560 --> 00:22:05,570
+matches and using information from these
+人们对此做了很多推理
+
+753
+00:22:05,570 --> 00:22:07,510
+matches and using information from these
+detailed pattern matches to make better
+确保我们理解 我们是
+
+754
+00:22:07,510 --> 00:22:07,520
+detailed pattern matches to make better
+添加三分之一，这是不会做的
+
+755
+00:22:07,520 --> 00:22:08,169
+detailed pattern matches to make better
+decisions
+任何像溢出的权利，但X是
+
+756
+00:22:08,169 --> 00:22:08,179
+decisions
+一些变量，我们知道它的价值
+
+757
+00:22:08,179 --> 00:22:10,750
+decisions
+it's called instruction selection and
+将是四个，没有办法
+
+758
+00:22:10,750 --> 00:22:10,760
+it's called instruction selection and
+当我们运行它时，值不会是4
+
+759
+00:22:10,760 --> 00:22:12,549
+it's called instruction selection and
+there's sort of a visual way to think
+程序所以有两个不同的 东西
+
+760
+00:22:12,549 --> 00:22:12,559
+there's sort of a visual way to think
+继续我们在那里使用
+
+761
+00:22:12,559 --> 00:22:14,710
+there's sort of a visual way to think
+about it so if we take one of our if
+聪明人才知道 这一点
+
+762
+00:22:14,710 --> 00:22:14,720
+about it so if we take one of our if
+程序 将 产生这个答案
+
+763
+00:22:14,720 --> 00:22:22,550
+about it so if we take one of our if
+programs from above we can think of the
+实际上有时会发生一件事
+
+764
+
+
+在第一对编程中
+
+765
+00:22:22,560 --> 00:22:28,580
+programs were writing and we've done
+本课程的作业是人
+
+766
+00:22:28,580 --> 00:22:28,590
+programs were writing and we've done
+写的 是复杂的编译器
+
+767
+00:22:28,590 --> 00:22:30,440
+programs were writing and we've done
+this you can think about this for any
+他们这样做是因为他们
+
+768
+00:22:30,440 --> 00:22:30,450
+this you can think about this for any
+可能实现了一个翻译
+
+769
+00:22:30,450 --> 00:22:32,230
+this you can think about this for any
+kind of recursive data structure like
+CS c130 如果他们编译了这个
+
+770
+00:22:32,230 --> 00:22:32,240
+kind of recursive data structure like
+程序让我们只调用这个 程序P.
+
+771
+00:22:32,240 --> 00:22:35,090
+kind of recursive data structure like
+like our abstract syntax trees and we
+目前
+
+772
+00:22:35,090 --> 00:22:35,100
+like our abstract syntax trees and we
+我们编译了P类的意义
+
+773
+00:22:35,100 --> 00:22:36,500
+like our abstract syntax trees and we
+don't usually draw them this way in this
+什么是我们可以做的最好的编译
+
+774
+00:22:36,500 --> 00:22:36,510
+don't usually draw them this way in this
+这个程序很好，如果我们这样会很好
+
+775
+00:22:36,510 --> 00:22:38,180
+don't usually draw them this way in this
+class but it's useful to draw them this
+可以将此程序编译为 移动 EA
+
+776
+00:22:38,180 --> 00:22:38,190
+class but it's useful to draw them this
+x17对，因为 那是
+
+777
+00:22:38,190 --> 00:22:41,960
+class but it's useful to draw them this
+way sometimes so let's just a imagine
+的八表示，这将是
+
+778
+00:22:41,960 --> 00:22:41,970
+way sometimes so let's just a imagine
+很酷， 如果我们编译这个程序的话
+
+779
+00:22:41,970 --> 00:22:45,980
+way sometimes so let's just a imagine
+drawing this if expression out is a tree
+只是把 答案变成了答案
+
+780
+00:22:45,980 --> 00:22:45,990
+drawing this if expression out is a tree
+EAX 还有 竟是 几个你
+
+781
+00:22:45,990 --> 00:22:47,840
+drawing this if expression out is a tree
+so the ifs that we were matching on in
+谁做了这样的事我很善良
+
+782
+00:22:47,840 --> 00:22:47,850
+so the ifs that we were matching on in
+它实际上有点 放慢你的速度
+
+783
+00:22:47,850 --> 00:22:49,850
+so the ifs that we were matching on in
+detail had an if at the root then a
+当你需要解析一个处理时
+
+784
+00:22:49,850 --> 00:22:49,860
+detail had an if at the root then a
+输入，因为你无法处理所有
+
+785
+00:22:49,860 --> 00:22:52,340
+detail had an if at the root then a
+greater than a that's a less than sign
+可能即将来临的未知价值
+
+786
+00:22:52,340 --> 00:22:52,350
+greater than a that's a less than sign
+进入一个程序， 但对于 一个程序
+
+787
+00:22:52,350 --> 00:22:55,280
+greater than a that's a less than sign
+and then a greater than on this side and
+我们实际可以写的所有已知值
+
+788
+00:22:55,280 --> 00:22:55,290
+and then a greater than on this side and
+进入我们的编译器就足够聪明了
+
+789
+00:22:55,290 --> 00:22:57,050
+and then a greater than on this side and
+then there were two expressions and in
+它可以弄清楚这些常数是什么
+
+790
+00:22:57,050 --> 00:22:57,060
+then there were two expressions and in
+应该并生成更好的代码
+
+791
+00:22:57,060 --> 00:22:59,690
+then there were two expressions and in
+Noah's of an an else expression and E 1
+对于其中一些案例和我们的一种方式
+
+792
+00:22:59,690 --> 00:22:59,700
+Noah's of an an else expression and E 1
+能做到这一点 是 我们能做到的
+
+793
+00:22:59,700 --> 00:23:03,560
+Noah's of an an else expression and E 1
+and E 2 and then an else we can think of
+这基于 我们迄今为止所知道的方式
+
+794
+00:23:03,560 --> 00:23:03,570
+and E 2 and then an else we can think of
+可以这么说，也许是绿色的东西
+
+795
+00:23:03,570 --> 00:23:05,240
+and E 2 and then an else we can think of
+as being full sub trees because those
+基于我们目前所知的+1 3
+
+796
+00:23:05,240 --> 00:23:05,250
+as being full sub trees because those
+是啊
+
+797
+00:23:05,250 --> 00:23:11,270
+as being full sub trees because those
+could be whole sub expressions so the
+对，所以一个想法是一个好主意
+
+798
+00:23:11,270 --> 00:23:11,280
+could be whole sub expressions so the
+想做 选择权的 想法
+
+799
+00:23:11,280 --> 00:23:14,210
+could be whole sub expressions so the
+the overall if match right the if match
+我们可以说 用一个 来表达+
+
+800
+00:23:14,210 --> 00:23:14,220
+the overall if match right the if match
+Eden嗯和enum这是一个特殊的
+
+801
+00:23:14,220 --> 00:23:16,730
+the overall if match right the if match
+that matched any possible expression we
+编译权可能 只是添加
+
+802
+00:23:16,730 --> 00:23:16,740
+that matched any possible expression we
+将这 两个数字放在一起 并编译成
+
+803
+00:23:16,740 --> 00:23:19,280
+that matched any possible expression we
+could think of that as just handling
+一个单一的移动指令就是一个
+
+804
+00:23:19,280 --> 00:23:19,290
+could think of that as just handling
+想法但它对 我们 没有帮助
+
+805
+00:23:19,290 --> 00:23:21,740
+could think of that as just handling
+this node of the tree and then it
+这个X变量的其他问题是哪个
+
+806
+00:23:21,740 --> 00:23:21,750
+this node of the tree and then it
+价值我们知道这些事情之一
+
+807
+00:23:21,750 --> 00:23:26,960
+this node of the tree and then it
+handled everything else this entire left
+好像它可能是一个指令
+
+808
+00:23:26,960 --> 00:23:26,970
+handled everything else this entire left
+选择这样的事情， 但 其他
+
+809
+00:23:26,970 --> 00:23:29,540
+handled everything else this entire left
+hand side sub tree and these two sub
+一个看起来不像是一个
+
+810
+00:23:29,540 --> 00:23:29,550
+hand side sub tree and these two sub
+指令选择的东西
+
+811
+00:23:29,550 --> 00:23:33,680
+hand side sub tree and these two sub
+trees separately and then these separate
+特别是如果那个X使用那个X.
+
+812
+00:23:33,680 --> 00:23:33,690
+trees separately and then these separate
+有点远离它的位置
+
+813
+00:23:33,690 --> 00:23:35,330
+trees separately and then these separate
+sub trees would get broken up by other
+定义但这些是相关的想法
+
+814
+00:23:35,330 --> 00:23:35,340
+sub trees would get broken up by other
+因为他们都与价值观有关
+
+815
+00:23:35,340 --> 00:23:37,160
+sub trees would get broken up by other
+naturals that's sort of what our
+我们 我们知道当我们编译
+
+816
+00:23:37,160 --> 00:23:37,170
+naturals that's sort of what our
+程序必须 是我们特定的价值
+
+817
+00:23:37,170 --> 00:23:38,990
+naturals that's sort of what our
+compilers are doing now every time we
+不需要等待并运行程序
+
+818
+00:23:38,990 --> 00:23:39,000
+compilers are doing now every time we
+搞清楚它们是什么值，因此
+
+819
+00:23:39,000 --> 00:23:41,090
+compilers are doing now every time we
+look at this tree we look at one node in
+这里有一个我们可以 使用的想法
+
+820
+00:23:41,090 --> 00:23:41,100
+look at this tree we look at one node in
+而不是写而不是写
+
+821
+00:23:41,100 --> 00:23:43,520
+look at this tree we look at one node in
+the tree figure out what to do with that
+使这部分编译功能
+
+822
+00:23:43,520 --> 00:23:43,530
+the tree figure out what to do with that
+并本着 我们刚刚所做 的精神
+
+823
+00:23:43,530 --> 00:23:45,920
+the tree figure out what to do with that
+one node and then recursively handle all
+对于人们的 优化让我们想象一下
+
+824
+00:23:45,920 --> 00:23:45,930
+one node and then recursively handle all
+函数调用提高表达式
+
+825
+00:23:45,930 --> 00:23:47,840
+one node and then recursively handle all
+the sub trees better there is some
+采取表达并产生一个
+
+826
+00:23:47,840 --> 00:23:47,850
+the sub trees better there is some
+表达式 ， 更好是
+
+827
+00:23:47,850 --> 00:24:06,790
+the sub trees better there is some
+expressions our more detailed match
+较短或较少的子
+
+828
+
+
+表达式或以某种方式减少工作量
+
+829
+00:24:06,800 --> 00:24:11,240
+is picking a larger chunk of the tree at
+让我们想象一下，我们可以写出来
+
+830
+00:24:11,240 --> 00:24:11,250
+is picking a larger chunk of the tree at
+改善表达
+
+831
+00:24:11,250 --> 00:24:15,740
+is picking a larger chunk of the tree at
+a time to handle picking a larger chunk
+这里的第一个案例是 你
+
+832
+00:24:15,740 --> 00:24:15,750
+a time to handle picking a larger chunk
+建议那就像
+
+833
+00:24:15,750 --> 00:24:17,510
+a time to handle picking a larger chunk
+of the tree at a time to handle and you
+指令选择版本
+
+834
+00:24:17,510 --> 00:24:17,520
+of the tree at a time to handle and you
+如果我们想要的话，这是正确的
+
+835
+00:24:17,520 --> 00:24:19,850
+of the tree at a time to handle and you
+can think of everything I did above with
+改进有优势的EEPROM 工具
+
+836
+00:24:19,850 --> 00:24:19,860
+can think of everything I did above with
+第一个位置然后是eID麻木
+
+837
+00:24:19,860 --> 00:24:21,590
+can think of everything I did above with
+the plus expression this matching on the
+和1和E 麻木 - 什么是 更好
+
+838
+00:24:21,590 --> 00:24:21,600
+the plus expression this matching on the
+这个表达式内存的版本应该
+
+839
+00:24:21,600 --> 00:24:24,590
+the plus expression this matching on the
+plus expression to be different parts of
+有一个更好的类型表达式
+
+840
+00:24:24,590 --> 00:24:24,600
+plus expression to be different parts of
+这个表达式 的 版本 更好
+
+841
+00:24:24,600 --> 00:24:26,780
+plus expression to be different parts of
+the expression starting at the root that
+使用的表达式比这个
+
+842
+00:24:26,780 --> 00:24:26,790
+the expression starting at the root that
+我们想要一种更快捷的方式
+
+843
+00:24:26,790 --> 00:24:29,360
+the expression starting at the root that
+are matched and then recursive pieces
+同样的结果是的，所以一个建议
+
+844
+00:24:29,360 --> 00:24:29,370
+are matched and then recursive pieces
+用一些 进入EAX + 1 + + 2
+
+845
+00:24:29,370 --> 00:24:31,669
+are matched and then recursive pieces
+end up getting handled by doing
+字符串字符串填写什么问题
+
+846
+00:24:31,669 --> 00:24:31,679
+end up getting handled by doing
+与这又会有什么问题
+
+847
+00:24:31,679 --> 00:24:36,049
+end up getting handled by doing
+recursive calls so one of the things
+它不是一个坏主意，这有点 的
+
+848
+00:24:36,049 --> 00:24:36,059
+recursive calls so one of the things
+与指令选择相同的想法
+
+849
+00:24:36,059 --> 00:24:38,510
+recursive calls so one of the things
+you'll see in literature on instruction
+想法是啊是啊也许有一些
+
+850
+00:24:38,510 --> 00:24:38,520
+you'll see in literature on instruction
+转向做它是啊
+
+851
+00:24:38,520 --> 00:24:40,850
+you'll see in literature on instruction
+selection and I'm going to not go too in
+溢出还有其他什么东西
+
+852
+00:24:40,850 --> 00:24:40,860
+selection and I'm going to not go too in
+还有更多的东西
+
+853
+00:24:40,860 --> 00:24:42,470
+selection and I'm going to not go too in
+depth into this I want to point out to
+关于我如何决定写这个
+
+854
+00:24:42,470 --> 00:24:42,480
+depth into this I want to point out to
+改善表达功能我应该
+
+855
+00:24:42,480 --> 00:24:44,720
+depth into this I want to point out to
+you that this exists but we have finite
+打扰你，是的，是的，我们
+
+856
+00:24:44,720 --> 00:24:44,730
+you that this exists but we have finite
+只是想要返回一个表达式
+
+857
+00:24:44,730 --> 00:24:49,160
+you that this exists but we have finite
+time in 131 1 this picture gets at this
+如果我们开始把它变成
+
+858
+00:24:49,160 --> 00:24:49,170
+time in 131 1 this picture gets at this
+说明就像是一个
+
+859
+00:24:49,170 --> 00:24:53,090
+time in 131 1 this picture gets at this
+idea in instruction selection that what
+没有骆驼级别的类型错误，所以我得到了
+
+860
+00:24:53,090 --> 00:24:53,100
+idea in instruction selection that what
+这个想法与这个想法不同
+
+861
+00:24:53,100 --> 00:24:55,400
+idea in instruction selection that what
+we are doing and I'm going to just move
+根据这个选择说明
+
+862
+00:24:55,400 --> 00:24:55,410
+we are doing and I'm going to just move
+想要一个我想要的东西
+
+863
+00:24:55,410 --> 00:24:57,560
+we are doing and I'm going to just move
+this example down so I can get this
+类型表达式是+ 1 + +的枚举
+
+864
+00:24:57,560 --> 00:24:57,570
+this example down so I can get this
+那是非常有趣的
+
+865
+00:24:57,570 --> 00:24:59,810
+this example down so I can get this
+picture next to this picture what we are
+非常有趣 我可以参加
+
+866
+00:24:59,810 --> 00:24:59,820
+picture next to this picture what we are
+表达，你知道我们会做一些
+
+867
+00:24:59,820 --> 00:25:02,750
+picture next to this picture what we are
+doing when we select instructions is we
+我们会做通常的递归事情
+
+868
+00:25:02,750 --> 00:25:02,760
+doing when we select instructions is we
+表达所以我们会找到任何子
+
+869
+00:25:02,760 --> 00:25:05,240
+doing when we select instructions is we
+have some tree that represents our
+其他匹配案例中的表达式
+
+870
+00:25:05,240 --> 00:25:05,250
+have some tree that represents our
+但如果我们找到的东西 ，这是一个
+
+871
+00:25:05,250 --> 00:25:12,320
+have some tree that represents our
+program and we've got all of these
+原始的，它是 两个加号
+
+872
+00:25:12,320 --> 00:25:12,330
+program and we've got all of these
+数字， 我们可以取代它
+
+873
+00:25:12,330 --> 00:25:13,700
+program and we've got all of these
+different ways and I'm just going to
+表达式的数字是
+
+874
+00:25:13,700 --> 00:25:13,710
+different ways and I'm just going to
+另外的那 两个东西 ，你只是
+
+875
+00:25:13,710 --> 00:25:15,290
+different ways and I'm just going to
+draw them as these abstract shapes off
+替换 它
+
+876
+00:25:15,290 --> 00:25:15,300
+draw them as these abstract shapes off
+我们不得不担心一些
+
+877
+00:25:15,300 --> 00:25:19,700
+draw them as these abstract shapes off
+to the side to compile subsets of nodes
+溢出，我们可能需要 把它变成
+
+878
+00:25:19,700 --> 00:25:19,710
+to the side to compile subsets of nodes
+表达式 抛出的东西
+
+879
+00:25:19,710 --> 00:25:21,620
+to the side to compile subsets of nodes
+in the tree into useful assembly
+溢出错误， 如果它们溢出 但是
+
+880
+00:25:21,620 --> 00:25:21,630
+in the tree into useful assembly
+如果他们不溢出这 是
+
+881
+00:25:21,630 --> 00:25:23,419
+in the tree into useful assembly
+instructions into useful target machine
+肯定会产生 相同的
+
+882
+00:25:23,419 --> 00:25:23,429
+instructions into useful target machine
+回答这很有意思
+
+883
+00:25:23,429 --> 00:25:26,240
+instructions into useful target machine
+instructions and what our compiler is
+非常有趣的有啥这个
+
+884
+00:25:26,240 --> 00:25:26,250
+instructions and what our compiler is
+另一个案例我们谈过这个案子
+
+885
+00:25:26,250 --> 00:25:28,040
+instructions and what our compiler is
+trying to do one way to view what our
+我将要 做到这一点
+
+886
+00:25:28,040 --> 00:25:28,050
+trying to do one way to view what our
+稍微简单的情况只是为了我要去
+
+887
+00:25:28,050 --> 00:25:32,470
+trying to do one way to view what our
+compilers job is is to find a complete
+想象一下，有一个数字
+
+888
+00:25:32,470 --> 00:25:32,480
+compilers job is is to find a complete
+不是没有一些复合表达
+
+889
+00:25:32,480 --> 00:25:35,450
+compilers job is is to find a complete
+covering tiling of this tree with
+但左边的数字让绑定
+
+890
+00:25:35,450 --> 00:25:35,460
+covering tiling of this tree with
+我们如何改善这一点
+
+891
+00:25:35,460 --> 00:25:36,980
+covering tiling of this tree with
+different ways we know how to compile
+表达我们怎样才能 改善这一点
+
+892
+00:25:36,980 --> 00:25:36,990
+different ways we know how to compile
+表达我们知道有一个数字
+
+893
+00:25:36,990 --> 00:25:40,400
+different ways we know how to compile
+notes so there might be one tiling that
+有没有 X，我们可以做，使该
+
+894
+00:25:40,400 --> 00:25:40,410
+notes so there might be one tiling that
+更好
+
+895
+00:25:40,410 --> 00:25:44,169
+notes so there might be one tiling that
+involves grabbing these with this color
+是啊
+
+896
+00:25:44,169 --> 00:25:44,179
+involves grabbing these with this color
+所以建议是，我们必须
+
+897
+00:25:44,179 --> 00:25:47,690
+involves grabbing these with this color
+grabbing these with this color grabbing
+想到类型是有意义的让我们
+
+898
+00:25:47,690 --> 00:25:47,700
+grabbing these with this color grabbing
+想象一下，我们有一些 你想要的 帮手
+
+899
+00:25:47,700 --> 00:25:49,970
+grabbing these with this color grabbing
+these with this color and then these
+用枚举替换X的所有实例
+
+900
+00:25:49,970 --> 00:25:49,980
+these with this color and then these
+的 在主体N， 其中替换将要
+
+901
+00:25:49,980 --> 00:25:52,580
+these with this color and then these
+down here that might be one possible way
+必须是我们的其他一些辅助功能
+
+902
+00:25:52,580 --> 00:25:52,590
+down here that might be one possible way
+对
+
+903
+00:25:52,590 --> 00:25:56,210
+down here that might be one possible way
+to think about tiling this entire tree
+那很有意思
+
+904
+00:25:56,210 --> 00:25:56,220
+to think about tiling this entire tree
+因此这表明 ， 也许我们有这个
+
+905
+00:25:56,220 --> 00:25:58,820
+to think about tiling this entire tree
+with ways we know to turn nodes into
+我们可以做的其他改造
+
+906
+00:25:58,820 --> 00:25:58,830
+with ways we know to turn nodes into
+表达式，如果我们知道a
+
+907
+00:25:58,830 --> 00:26:02,210
+with ways we know to turn nodes into
+instructions and if you squint at our
+特定的标识符总是如此
+
+908
+00:26:02,210 --> 00:26:02,220
+instructions and if you squint at our
+被绑定到我们可以相同的价值
+
+909
+00:26:02,220 --> 00:26:03,680
+instructions and if you squint at our
+pattern matches you could imagine that
+到处替换它的 价值
+
+910
+00:26:03,680 --> 00:26:03,690
+pattern matches you could imagine that
+我们不再需要那个了
+
+911
+00:26:03,690 --> 00:26:07,130
+pattern matches you could imagine that
+the the purple region here and the red
+变量 在 咱们的工作是
+
+912
+00:26:07,130 --> 00:26:07,140
+the the purple region here and the red
+有价值的地方生活
+
+913
+00:26:07,140 --> 00:26:10,460
+the the purple region here and the red
+region here our nested matches where we
+在我们评估之后我们可以看一下
+
+914
+00:26:10,460 --> 00:26:10,470
+region here our nested matches where we
+它多次，但 如果我们知道什么
+
+915
+00:26:10,470 --> 00:26:12,280
+region here our nested matches where we
+matched on more information and then
+这 是没有理由 去的
+
+916
+00:26:12,280 --> 00:26:12,290
+matched on more information and then
+存储它并查找多个
+
+917
+00:26:12,290 --> 00:26:14,710
+matched on more information and then
+the bottom most leaf nodes are things
+当我们得到时 ，我们只是使用那个值
+
+918
+00:26:14,710 --> 00:26:14,720
+the bottom most leaf nodes are things
+如果我们可以取代所有的
+
+919
+00:26:14,720 --> 00:26:16,510
+the bottom most leaf nodes are things
+like numbers and boolean's that we just
+Eid X在体内的实例
+
+920
+00:26:16,510 --> 00:26:16,520
+like numbers and boolean's that we just
+然后 我们得到 那个 数字表达式
+
+921
+00:26:16,520 --> 00:26:20,500
+like numbers and boolean's that we just
+compile very directly and the strategy
+节省 查找 该变量的时间
+
+922
+00:26:20,500 --> 00:26:20,510
+compile very directly and the strategy
+每次遇到它我们永远不会
+
+923
+00:26:20,510 --> 00:26:23,110
+compile very directly and the strategy
+we have implemented in our compiler is a
+必须将变量存储在第一个中
+
+924
+00:26:23,110 --> 00:26:23,120
+we have implemented in our compiler is a
+地点
+
+925
+00:26:23,120 --> 00:26:25,570
+we have implemented in our compiler is a
+greedy strategy that starts from the
+所以只是给出这些的定义
+
+926
+00:26:25,570 --> 00:26:25,580
+greedy strategy that starts from the
+事我想我会谈 一 点点
+
+927
+00:26:25,580 --> 00:26:29,800
+greedy strategy that starts from the
+root what our compiler does is greedily
+这个案子 周五 更多关于他们
+
+928
+00:26:29,800 --> 00:26:29,810
+root what our compiler does is greedily
+所谓主要所以如果你想看看
+
+929
+00:26:29,810 --> 00:26:31,570
+root what our compiler does is greedily
+matches things starting from the root
+他们这种情况称为常数
+
+930
+00:26:31,570 --> 00:26:31,580
+matches things starting from the root
+传播你采取常数和移动
+
+931
+00:26:31,580 --> 00:26:33,760
+matches things starting from the root
+picking picking what it can find from
+他们到了
+
+932
+00:26:33,760 --> 00:26:33,770
+picking picking what it can find from

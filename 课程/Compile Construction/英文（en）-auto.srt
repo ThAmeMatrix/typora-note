@@ -1,0 +1,9161 @@
+1
+00:01:02,960 --> 00:01:07,310
+ok let's get started so the theme of
+
+2
+00:01:07,310 --> 00:01:07,320
+ok let's get started so the theme of
+ 
+
+3
+00:01:07,320 --> 00:01:09,520
+ok let's get started so the theme of
+this week is talking about optimizing
+
+4
+00:01:09,520 --> 00:01:09,530
+this week is talking about optimizing
+ 
+
+5
+00:01:09,530 --> 00:01:12,500
+this week is talking about optimizing
+the assembly output we create so can we
+
+6
+00:01:12,500 --> 00:01:12,510
+the assembly output we create so can we
+ 
+
+7
+00:01:12,510 --> 00:01:15,650
+the assembly output we create so can we
+take these programs that we have as
+
+8
+00:01:15,650 --> 00:01:15,660
+take these programs that we have as
+ 
+
+9
+00:01:15,660 --> 00:01:19,100
+take these programs that we have as
+input and on their way to the resulting
+
+10
+00:01:19,100 --> 00:01:19,110
+input and on their way to the resulting
+ 
+
+11
+00:01:19,110 --> 00:01:22,190
+input and on their way to the resulting
+assembly can we do intelligent things to
+
+12
+00:01:22,190 --> 00:01:22,200
+assembly can we do intelligent things to
+ 
+
+13
+00:01:22,200 --> 00:01:24,620
+assembly can we do intelligent things to
+avoid either generating so many
+
+14
+00:01:24,620 --> 00:01:24,630
+avoid either generating so many
+
+15
+00:01:24,630 --> 00:01:27,560
+avoid either generating so many
+instructions or can we generate smarter
+
+16
+00:01:27,560 --> 00:01:27,570
+instructions or can we generate smarter
+
+17
+00:01:27,570 --> 00:01:30,109
+instructions or can we generate smarter
+instructions use less memory all these
+
+18
+00:01:30,109 --> 00:01:30,119
+instructions use less memory all these
+ 
+
+19
+00:01:30,119 --> 00:01:33,590
+instructions use less memory all these
+kinds of things and so today I want to
+
+20
+00:01:33,590 --> 00:01:33,600
+kinds of things and so today I want to
+ 
+
+21
+00:01:33,600 --> 00:01:37,310
+kinds of things and so today I want to
+talk about three ideas there's sort of
+
+22
+00:01:37,310 --> 00:01:37,320
+talk about three ideas there's sort of
+ 
+
+23
+00:01:37,320 --> 00:01:39,410
+talk about three ideas there's sort of
+three different ideas that fall into
+
+24
+00:01:39,410 --> 00:01:39,420
+three different ideas that fall into
+ 
+
+25
+00:01:39,420 --> 00:01:43,190
+three different ideas that fall into
+three different categories of compiler
+
+26
+00:01:43,190 --> 00:01:43,200
+three different categories of compiler
+ 
+
+27
+00:01:43,200 --> 00:01:48,590
+three different categories of compiler
+optimization there are three sort of
+
+28
+00:01:48,590 --> 00:01:48,600
+optimization there are three sort of
+ 
+
+29
+00:01:48,600 --> 00:01:52,310
+optimization there are three sort of
+little ideas on the surface that if you
+
+30
+00:01:52,310 --> 00:01:52,320
+little ideas on the surface that if you
+ 
+
+31
+00:01:52,320 --> 00:01:53,990
+little ideas on the surface that if you
+wanted to put in lots of detailed work
+
+32
+00:01:53,990 --> 00:01:54,000
+wanted to put in lots of detailed work
+ 
+
+33
+00:01:54,000 --> 00:01:58,460
+wanted to put in lots of detailed work
+or write the GCC team wanted to put in
+
+34
+00:01:58,460 --> 00:01:58,470
+or write the GCC team wanted to put in
+ 
+
+35
+00:01:58,470 --> 00:02:01,070
+or write the GCC team wanted to put in
+years of detailed work you can see a
+
+36
+00:02:01,070 --> 00:02:01,080
+years of detailed work you can see a
+ 
+
+37
+00:02:01,080 --> 00:02:04,010
+years of detailed work you can see a
+trajectory spanning out of how you'd put
+
+38
+00:02:04,010 --> 00:02:04,020
+trajectory spanning out of how you'd put
+
+39
+00:02:04,020 --> 00:02:06,139
+trajectory spanning out of how you'd put
+more and more effort into this thing to
+
+40
+00:02:06,139 --> 00:02:06,149
+more and more effort into this thing to
+ 
+
+41
+00:02:06,149 --> 00:02:09,889
+more and more effort into this thing to
+make things really really good in 131 we
+
+42
+00:02:09,889 --> 00:02:09,899
+make things really really good in 131 we
+ 
+
+43
+00:02:09,899 --> 00:02:12,890
+make things really really good in 131 we
+don't have hundreds of thousands of men
+
+44
+00:02:12,890 --> 00:02:12,900
+don't have hundreds of thousands of men
+ 
+
+45
+00:02:12,900 --> 00:02:14,780
+don't have hundreds of thousands of men
+and women hours to put into our
+
+46
+00:02:14,780 --> 00:02:14,790
+and women hours to put into our
+ 
+
+47
+00:02:14,790 --> 00:02:16,850
+and women hours to put into our
+compilers that's what goes into a
+
+48
+00:02:16,850 --> 00:02:16,860
+compilers that's what goes into a
+
+49
+00:02:16,860 --> 00:02:20,360
+compilers that's what goes into a
+compiler like GCC it has lots of
+
+50
+00:02:20,360 --> 00:02:20,370
+compiler like GCC it has lots of
+ 
+
+51
+00:02:20,370 --> 00:02:22,490
+compiler like GCC it has lots of
+thinking about many many different cases
+
+52
+00:02:22,490 --> 00:02:22,500
+thinking about many many different cases
+ 
+
+53
+00:02:22,500 --> 00:02:24,170
+thinking about many many different cases
+so we're going to talk about some
+
+54
+00:02:24,170 --> 00:02:24,180
+so we're going to talk about some
+ 
+
+55
+00:02:24,180 --> 00:02:27,380
+so we're going to talk about some
+interesting cases today across a few
+
+56
+00:02:27,380 --> 00:02:27,390
+interesting cases today across a few
+ 
+
+57
+00:02:27,390 --> 00:02:28,960
+interesting cases today across a few
+different kinds of compiler
+
+58
+00:02:28,960 --> 00:02:28,970
+different kinds of compiler
+ 
+
+59
+00:02:28,970 --> 00:02:31,490
+different kinds of compiler
+optimizations we might try and these are
+
+60
+00:02:31,490 --> 00:02:31,500
+optimizations we might try and these are
+
+61
+00:02:31,500 --> 00:02:34,059
+optimizations we might try and these are
+actually quite similar to things that
+
+62
+00:02:34,059 --> 00:02:34,069
+actually quite similar to things that
+ 
+
+63
+00:02:34,069 --> 00:02:36,620
+actually quite similar to things that
+GCC does but one of the first things
+
+64
+00:02:36,620 --> 00:02:36,630
+GCC does but one of the first things
+ 
+
+65
+00:02:36,630 --> 00:02:37,729
+GCC does but one of the first things
+we're going to talk about actually the
+
+66
+00:02:37,729 --> 00:02:37,739
+we're going to talk about actually the
+ 
+
+67
+00:02:37,739 --> 00:02:39,740
+we're going to talk about actually the
+first two things are things that GCC
+
+68
+00:02:39,740 --> 00:02:39,750
+first two things are things that GCC
+ 
+
+69
+00:02:39,750 --> 00:02:43,010
+first two things are things that GCC
+does in particular so what I have on the
+
+70
+00:02:43,010 --> 00:02:43,020
+does in particular so what I have on the
+ 
+
+71
+00:02:43,020 --> 00:02:46,089
+does in particular so what I have on the
+screen here is on the left-hand side I
+
+72
+00:02:46,089 --> 00:02:46,099
+screen here is on the left-hand side I
+ 
+
+73
+00:02:46,099 --> 00:02:49,250
+screen here is on the left-hand side I
+just copied the code that we have in our
+
+74
+00:02:49,250 --> 00:02:49,260
+just copied the code that we have in our
+ 
+
+75
+00:02:49,260 --> 00:02:52,970
+just copied the code that we have in our
+reference implementation for ii-if from
+
+76
+00:02:52,970 --> 00:02:52,980
+reference implementation for ii-if from
+ 
+
+77
+00:02:52,980 --> 00:02:58,150
+reference implementation for ii-if from
+like cobra and Diamondback and it's
+
+78
+00:02:58,150 --> 00:02:58,160
+like cobra and Diamondback and it's
+ 
+
+79
+00:02:58,160 --> 00:03:01,910
+like cobra and Diamondback and it's
+doing what if needs to do it compiles
+
+80
+00:03:01,910 --> 00:03:01,920
+doing what if needs to do it compiles
+
+81
+00:03:01,920 --> 00:03:04,699
+doing what if needs to do it compiles
+the conditional expression here called
+
+82
+00:03:04,699 --> 00:03:04,709
+the conditional expression here called
+ 
+
+83
+00:03:04,709 --> 00:03:07,430
+the conditional expression here called
+if exper checks if it's a boolean
+
+84
+00:03:07,430 --> 00:03:07,440
+if exper checks if it's a boolean
+ 
+
+85
+00:03:07,440 --> 00:03:09,180
+if exper checks if it's a boolean
+because in our
+
+86
+00:03:09,180 --> 00:03:09,190
+because in our
+ 
+
+87
+00:03:09,190 --> 00:03:11,100
+because in our
+our language we care about these being
+
+88
+00:03:11,100 --> 00:03:11,110
+our language we care about these being
+ 
+
+89
+00:03:11,110 --> 00:03:13,830
+our language we care about these being
+bully ins and then it has the code for
+
+90
+00:03:13,830 --> 00:03:13,840
+bully ins and then it has the code for
+ 
+
+91
+00:03:13,840 --> 00:03:15,330
+bully ins and then it has the code for
+the then branch and the code for the
+
+92
+00:03:15,330 --> 00:03:15,340
+the then branch and the code for the
+ 
+
+93
+00:03:15,340 --> 00:03:16,680
+the then branch and the code for the
+else branch and it checks for trueness
+
+94
+00:03:16,680 --> 00:03:16,690
+else branch and it checks for trueness
+ 
+
+95
+00:03:16,690 --> 00:03:20,520
+else branch and it checks for trueness
+too so what I have on the right-hand
+
+96
+00:03:20,520 --> 00:03:20,530
+too so what I have on the right-hand
+ 
+
+97
+00:03:20,530 --> 00:03:25,340
+too so what I have on the right-hand
+side is a more detailed pattern match on
+
+98
+00:03:25,340 --> 00:03:25,350
+side is a more detailed pattern match on
+ 
+
+99
+00:03:25,350 --> 00:03:29,810
+side is a more detailed pattern match on
+e if then is on the left-hand side a
+
+100
+00:03:29,810 --> 00:03:29,820
+e if then is on the left-hand side a
+ 
+
+101
+00:03:29,820 --> 00:03:34,230
+e if then is on the left-hand side a
+more detailed pattern match than what's
+
+102
+00:03:34,230 --> 00:03:34,240
+more detailed pattern match than what's
+ 
+
+103
+00:03:34,240 --> 00:03:37,200
+more detailed pattern match than what's
+on the left-hand side so this left hand
+
+104
+00:03:37,200 --> 00:03:37,210
+on the left-hand side so this left hand
+ 
+
+105
+00:03:37,210 --> 00:03:40,110
+on the left-hand side so this left hand
+side match will match programs that look
+
+106
+00:03:40,110 --> 00:03:40,120
+side match will match programs that look
+ 
+
+107
+00:03:40,120 --> 00:03:45,420
+side match will match programs that look
+like if X then some II 1 LC 2 they'll
+
+108
+00:03:45,420 --> 00:03:45,430
+like if X then some II 1 LC 2 they'll
+ 
+
+109
+00:03:45,430 --> 00:03:49,530
+like if X then some II 1 LC 2 they'll
+match things that look like if some
+
+110
+00:03:49,530 --> 00:03:49,540
+match things that look like if some
+ 
+
+111
+00:03:49,540 --> 00:03:53,940
+match things that look like if some
+function call on some value so match any
+
+112
+00:03:53,940 --> 00:03:53,950
+function call on some value so match any
+ 
+
+113
+00:03:53,950 --> 00:03:55,860
+function call on some value so match any
+possible if expression that we could
+
+114
+00:03:55,860 --> 00:03:55,870
+possible if expression that we could
+ 
+
+115
+00:03:55,870 --> 00:03:58,080
+possible if expression that we could
+write an e if expression you write if
+
+116
+00:03:58,080 --> 00:03:58,090
+write an e if expression you write if
+ 
+
+117
+00:03:58,090 --> 00:03:59,940
+write an e if expression you write if
+you parse it turn it into the abstract
+
+118
+00:03:59,940 --> 00:03:59,950
+you parse it turn it into the abstract
+ 
+
+119
+00:03:59,950 --> 00:04:01,770
+you parse it turn it into the abstract
+syntax and match it against that case
+
+120
+00:04:01,770 --> 00:04:01,780
+syntax and match it against that case
+ 
+
+121
+00:04:01,780 --> 00:04:04,440
+syntax and match it against that case
+it'll match and that's what will compile
+
+122
+00:04:04,440 --> 00:04:04,450
+it'll match and that's what will compile
+ 
+
+123
+00:04:04,450 --> 00:04:07,530
+it'll match and that's what will compile
+for it this right hand case is only
+
+124
+00:04:07,530 --> 00:04:07,540
+for it this right hand case is only
+ 
+
+125
+00:04:07,540 --> 00:04:11,670
+for it this right hand case is only
+going to match if expressions that look
+
+126
+00:04:11,670 --> 00:04:11,680
+going to match if expressions that look
+ 
+
+127
+00:04:11,680 --> 00:04:21,780
+going to match if expressions that look
+like keep the names the same here with
+
+128
+00:04:21,780 --> 00:04:21,790
+like keep the names the same here with
+ 
+
+129
+00:04:21,790 --> 00:04:23,550
+like keep the names the same here with
+some expression and then in else
+
+130
+00:04:23,550 --> 00:04:23,560
+some expression and then in else
+ 
+
+131
+00:04:23,560 --> 00:04:25,470
+some expression and then in else
+possession it's only going to match
+
+132
+00:04:25,470 --> 00:04:25,480
+possession it's only going to match
+ 
+
+133
+00:04:25,480 --> 00:04:28,140
+possession it's only going to match
+things whoops a greater not less it's
+
+134
+00:04:28,140 --> 00:04:28,150
+things whoops a greater not less it's
+ 
+
+135
+00:04:28,150 --> 00:04:30,450
+things whoops a greater not less it's
+only going to match things where the
+
+136
+00:04:30,450 --> 00:04:30,460
+only going to match things where the
+ 
+
+137
+00:04:30,460 --> 00:04:32,190
+only going to match things where the
+thing in conditional position has a
+
+138
+00:04:32,190 --> 00:04:32,200
+thing in conditional position has a
+
+139
+00:04:32,200 --> 00:04:36,600
+thing in conditional position has a
+greater than sign first question can you
+
+140
+00:04:36,600 --> 00:04:36,610
+greater than sign first question can you
+ 
+
+141
+00:04:36,610 --> 00:04:41,550
+greater than sign first question can you
+talk about what might be something we
+
+142
+00:04:41,550 --> 00:04:41,560
+talk about what might be something we
+ 
+
+143
+00:04:41,560 --> 00:04:43,740
+talk about what might be something we
+could do better if we knew we were
+
+144
+00:04:43,740 --> 00:04:43,750
+could do better if we knew we were
+ 
+
+145
+00:04:43,750 --> 00:04:46,080
+could do better if we knew we were
+matching against this case if we knew
+
+146
+00:04:46,080 --> 00:04:46,090
+matching against this case if we knew
+ 
+
+147
+00:04:46,090 --> 00:04:47,970
+matching against this case if we knew
+that we were only matching ifs against
+
+148
+00:04:47,970 --> 00:04:47,980
+that we were only matching ifs against
+ 
+
+149
+00:04:47,980 --> 00:04:49,050
+that we were only matching ifs against
+this case where we had a greater than
+
+150
+00:04:49,050 --> 00:04:49,060
+this case where we had a greater than
+ 
+
+151
+00:04:49,060 --> 00:04:52,410
+this case where we had a greater than
+what could we do better what could we do
+
+152
+00:04:52,410 --> 00:04:52,420
+what could we do better what could we do
+ 
+
+153
+00:04:52,420 --> 00:04:53,820
+what could we do better what could we do
+that would be smarter than the
+
+154
+00:04:53,820 --> 00:04:53,830
+that would be smarter than the
+ 
+
+155
+00:04:53,830 --> 00:04:55,560
+that would be smarter than the
+instructions we're generating for if in
+
+156
+00:04:55,560 --> 00:04:55,570
+instructions we're generating for if in
+ 
+
+157
+00:04:55,570 --> 00:04:57,780
+instructions we're generating for if in
+all the generic cases like what this
+
+158
+00:04:57,780 --> 00:04:57,790
+all the generic cases like what this
+ 
+
+159
+00:04:57,790 --> 00:05:00,600
+all the generic cases like what this
+just for 30 seconds or so what could we
+
+160
+00:05:00,600 --> 00:05:00,610
+just for 30 seconds or so what could we
+ 
+
+161
+00:05:00,610 --> 00:05:01,740
+just for 30 seconds or so what could we
+do that would be smarter on the
+
+162
+00:05:01,740 --> 00:05:01,750
+do that would be smarter on the
+ 
+
+163
+00:05:01,750 --> 00:05:40,030
+do that would be smarter on the
+right-hand side
+
+164
+00:05:40,030 --> 00:05:40,040
+
+
+165
+00:05:40,040 --> 00:05:43,180
+there's no talking talk about it talk
+
+166
+00:05:43,180 --> 00:05:43,190
+there's no talking talk about it talk
+ 
+
+167
+00:05:43,190 --> 00:06:31,290
+there's no talking talk about it talk
+about it talk about it talk talk
+
+168
+00:06:31,290 --> 00:06:31,300
+
+
+169
+00:06:31,300 --> 00:06:34,050
+okay ideas there's a few different ideas
+
+170
+00:06:34,050 --> 00:06:34,060
+okay ideas there's a few different ideas
+ 
+
+171
+00:06:34,060 --> 00:06:37,650
+okay ideas there's a few different ideas
+in this space but ideas ideas if we have
+
+172
+00:06:37,650 --> 00:06:37,660
+in this space but ideas ideas if we have
+ 
+
+173
+00:06:37,660 --> 00:06:39,690
+in this space but ideas ideas if we have
+this extra information what can we maybe
+
+174
+00:06:39,690 --> 00:06:39,700
+this extra information what can we maybe
+ 
+
+175
+00:06:39,700 --> 00:06:49,770
+this extra information what can we maybe
+do better what are some ideas I see
+
+176
+00:06:49,770 --> 00:06:49,780
+do better what are some ideas I see
+ 
+
+177
+00:06:49,780 --> 00:07:03,600
+do better what are some ideas I see
+nodding idea if oh so you're saying if
+
+178
+00:07:03,600 --> 00:07:03,610
+nodding idea if oh so you're saying if
+ 
+
+179
+00:07:03,610 --> 00:07:05,610
+nodding idea if oh so you're saying if
+we know something about a 1 and a 2 so
+
+180
+00:07:05,610 --> 00:07:05,620
+we know something about a 1 and a 2 so
+ 
+
+181
+00:07:05,620 --> 00:07:07,170
+we know something about a 1 and a 2 so
+let's imagine let's get even more
+
+182
+00:07:07,170 --> 00:07:07,180
+let's imagine let's get even more
+ 
+
+183
+00:07:07,180 --> 00:07:11,190
+let's imagine let's get even more
+specific right you're saying another
+
+184
+00:07:11,190 --> 00:07:11,200
+specific right you're saying another
+ 
+
+185
+00:07:11,200 --> 00:07:12,780
+specific right you're saying another
+idea so I'm just gonna put a dotted line
+
+186
+00:07:12,780 --> 00:07:12,790
+idea so I'm just gonna put a dotted line
+ 
+
+187
+00:07:12,790 --> 00:07:14,040
+idea so I'm just gonna put a dotted line
+here so we know that we're talking about
+
+188
+00:07:14,040 --> 00:07:14,050
+here so we know that we're talking about
+ 
+
+189
+00:07:14,050 --> 00:07:16,800
+here so we know that we're talking about
+something more specific but if we wanted
+
+190
+00:07:16,800 --> 00:07:16,810
+something more specific but if we wanted
+ 
+
+191
+00:07:16,810 --> 00:07:19,050
+something more specific but if we wanted
+to talk about things where one or more
+
+192
+00:07:19,050 --> 00:07:19,060
+to talk about things where one or more
+ 
+
+193
+00:07:19,060 --> 00:07:24,780
+to talk about things where one or more
+of these was numbers then in this case
+
+194
+00:07:24,780 --> 00:07:24,790
+of these was numbers then in this case
+ 
+
+195
+00:07:24,790 --> 00:07:27,060
+of these was numbers then in this case
+in this case we could say well we're
+
+196
+00:07:27,060 --> 00:07:27,070
+in this case we could say well we're
+ 
+
+197
+00:07:27,070 --> 00:07:28,590
+in this case we could say well we're
+definitely just need the instructions
+
+198
+00:07:28,590 --> 00:07:28,600
+definitely just need the instructions
+ 
+
+199
+00:07:28,600 --> 00:07:30,510
+definitely just need the instructions
+for the else branch because this is
+
+200
+00:07:30,510 --> 00:07:30,520
+for the else branch because this is
+ 
+
+201
+00:07:30,520 --> 00:07:33,000
+for the else branch because this is
+always gonna evaluate to false right
+
+202
+00:07:33,000 --> 00:07:33,010
+always gonna evaluate to false right
+ 
+
+203
+00:07:33,010 --> 00:07:34,140
+always gonna evaluate to false right
+that's what you're getting at right
+
+204
+00:07:34,140 --> 00:07:34,150
+that's what you're getting at right
+ 
+
+205
+00:07:34,150 --> 00:07:36,180
+that's what you're getting at right
+right so if we knew even more right
+
+206
+00:07:36,180 --> 00:07:36,190
+right so if we knew even more right
+ 
+
+207
+00:07:36,190 --> 00:07:37,620
+right so if we knew even more right
+there's a more detailed match I could
+
+208
+00:07:37,620 --> 00:07:37,630
+there's a more detailed match I could
+
+209
+00:07:37,630 --> 00:07:40,560
+there's a more detailed match I could
+write where instead of having a e1 and
+
+210
+00:07:40,560 --> 00:07:40,570
+write where instead of having a e1 and
+ 
+
+211
+00:07:40,570 --> 00:07:42,560
+write where instead of having a e1 and
+e2 here I could write something like
+
+212
+00:07:42,560 --> 00:07:42,570
+e2 here I could write something like
+ 
+
+213
+00:07:42,570 --> 00:07:45,690
+e2 here I could write something like
+what if these are both numbers right
+
+214
+00:07:45,690 --> 00:07:45,700
+what if these are both numbers right
+ 
+
+215
+00:07:45,700 --> 00:07:49,560
+what if these are both numbers right
+that's an idea it's a cool idea that we
+
+216
+00:07:49,560 --> 00:07:49,570
+that's an idea it's a cool idea that we
+ 
+
+217
+00:07:49,570 --> 00:07:51,960
+that's an idea it's a cool idea that we
+might use actually gonna use the idea
+
+218
+00:07:51,960 --> 00:07:51,970
+might use actually gonna use the idea
+ 
+
+219
+00:07:51,970 --> 00:07:53,970
+might use actually gonna use the idea
+related to that later in a later in the
+
+220
+00:07:53,970 --> 00:07:53,980
+related to that later in a later in the
+ 
+
+221
+00:07:53,980 --> 00:07:55,950
+related to that later in a later in the
+lecture but what about if we don't know
+
+222
+00:07:55,950 --> 00:07:55,960
+lecture but what about if we don't know
+ 
+
+223
+00:07:55,960 --> 00:07:58,170
+lecture but what about if we don't know
+anything more still about a 1 in E -
+
+224
+00:07:58,170 --> 00:07:58,180
+anything more still about a 1 in E -
+ 
+
+225
+00:07:58,180 --> 00:08:02,520
+anything more still about a 1 in E -
+yeah can save a boolean check Y please
+
+226
+00:08:02,520 --> 00:08:02,530
+yeah can save a boolean check Y please
+ 
+
+227
+00:08:02,530 --> 00:08:04,530
+yeah can save a boolean check Y please
+can we save a boolean check ok maybe we
+
+228
+00:08:04,530 --> 00:08:04,540
+can we save a boolean check ok maybe we
+ 
+
+229
+00:08:04,540 --> 00:08:07,140
+can we save a boolean check ok maybe we
+can save a boolean check other ideas
+
+230
+00:08:07,140 --> 00:08:07,150
+can save a boolean check other ideas
+ 
+
+231
+00:08:07,150 --> 00:08:11,730
+can save a boolean check other ideas
+what's that also potentially save a
+
+232
+00:08:11,730 --> 00:08:11,740
+what's that also potentially save a
+ 
+
+233
+00:08:11,740 --> 00:08:14,220
+what's that also potentially save a
+branch also potentially save a branch so
+
+234
+00:08:14,220 --> 00:08:14,230
+branch also potentially save a branch so
+ 
+
+235
+00:08:14,230 --> 00:08:15,960
+branch also potentially save a branch so
+ideas of saving boolean check saving a
+
+236
+00:08:15,960 --> 00:08:15,970
+ideas of saving boolean check saving a
+
+237
+00:08:15,970 --> 00:08:17,370
+ideas of saving boolean check saving a
+branch we'll come back to those other
+
+238
+00:08:17,370 --> 00:08:17,380
+branch we'll come back to those other
+ 
+
+239
+00:08:17,380 --> 00:08:24,159
+branch we'll come back to those other
+ideas other ideas
+
+240
+00:08:24,159 --> 00:08:24,169
+
+
+241
+00:08:24,169 --> 00:08:26,080
+okay I'm gonna come back and say why can
+
+242
+00:08:26,080 --> 00:08:26,090
+okay I'm gonna come back and say why can
+ 
+
+243
+00:08:26,090 --> 00:08:27,309
+okay I'm gonna come back and say why can
+we skip the boolean check why is that
+
+244
+00:08:27,309 --> 00:08:27,319
+we skip the boolean check why is that
+ 
+
+245
+00:08:27,319 --> 00:08:37,659
+we skip the boolean check why is that
+okay yeah what if there's like an error
+
+246
+00:08:37,659 --> 00:08:37,669
+okay yeah what if there's like an error
+ 
+
+247
+00:08:37,669 --> 00:08:39,430
+okay yeah what if there's like an error
+what if you wanna need to cause an error
+
+248
+00:08:39,430 --> 00:08:39,440
+what if you wanna need to cause an error
+ 
+
+249
+00:08:39,440 --> 00:08:46,180
+what if you wanna need to cause an error
+then how do I know yeah so greater than
+
+250
+00:08:46,180 --> 00:08:46,190
+then how do I know yeah so greater than
+ 
+
+251
+00:08:46,190 --> 00:08:50,620
+then how do I know yeah so greater than
+either II 1 or e 2 produces an error or
+
+252
+00:08:50,620 --> 00:08:50,630
+either II 1 or e 2 produces an error or
+ 
+
+253
+00:08:50,630 --> 00:08:52,120
+either II 1 or e 2 produces an error or
+their non numbers so greater than
+
+254
+00:08:52,120 --> 00:08:52,130
+their non numbers so greater than
+ 
+
+255
+00:08:52,130 --> 00:08:54,400
+their non numbers so greater than
+produces an error in which case the
+
+256
+00:08:54,400 --> 00:08:54,410
+produces an error in which case the
+
+257
+00:08:54,410 --> 00:08:56,769
+produces an error in which case the
+program's done we don't need to worry
+
+258
+00:08:56,769 --> 00:08:56,779
+program's done we don't need to worry
+ 
+
+259
+00:08:56,779 --> 00:08:59,230
+program's done we don't need to worry
+about the answer for this sub expression
+
+260
+00:08:59,230 --> 00:08:59,240
+about the answer for this sub expression
+
+261
+00:08:59,240 --> 00:09:01,960
+about the answer for this sub expression
+because we got an error right and this
+
+262
+00:09:01,960 --> 00:09:01,970
+because we got an error right and this
+ 
+
+263
+00:09:01,970 --> 00:09:03,460
+because we got an error right and this
+would be true in many languages right in
+
+264
+00:09:03,460 --> 00:09:03,470
+would be true in many languages right in
+
+265
+00:09:03,470 --> 00:09:05,470
+would be true in many languages right in
+Java you would no longer worry about the
+
+266
+00:09:05,470 --> 00:09:05,480
+Java you would no longer worry about the
+ 
+
+267
+00:09:05,480 --> 00:09:07,329
+Java you would no longer worry about the
+answer for this sub expression and an if
+
+268
+00:09:07,329 --> 00:09:07,339
+answer for this sub expression and an if
+ 
+
+269
+00:09:07,339 --> 00:09:09,280
+answer for this sub expression and an if
+if an exception was thrown some
+
+270
+00:09:09,280 --> 00:09:09,290
+if an exception was thrown some
+ 
+
+271
+00:09:09,290 --> 00:09:10,750
+if an exception was thrown some
+exception handlers gonna handle that you
+
+272
+00:09:10,750 --> 00:09:10,760
+exception handlers gonna handle that you
+ 
+
+273
+00:09:10,760 --> 00:09:12,160
+exception handlers gonna handle that you
+don't have to worry about it locally
+
+274
+00:09:12,160 --> 00:09:12,170
+don't have to worry about it locally
+ 
+
+275
+00:09:12,170 --> 00:09:16,630
+don't have to worry about it locally
+here so greater than always returns a
+
+276
+00:09:16,630 --> 00:09:16,640
+here so greater than always returns a
+ 
+
+277
+00:09:16,640 --> 00:09:19,870
+here so greater than always returns a
+boolean always puts a boolean in EAX as
+
+278
+00:09:19,870 --> 00:09:19,880
+boolean always puts a boolean in EAX as
+ 
+
+279
+00:09:19,880 --> 00:09:21,790
+boolean always puts a boolean in EAX as
+long as it succeeds and we don't have to
+
+280
+00:09:21,790 --> 00:09:21,800
+long as it succeeds and we don't have to
+ 
+
+281
+00:09:21,800 --> 00:09:23,439
+long as it succeeds and we don't have to
+worry about the failure case because the
+
+282
+00:09:23,439 --> 00:09:23,449
+worry about the failure case because the
+ 
+
+283
+00:09:23,449 --> 00:09:25,000
+worry about the failure case because the
+code we're generating here isn't the
+
+284
+00:09:25,000 --> 00:09:25,010
+code we're generating here isn't the
+ 
+
+285
+00:09:25,010 --> 00:09:26,620
+code we're generating here isn't the
+code for that isn't the code that
+
+286
+00:09:26,620 --> 00:09:26,630
+code for that isn't the code that
+ 
+
+287
+00:09:26,630 --> 00:09:29,860
+code for that isn't the code that
+handles errors so we know since we know
+
+288
+00:09:29,860 --> 00:09:29,870
+handles errors so we know since we know
+ 
+
+289
+00:09:29,870 --> 00:09:31,689
+handles errors so we know since we know
+that the results of greater then must be
+
+290
+00:09:31,689 --> 00:09:31,699
+that the results of greater then must be
+ 
+
+291
+00:09:31,699 --> 00:09:36,220
+that the results of greater then must be
+a boolean we don't need this entire test
+
+292
+00:09:36,220 --> 00:09:36,230
+a boolean we don't need this entire test
+ 
+
+293
+00:09:36,230 --> 00:09:43,420
+a boolean we don't need this entire test
+bool chunk this part of inserting the
+
+294
+00:09:43,420 --> 00:09:43,430
+bool chunk this part of inserting the
+ 
+
+295
+00:09:43,430 --> 00:09:46,240
+bool chunk this part of inserting the
+code for test pool and where we add it
+
+296
+00:09:46,240 --> 00:09:46,250
+code for test pool and where we add it
+ 
+
+297
+00:09:46,250 --> 00:09:47,199
+code for test pool and where we add it
+in the list here
+
+298
+00:09:47,199 --> 00:09:47,209
+in the list here
+
+299
+00:09:47,209 --> 00:09:51,250
+in the list here
+these don't need to be part of this
+
+300
+00:09:51,250 --> 00:09:51,260
+these don't need to be part of this
+ 
+
+301
+00:09:51,260 --> 00:09:57,410
+these don't need to be part of this
+match
+
+302
+00:09:57,410 --> 00:09:57,420
+
+
+303
+00:09:57,420 --> 00:09:59,610
+if we were just thinking about moving
+
+304
+00:09:59,610 --> 00:09:59,620
+if we were just thinking about moving
+ 
+
+305
+00:09:59,620 --> 00:10:01,920
+if we were just thinking about moving
+the code over and implementing this
+
+306
+00:10:01,920 --> 00:10:01,930
+the code over and implementing this
+ 
+
+307
+00:10:01,930 --> 00:10:04,110
+the code over and implementing this
+match case over here now we're still
+
+308
+00:10:04,110 --> 00:10:04,120
+match case over here now we're still
+ 
+
+309
+00:10:04,120 --> 00:10:05,430
+match case over here now we're still
+gonna have to do some stuff that has to
+
+310
+00:10:05,430 --> 00:10:05,440
+gonna have to do some stuff that has to
+ 
+
+311
+00:10:05,440 --> 00:10:07,320
+gonna have to do some stuff that has to
+do with the if and the then and the else
+
+312
+00:10:07,320 --> 00:10:07,330
+do with the if and the then and the else
+ 
+
+313
+00:10:07,330 --> 00:10:09,120
+do with the if and the then and the else
+and things like that to compile those
+
+314
+00:10:09,120 --> 00:10:09,130
+and things like that to compile those
+ 
+
+315
+00:10:09,130 --> 00:10:10,500
+and things like that to compile those
+sub expressions but we don't need to
+
+316
+00:10:10,500 --> 00:10:10,510
+sub expressions but we don't need to
+ 
+
+317
+00:10:10,510 --> 00:10:12,300
+sub expressions but we don't need to
+test pool you had suggested that we
+
+318
+00:10:12,300 --> 00:10:12,310
+test pool you had suggested that we
+ 
+
+319
+00:10:12,310 --> 00:10:13,950
+test pool you had suggested that we
+could get rid of a branch case to was a
+
+320
+00:10:13,950 --> 00:10:13,960
+could get rid of a branch case to was a
+ 
+
+321
+00:10:13,960 --> 00:10:16,140
+could get rid of a branch case to was a
+suggestion from the middle what was the
+
+322
+00:10:16,140 --> 00:10:16,150
+suggestion from the middle what was the
+ 
+
+323
+00:10:16,150 --> 00:10:17,640
+suggestion from the middle what was the
+branch case you're suggesting we could
+
+324
+00:10:17,640 --> 00:10:17,650
+branch case you're suggesting we could
+ 
+
+325
+00:10:17,650 --> 00:10:25,500
+branch case you're suggesting we could
+get rid of if we implement greater than
+
+326
+00:10:25,500 --> 00:10:25,510
+get rid of if we implement greater than
+
+327
+00:10:25,510 --> 00:10:29,250
+get rid of if we implement greater than
+with branch oh so are you saying we like
+
+328
+00:10:29,250 --> 00:10:29,260
+with branch oh so are you saying we like
+ 
+
+329
+00:10:29,260 --> 00:10:31,380
+with branch oh so are you saying we like
+inside the greater than operation there
+
+330
+00:10:31,380 --> 00:10:31,390
+inside the greater than operation there
+ 
+
+331
+00:10:31,390 --> 00:10:33,180
+inside the greater than operation there
+might be a branch in there and we can
+
+332
+00:10:33,180 --> 00:10:33,190
+might be a branch in there and we can
+ 
+
+333
+00:10:33,190 --> 00:10:36,300
+might be a branch in there and we can
+make that branch do the if thing instead
+
+334
+00:10:36,300 --> 00:10:36,310
+make that branch do the if thing instead
+ 
+
+335
+00:10:36,310 --> 00:10:37,740
+make that branch do the if thing instead
+so maybe we could get clever with
+
+336
+00:10:37,740 --> 00:10:37,750
+so maybe we could get clever with
+ 
+
+337
+00:10:37,750 --> 00:10:40,350
+so maybe we could get clever with
+compiling the greater than at this sort
+
+338
+00:10:40,350 --> 00:10:40,360
+compiling the greater than at this sort
+ 
+
+339
+00:10:40,360 --> 00:10:42,330
+compiling the greater than at this sort
+of at the same time as the if right so
+
+340
+00:10:42,330 --> 00:10:42,340
+of at the same time as the if right so
+ 
+
+341
+00:10:42,340 --> 00:10:44,730
+of at the same time as the if right so
+there'd be some opportunities there okay
+
+342
+00:10:44,730 --> 00:10:44,740
+there'd be some opportunities there okay
+ 
+
+343
+00:10:44,740 --> 00:10:47,540
+there'd be some opportunities there okay
+so maybe we could go deeper into
+
+344
+00:10:47,540 --> 00:10:47,550
+so maybe we could go deeper into
+ 
+
+345
+00:10:47,550 --> 00:10:51,450
+so maybe we could go deeper into
+exploring that option the the point I
+
+346
+00:10:51,450 --> 00:10:51,460
+exploring that option the the point I
+ 
+
+347
+00:10:51,460 --> 00:10:53,280
+exploring that option the the point I
+had in mind when I put this up that's an
+
+348
+00:10:53,280 --> 00:10:53,290
+had in mind when I put this up that's an
+ 
+
+349
+00:10:53,290 --> 00:10:54,780
+had in mind when I put this up that's an
+interesting idea I didn't have that idea
+
+350
+00:10:54,780 --> 00:10:54,790
+interesting idea I didn't have that idea
+ 
+
+351
+00:10:54,790 --> 00:10:56,820
+interesting idea I didn't have that idea
+in mind when I picked this example the
+
+352
+00:10:56,820 --> 00:10:56,830
+in mind when I picked this example the
+
+353
+00:10:56,830 --> 00:10:58,200
+in mind when I picked this example the
+main thing I had in mind when I picked
+
+354
+00:10:58,200 --> 00:10:58,210
+main thing I had in mind when I picked
+ 
+
+355
+00:10:58,210 --> 00:10:59,700
+main thing I had in mind when I picked
+this example is pointing out this bool
+
+356
+00:10:59,700 --> 00:10:59,710
+this example is pointing out this bool
+ 
+
+357
+00:10:59,710 --> 00:11:02,250
+this example is pointing out this bool
+case that we can get rid of this boolean
+
+358
+00:11:02,250 --> 00:11:02,260
+case that we can get rid of this boolean
+ 
+
+359
+00:11:02,260 --> 00:11:05,340
+case that we can get rid of this boolean
+check by virtue of the fact that we know
+
+360
+00:11:05,340 --> 00:11:05,350
+check by virtue of the fact that we know
+ 
+
+361
+00:11:05,350 --> 00:11:08,820
+check by virtue of the fact that we know
+that if we're doing a greater in if in
+
+362
+00:11:08,820 --> 00:11:08,830
+that if we're doing a greater in if in
+ 
+
+363
+00:11:08,830 --> 00:11:10,440
+that if we're doing a greater in if in
+the conditional position it's gonna
+
+364
+00:11:10,440 --> 00:11:10,450
+the conditional position it's gonna
+ 
+
+365
+00:11:10,450 --> 00:11:11,970
+the conditional position it's gonna
+produce a boolean so there's no need to
+
+366
+00:11:11,970 --> 00:11:11,980
+produce a boolean so there's no need to
+ 
+
+367
+00:11:11,980 --> 00:11:14,160
+produce a boolean so there's no need to
+check there's no way that omitting this
+
+368
+00:11:14,160 --> 00:11:14,170
+check there's no way that omitting this
+ 
+
+369
+00:11:14,170 --> 00:11:16,740
+check there's no way that omitting this
+code could cause this program to have a
+
+370
+00:11:16,740 --> 00:11:16,750
+code could cause this program to have a
+ 
+
+371
+00:11:16,750 --> 00:11:18,480
+code could cause this program to have a
+different answer or have an error when
+
+372
+00:11:18,480 --> 00:11:18,490
+different answer or have an error when
+ 
+
+373
+00:11:18,490 --> 00:11:20,490
+different answer or have an error when
+there wasn't an error before etc it's
+
+374
+00:11:20,490 --> 00:11:20,500
+there wasn't an error before etc it's
+ 
+
+375
+00:11:20,500 --> 00:11:22,980
+there wasn't an error before etc it's
+gonna have the same answers so that's
+
+376
+00:11:22,980 --> 00:11:22,990
+gonna have the same answers so that's
+ 
+
+377
+00:11:22,990 --> 00:11:24,330
+gonna have the same answers so that's
+pretty interesting it means that we
+
+378
+00:11:24,330 --> 00:11:24,340
+pretty interesting it means that we
+ 
+
+379
+00:11:24,340 --> 00:11:25,890
+pretty interesting it means that we
+could write these more detailed match
+
+380
+00:11:25,890 --> 00:11:25,900
+could write these more detailed match
+ 
+
+381
+00:11:25,900 --> 00:11:28,620
+could write these more detailed match
+cases on some expressions in the current
+
+382
+00:11:28,620 --> 00:11:28,630
+cases on some expressions in the current
+ 
+
+383
+00:11:28,630 --> 00:11:30,210
+cases on some expressions in the current
+compilers we have this is particularly
+
+384
+00:11:30,210 --> 00:11:30,220
+compilers we have this is particularly
+
+385
+00:11:30,220 --> 00:11:33,060
+compilers we have this is particularly
+useful in expressions that do these tag
+
+386
+00:11:33,060 --> 00:11:33,070
+useful in expressions that do these tag
+ 
+
+387
+00:11:33,070 --> 00:11:36,120
+useful in expressions that do these tag
+checks for errors but there's other
+
+388
+00:11:36,120 --> 00:11:36,130
+checks for errors but there's other
+ 
+
+389
+00:11:36,130 --> 00:11:37,410
+checks for errors but there's other
+cases where this can be useful as well
+
+390
+00:11:37,410 --> 00:11:37,420
+cases where this can be useful as well
+ 
+
+391
+00:11:37,420 --> 00:11:39,300
+cases where this can be useful as well
+we can write these more detailed match
+
+392
+00:11:39,300 --> 00:11:39,310
+we can write these more detailed match
+ 
+
+393
+00:11:39,310 --> 00:11:42,270
+we can write these more detailed match
+cases and do a better job of selecting
+
+394
+00:11:42,270 --> 00:11:42,280
+cases and do a better job of selecting
+ 
+
+395
+00:11:42,280 --> 00:11:44,130
+cases and do a better job of selecting
+which instructions we generate for a
+
+396
+00:11:44,130 --> 00:11:44,140
+which instructions we generate for a
+ 
+
+397
+00:11:44,140 --> 00:11:48,150
+which instructions we generate for a
+given expression so this site this idea
+
+398
+00:11:48,150 --> 00:11:48,160
+given expression so this site this idea
+ 
+
+399
+00:11:48,160 --> 00:11:52,710
+given expression so this site this idea
+has a name I'm just gonna write it over
+
+400
+00:11:52,710 --> 00:11:52,720
+has a name I'm just gonna write it over
+
+401
+00:11:52,720 --> 00:11:57,870
+has a name I'm just gonna write it over
+here this idea is called well it's
+
+402
+00:11:57,870 --> 00:11:57,880
+here this idea is called well it's
+ 
+
+403
+00:11:57,880 --> 00:11:59,820
+here this idea is called well it's
+really--it's there's a huge family of
+
+404
+00:11:59,820 --> 00:11:59,830
+really--it's there's a huge family of
+ 
+
+405
+00:11:59,830 --> 00:12:03,960
+really--it's there's a huge family of
+techniques here but the overall idea is
+
+406
+00:12:03,960 --> 00:12:03,970
+techniques here but the overall idea is
+ 
+
+407
+00:12:03,970 --> 00:12:07,740
+techniques here but the overall idea is
+called instruction selection and this is
+
+408
+00:12:07,740 --> 00:12:07,750
+called instruction selection and this is
+ 
+
+409
+00:12:07,750 --> 00:12:09,660
+called instruction selection and this is
+getting at this idea that right now
+
+410
+00:12:09,660 --> 00:12:09,670
+getting at this idea that right now
+ 
+
+411
+00:12:09,670 --> 00:12:12,300
+getting at this idea that right now
+we've written sort of one case for each
+
+412
+00:12:12,300 --> 00:12:12,310
+we've written sort of one case for each
+ 
+
+413
+00:12:12,310 --> 00:12:15,930
+we've written sort of one case for each
+expression in in our language right EF
+
+414
+00:12:15,930 --> 00:12:15,940
+expression in in our language right EF
+ 
+
+415
+00:12:15,940 --> 00:12:18,420
+expression in in our language right EF
+has one case that matches it in the
+
+416
+00:12:18,420 --> 00:12:18,430
+has one case that matches it in the
+ 
+
+417
+00:12:18,430 --> 00:12:22,470
+has one case that matches it in the
+compiler EBU bully num e app everything
+
+418
+00:12:22,470 --> 00:12:22,480
+compiler EBU bully num e app everything
+ 
+
+419
+00:12:22,480 --> 00:12:23,880
+compiler EBU bully num e app everything
+has one case that matches it in the
+
+420
+00:12:23,880 --> 00:12:23,890
+has one case that matches it in the
+ 
+
+421
+00:12:23,890 --> 00:12:26,190
+has one case that matches it in the
+compiler and there's only one option for
+
+422
+00:12:26,190 --> 00:12:26,200
+compiler and there's only one option for
+ 
+
+423
+00:12:26,200 --> 00:12:27,750
+compiler and there's only one option for
+which instructions we generate for each
+
+424
+00:12:27,750 --> 00:12:27,760
+which instructions we generate for each
+ 
+
+425
+00:12:27,760 --> 00:12:31,200
+which instructions we generate for each
+expression we generate it and the idea
+
+426
+00:12:31,200 --> 00:12:31,210
+expression we generate it and the idea
+ 
+
+427
+00:12:31,210 --> 00:12:34,050
+expression we generate it and the idea
+of instruction selection is well if we
+
+428
+00:12:34,050 --> 00:12:34,060
+of instruction selection is well if we
+ 
+
+429
+00:12:34,060 --> 00:12:37,590
+of instruction selection is well if we
+use more information about what's going
+
+430
+00:12:37,590 --> 00:12:37,600
+use more information about what's going
+ 
+
+431
+00:12:37,600 --> 00:12:39,720
+use more information about what's going
+on around an expression we can do some
+
+432
+00:12:39,720 --> 00:12:39,730
+on around an expression we can do some
+ 
+
+433
+00:12:39,730 --> 00:12:41,000
+on around an expression we can do some
+smarter things when we generate code
+
+434
+00:12:41,000 --> 00:12:41,010
+smarter things when we generate code
+ 
+
+435
+00:12:41,010 --> 00:12:44,580
+smarter things when we generate code
+omitting omitting checks like this is
+
+436
+00:12:44,580 --> 00:12:44,590
+omitting omitting checks like this is
+ 
+
+437
+00:12:44,590 --> 00:12:48,510
+omitting omitting checks like this is
+one idea so I want to talk about this
+
+438
+00:12:48,510 --> 00:12:48,520
+one idea so I want to talk about this
+ 
+
+439
+00:12:48,520 --> 00:12:49,920
+one idea so I want to talk about this
+more generally but before I talk about
+
+440
+00:12:49,920 --> 00:12:49,930
+more generally but before I talk about
+ 
+
+441
+00:12:49,930 --> 00:12:51,930
+more generally but before I talk about
+it more generally I want to put a few
+
+442
+00:12:51,930 --> 00:12:51,940
+it more generally I want to put a few
+ 
+
+443
+00:12:51,940 --> 00:12:54,780
+it more generally I want to put a few
+examples up here so another set of
+
+444
+00:12:54,780 --> 00:12:54,790
+examples up here so another set of
+ 
+
+445
+00:12:54,790 --> 00:12:56,670
+examples up here so another set of
+examples here these are nested matches
+
+446
+00:12:56,670 --> 00:12:56,680
+examples here these are nested matches
+ 
+
+447
+00:12:56,680 --> 00:13:03,330
+examples here these are nested matches
+on on plus and they need some letters
+
+448
+00:13:03,330 --> 00:13:03,340
+on on plus and they need some letters
+ 
+
+449
+00:13:03,340 --> 00:13:08,760
+on on plus and they need some letters
+and the question I want to ask is which
+
+450
+00:13:08,760 --> 00:13:08,770
+and the question I want to ask is which
+ 
+
+451
+00:13:08,770 --> 00:13:22,900
+and the question I want to ask is which
+of these
+
+452
+00:13:22,900 --> 00:13:22,910
+
+
+453
+00:13:22,910 --> 00:13:25,280
+which of these won't let us skip a tag
+
+454
+00:13:25,280 --> 00:13:25,290
+which of these won't let us skip a tag
+ 
+
+455
+00:13:25,290 --> 00:13:27,260
+which of these won't let us skip a tag
+check right so we just saw how if we
+
+456
+00:13:27,260 --> 00:13:27,270
+check right so we just saw how if we
+ 
+
+457
+00:13:27,270 --> 00:13:29,000
+check right so we just saw how if we
+know that the thing in conditional
+
+458
+00:13:29,000 --> 00:13:29,010
+know that the thing in conditional
+ 
+
+459
+00:13:29,010 --> 00:13:31,190
+know that the thing in conditional
+position in an if is a greater than we
+
+460
+00:13:31,190 --> 00:13:31,200
+position in an if is a greater than we
+ 
+
+461
+00:13:31,200 --> 00:13:32,690
+position in an if is a greater than we
+can skip the tag check for boolean's in
+
+462
+00:13:32,690 --> 00:13:32,700
+can skip the tag check for boolean's in
+ 
+
+463
+00:13:32,700 --> 00:13:34,580
+can skip the tag check for boolean's in
+it what about this so these here's four
+
+464
+00:13:34,580 --> 00:13:34,590
+it what about this so these here's four
+ 
+
+465
+00:13:34,590 --> 00:13:36,920
+it what about this so these here's four
+options of nested nested binary
+
+466
+00:13:36,920 --> 00:13:36,930
+options of nested nested binary
+ 
+
+467
+00:13:36,930 --> 00:13:38,920
+options of nested nested binary
+operators
+
+468
+00:13:38,920 --> 00:13:38,930
+operators
+
+469
+00:13:38,930 --> 00:13:42,650
+operators
+well this let us do this should say well
+
+470
+00:13:42,650 --> 00:13:42,660
+well this let us do this should say well
+ 
+
+471
+00:13:42,660 --> 00:13:44,360
+well this let us do this should say well
+this should say EEPROM to sorry about
+
+472
+00:13:44,360 --> 00:13:44,370
+this should say EEPROM to sorry about
+ 
+
+473
+00:13:44,370 --> 00:14:18,140
+this should say EEPROM to sorry about
+that just for consistency that way
+
+474
+00:14:18,140 --> 00:14:18,150
+
+
+475
+00:14:18,150 --> 00:14:24,280
+five four three two one
+
+476
+00:14:24,280 --> 00:14:24,290
+five four three two one
+ 
+
+477
+00:14:24,290 --> 00:14:28,160
+five four three two one
+okay there's sort of a weirdness in one
+
+478
+00:14:28,160 --> 00:14:28,170
+okay there's sort of a weirdness in one
+ 
+
+479
+00:14:28,170 --> 00:14:29,360
+okay there's sort of a weirdness in one
+of these options so I want you to talk
+
+480
+00:14:29,360 --> 00:14:29,370
+of these options so I want you to talk
+ 
+
+481
+00:14:29,370 --> 00:14:31,970
+of these options so I want you to talk
+about it just for 20 or 30 seconds just
+
+482
+00:14:31,970 --> 00:14:31,980
+about it just for 20 or 30 seconds just
+ 
+
+483
+00:14:31,980 --> 00:15:03,500
+about it just for 20 or 30 seconds just
+talk about it briefly
+
+484
+00:15:03,500 --> 00:15:03,510
+
+
+485
+00:15:03,510 --> 00:15:06,410
+okay so what's so first of all what's
+
+486
+00:15:06,410 --> 00:15:06,420
+okay so what's so first of all what's
+ 
+
+487
+00:15:06,420 --> 00:15:09,769
+okay so what's so first of all what's
+the what's the answer here or at least
+
+488
+00:15:09,769 --> 00:15:09,779
+the what's the answer here or at least
+ 
+
+489
+00:15:09,779 --> 00:15:11,449
+the what's the answer here or at least
+like the the most obvious answer here
+
+490
+00:15:11,449 --> 00:15:11,459
+like the the most obvious answer here
+ 
+
+491
+00:15:11,459 --> 00:15:15,769
+like the the most obvious answer here
+well in B and C we're doing a plus and
+
+492
+00:15:15,769 --> 00:15:15,779
+well in B and C we're doing a plus and
+ 
+
+493
+00:15:15,779 --> 00:15:17,720
+well in B and C we're doing a plus and
+then we know that the first argument is
+
+494
+00:15:17,720 --> 00:15:17,730
+then we know that the first argument is
+ 
+
+495
+00:15:17,730 --> 00:15:20,660
+then we know that the first argument is
+either a number or another plus and we
+
+496
+00:15:20,660 --> 00:15:20,670
+either a number or another plus and we
+ 
+
+497
+00:15:20,670 --> 00:15:22,310
+either a number or another plus and we
+know that numbers well numbers don't
+
+498
+00:15:22,310 --> 00:15:22,320
+know that numbers well numbers don't
+ 
+
+499
+00:15:22,320 --> 00:15:23,629
+know that numbers well numbers don't
+need to be checked for being numbers and
+
+500
+00:15:23,629 --> 00:15:23,639
+need to be checked for being numbers and
+ 
+
+501
+00:15:23,639 --> 00:15:25,430
+need to be checked for being numbers and
+we know that plus plus expressions have
+
+502
+00:15:25,430 --> 00:15:25,440
+we know that plus plus expressions have
+
+503
+00:15:25,440 --> 00:15:27,949
+we know that plus plus expressions have
+to return numbers so in B and C we can
+
+504
+00:15:27,949 --> 00:15:27,959
+to return numbers so in B and C we can
+ 
+
+505
+00:15:27,959 --> 00:15:29,810
+to return numbers so in B and C we can
+definitely omit the tag check for the
+
+506
+00:15:29,810 --> 00:15:29,820
+definitely omit the tag check for the
+
+507
+00:15:29,820 --> 00:15:32,150
+definitely omit the tag check for the
+first argument we don't have to check
+
+508
+00:15:32,150 --> 00:15:32,160
+first argument we don't have to check
+ 
+
+509
+00:15:32,160 --> 00:15:35,300
+first argument we don't have to check
+the tag of this expression or this
+
+510
+00:15:35,300 --> 00:15:35,310
+the tag of this expression or this
+ 
+
+511
+00:15:35,310 --> 00:15:38,329
+the tag of this expression or this
+expression we can just skip it and maybe
+
+512
+00:15:38,329 --> 00:15:38,339
+expression we can just skip it and maybe
+ 
+
+513
+00:15:38,339 --> 00:15:40,009
+expression we can just skip it and maybe
+even generate even more intelligent
+
+514
+00:15:40,009 --> 00:15:40,019
+even generate even more intelligent
+ 
+
+515
+00:15:40,019 --> 00:15:43,280
+even generate even more intelligent
+instructions there in the first case in
+
+516
+00:15:43,280 --> 00:15:43,290
+instructions there in the first case in
+ 
+
+517
+00:15:43,290 --> 00:15:46,400
+instructions there in the first case in
+answer a like if we have a function
+
+518
+00:15:46,400 --> 00:15:46,410
+answer a like if we have a function
+
+519
+00:15:46,410 --> 00:15:50,590
+answer a like if we have a function
+application we don't know that much
+
+520
+00:15:50,590 --> 00:15:50,600
+application we don't know that much
+ 
+
+521
+00:15:50,600 --> 00:15:53,569
+application we don't know that much
+locally to this pattern match about what
+
+522
+00:15:53,569 --> 00:15:53,579
+locally to this pattern match about what
+ 
+
+523
+00:15:53,579 --> 00:15:55,400
+locally to this pattern match about what
+could possibly be returned from that
+
+524
+00:15:55,400 --> 00:15:55,410
+could possibly be returned from that
+ 
+
+525
+00:15:55,410 --> 00:15:57,500
+could possibly be returned from that
+function the way we have our compiler
+
+526
+00:15:57,500 --> 00:15:57,510
+function the way we have our compiler
+ 
+
+527
+00:15:57,510 --> 00:15:58,670
+function the way we have our compiler
+set up we don't know much at all about
+
+528
+00:15:58,670 --> 00:15:58,680
+set up we don't know much at all about
+ 
+
+529
+00:15:58,680 --> 00:16:00,740
+set up we don't know much at all about
+the return values of functions until we
+
+530
+00:16:00,740 --> 00:16:00,750
+the return values of functions until we
+ 
+
+531
+00:16:00,750 --> 00:16:04,220
+the return values of functions until we
+call them so option A it's really hard
+
+532
+00:16:04,220 --> 00:16:04,230
+call them so option A it's really hard
+ 
+
+533
+00:16:04,230 --> 00:16:06,259
+call them so option A it's really hard
+to see how we would skip a check check
+
+534
+00:16:06,259 --> 00:16:06,269
+to see how we would skip a check check
+
+535
+00:16:06,269 --> 00:16:08,240
+to see how we would skip a check check
+by using option a we kind of have to do
+
+536
+00:16:08,240 --> 00:16:08,250
+by using option a we kind of have to do
+ 
+
+537
+00:16:08,250 --> 00:16:09,620
+by using option a we kind of have to do
+the function call see what comes back
+
+538
+00:16:09,620 --> 00:16:09,630
+the function call see what comes back
+ 
+
+539
+00:16:09,630 --> 00:16:12,230
+the function call see what comes back
+and then do the addition with it so the
+
+540
+00:16:12,230 --> 00:16:12,240
+and then do the addition with it so the
+ 
+
+541
+00:16:12,240 --> 00:16:15,829
+and then do the addition with it so the
+most obvious answer here is a and it's
+
+542
+00:16:15,829 --> 00:16:15,839
+most obvious answer here is a and it's
+ 
+
+543
+00:16:15,839 --> 00:16:17,689
+most obvious answer here is a and it's
+sort of the intended answer but D is
+
+544
+00:16:17,689 --> 00:16:17,699
+sort of the intended answer but D is
+ 
+
+545
+00:16:17,699 --> 00:16:20,000
+sort of the intended answer but D is
+intentionally weird B is intentionally
+
+546
+00:16:20,000 --> 00:16:20,010
+intentionally weird B is intentionally
+ 
+
+547
+00:16:20,010 --> 00:16:22,490
+intentionally weird B is intentionally
+weird what's weird about D that's weird
+
+548
+00:16:22,490 --> 00:16:22,500
+weird what's weird about D that's weird
+ 
+
+549
+00:16:22,500 --> 00:16:30,920
+weird what's weird about D that's weird
+about D yeah yeah yeah a one is
+
+550
+00:16:30,920 --> 00:16:30,930
+about D yeah yeah yeah a one is
+ 
+
+551
+00:16:30,930 --> 00:16:35,090
+about D yeah yeah yeah a one is
+definitely gonna produce a boolean which
+
+552
+00:16:35,090 --> 00:16:35,100
+definitely gonna produce a boolean which
+ 
+
+553
+00:16:35,100 --> 00:16:38,090
+definitely gonna produce a boolean which
+means the plus expression is definitely
+
+554
+00:16:38,090 --> 00:16:38,100
+means the plus expression is definitely
+ 
+
+555
+00:16:38,100 --> 00:16:40,269
+means the plus expression is definitely
+going to cause an error when it runs
+
+556
+00:16:40,269 --> 00:16:40,279
+going to cause an error when it runs
+ 
+
+557
+00:16:40,279 --> 00:16:44,319
+going to cause an error when it runs
+right this is like a known error case
+
+558
+00:16:44,319 --> 00:16:44,329
+right this is like a known error case
+ 
+
+559
+00:16:44,329 --> 00:16:46,579
+right this is like a known error case
+right it's definitely going to cause an
+
+560
+00:16:46,579 --> 00:16:46,589
+right it's definitely going to cause an
+ 
+
+561
+00:16:46,589 --> 00:16:49,189
+right it's definitely going to cause an
+error so one interesting thing about
+
+562
+00:16:49,189 --> 00:16:49,199
+error so one interesting thing about
+ 
+
+563
+00:16:49,199 --> 00:16:52,850
+error so one interesting thing about
+this is wait we have a little bit of a
+
+564
+00:16:52,850 --> 00:16:52,860
+this is wait we have a little bit of a
+ 
+
+565
+00:16:52,860 --> 00:16:54,800
+this is wait we have a little bit of a
+design decision about what to do if we
+
+566
+00:16:54,800 --> 00:16:54,810
+design decision about what to do if we
+ 
+
+567
+00:16:54,810 --> 00:16:56,389
+design decision about what to do if we
+were to match on an expression that we
+
+568
+00:16:56,389 --> 00:16:56,399
+were to match on an expression that we
+ 
+
+569
+00:16:56,399 --> 00:16:58,160
+were to match on an expression that we
+know is going to cause an error at
+
+570
+00:16:58,160 --> 00:16:58,170
+know is going to cause an error at
+ 
+
+571
+00:16:58,170 --> 00:17:02,240
+know is going to cause an error at
+runtime according to our definition of
+
+572
+00:17:02,240 --> 00:17:02,250
+runtime according to our definition of
+ 
+
+573
+00:17:02,250 --> 00:17:03,920
+runtime according to our definition of
+an optimization what should we do we
+
+574
+00:17:03,920 --> 00:17:03,930
+an optimization what should we do we
+ 
+
+575
+00:17:03,930 --> 00:17:05,780
+an optimization what should we do we
+have a definition of an optimization we
+
+576
+00:17:05,780 --> 00:17:05,790
+have a definition of an optimization we
+ 
+
+577
+00:17:05,790 --> 00:17:07,069
+have a definition of an optimization we
+gave on Monday what should we do
+
+578
+00:17:07,069 --> 00:17:07,079
+gave on Monday what should we do
+
+579
+00:17:07,079 --> 00:17:11,059
+gave on Monday what should we do
+yeah maybe make maybe call an error
+
+580
+00:17:11,059 --> 00:17:11,069
+yeah maybe make maybe call an error
+ 
+
+581
+00:17:11,069 --> 00:17:12,319
+yeah maybe make maybe call an error
+right away oh right away right away
+
+582
+00:17:12,319 --> 00:17:12,329
+right away oh right away right away
+ 
+
+583
+00:17:12,329 --> 00:17:14,210
+right away oh right away right away
+there's this notion of time should we do
+
+584
+00:17:14,210 --> 00:17:14,220
+there's this notion of time should we do
+ 
+
+585
+00:17:14,220 --> 00:17:17,199
+there's this notion of time should we do
+it in the compiler
+
+586
+00:17:17,199 --> 00:17:17,209
+
+
+587
+00:17:17,209 --> 00:17:18,490
+would be and maybe as right away as
+
+588
+00:17:18,490 --> 00:17:18,500
+would be and maybe as right away as
+ 
+
+589
+00:17:18,500 --> 00:17:20,289
+would be and maybe as right away as
+possible right as right away as possible
+
+590
+00:17:20,289 --> 00:17:20,299
+possible right as right away as possible
+ 
+
+591
+00:17:20,299 --> 00:17:26,829
+possible right as right away as possible
+is fail with bad right let's give a
+
+592
+00:17:26,829 --> 00:17:26,839
+is fail with bad right let's give a
+ 
+
+593
+00:17:26,839 --> 00:17:36,580
+is fail with bad right let's give a
+compiler definition of optimization say
+
+594
+00:17:36,580 --> 00:17:36,590
+compiler definition of optimization say
+ 
+
+595
+00:17:36,590 --> 00:17:44,250
+compiler definition of optimization say
+about this though
+
+596
+00:17:44,250 --> 00:17:44,260
+
+
+597
+00:17:44,260 --> 00:17:52,960
+well what yeah so our definition of
+
+598
+00:17:52,960 --> 00:17:52,970
+well what yeah so our definition of
+ 
+
+599
+00:17:52,970 --> 00:17:56,230
+well what yeah so our definition of
+optimization the key part was having the
+
+600
+00:17:56,230 --> 00:17:56,240
+optimization the key part was having the
+
+601
+00:17:56,240 --> 00:18:04,920
+optimization the key part was having the
+same answer and effects that was the
+
+602
+00:18:04,920 --> 00:18:04,930
+same answer and effects that was the
+ 
+
+603
+00:18:04,930 --> 00:18:08,260
+same answer and effects that was the
+whoops that was the key part of our
+
+604
+00:18:08,260 --> 00:18:08,270
+whoops that was the key part of our
+ 
+
+605
+00:18:08,270 --> 00:18:10,870
+whoops that was the key part of our
+optimization definition was that we
+
+606
+00:18:10,870 --> 00:18:10,880
+optimization definition was that we
+
+607
+00:18:10,880 --> 00:18:12,400
+optimization definition was that we
+might generate different instructions
+
+608
+00:18:12,400 --> 00:18:12,410
+might generate different instructions
+
+609
+00:18:12,410 --> 00:18:13,780
+might generate different instructions
+which might do something different in
+
+610
+00:18:13,780 --> 00:18:13,790
+which might do something different in
+ 
+
+611
+00:18:13,790 --> 00:18:16,150
+which might do something different in
+terms of speed or memory usage but the
+
+612
+00:18:16,150 --> 00:18:16,160
+terms of speed or memory usage but the
+ 
+
+613
+00:18:16,160 --> 00:18:17,530
+terms of speed or memory usage but the
+program we generate ought to have the
+
+614
+00:18:17,530 --> 00:18:17,540
+program we generate ought to have the
+
+615
+00:18:17,540 --> 00:18:21,930
+program we generate ought to have the
+same answer and the same effects so
+
+616
+00:18:21,930 --> 00:18:21,940
+same answer and the same effects so
+ 
+
+617
+00:18:21,940 --> 00:18:24,850
+same answer and the same effects so
+we're so there's a couple places where
+
+618
+00:18:24,850 --> 00:18:24,860
+we're so there's a couple places where
+ 
+
+619
+00:18:24,860 --> 00:18:27,550
+we're so there's a couple places where
+we might have answers and effects coming
+
+620
+00:18:27,550 --> 00:18:27,560
+we might have answers and effects coming
+ 
+
+621
+00:18:27,560 --> 00:18:30,370
+we might have answers and effects coming
+out here so and in particular one of the
+
+622
+00:18:30,370 --> 00:18:30,380
+out here so and in particular one of the
+ 
+
+623
+00:18:30,380 --> 00:18:32,590
+out here so and in particular one of the
+places we might have interesting things
+
+624
+00:18:32,590 --> 00:18:32,600
+places we might have interesting things
+ 
+
+625
+00:18:32,600 --> 00:18:34,660
+places we might have interesting things
+happening and they're like underscored
+
+626
+00:18:34,660 --> 00:18:34,670
+happening and they're like underscored
+ 
+
+627
+00:18:34,670 --> 00:18:40,330
+happening and they're like underscored
+out right now is right here we're going
+
+628
+00:18:40,330 --> 00:18:40,340
+out right now is right here we're going
+ 
+
+629
+00:18:40,340 --> 00:18:43,590
+out right now is right here we're going
+to do this greater than operation on two
+
+630
+00:18:43,590 --> 00:18:43,600
+to do this greater than operation on two
+ 
+
+631
+00:18:43,600 --> 00:18:46,810
+to do this greater than operation on two
+expressions what if they have effects
+
+632
+00:18:46,810 --> 00:18:46,820
+expressions what if they have effects
+ 
+
+633
+00:18:46,820 --> 00:18:49,810
+expressions what if they have effects
+what if they have effects what if the
+
+634
+00:18:49,810 --> 00:18:49,820
+what if they have effects what if the
+ 
+
+635
+00:18:49,820 --> 00:18:51,070
+what if they have effects what if the
+programmer was expecting something to
+
+636
+00:18:51,070 --> 00:18:51,080
+programmer was expecting something to
+
+637
+00:18:51,080 --> 00:18:53,080
+programmer was expecting something to
+happen there what I want you to think
+
+638
+00:18:53,080 --> 00:18:53,090
+happen there what I want you to think
+ 
+
+639
+00:18:53,090 --> 00:18:54,760
+happen there what I want you to think
+about for a minute what's an example of
+
+640
+00:18:54,760 --> 00:18:54,770
+about for a minute what's an example of
+ 
+
+641
+00:18:54,770 --> 00:19:09,920
+about for a minute what's an example of
+a program it's an example of a program
+
+642
+00:19:09,920 --> 00:19:09,930
+
+
+643
+00:19:09,930 --> 00:19:12,870
+that has effects in this greater
+
+644
+00:19:12,870 --> 00:19:12,880
+that has effects in this greater
+ 
+
+645
+00:19:12,880 --> 00:19:14,820
+that has effects in this greater
+position talk about this for me what do
+
+646
+00:19:14,820 --> 00:19:14,830
+position talk about this for me what do
+ 
+
+647
+00:19:14,830 --> 00:19:16,890
+position talk about this for me what do
+I mean by that what is an example of a
+
+648
+00:19:16,890 --> 00:19:16,900
+I mean by that what is an example of a
+ 
+
+649
+00:19:16,900 --> 00:19:19,290
+I mean by that what is an example of a
+program that has effects where I've
+
+650
+00:19:19,290 --> 00:19:19,300
+program that has effects where I've
+ 
+
+651
+00:19:19,300 --> 00:19:22,110
+program that has effects where I've
+circled these two underscores for near
+
+652
+00:19:22,110 --> 00:19:22,120
+circled these two underscores for near
+ 
+
+653
+00:19:22,120 --> 00:19:23,610
+circled these two underscores for near
+greater what's an example of a program
+
+654
+00:19:23,610 --> 00:19:23,620
+greater what's an example of a program
+ 
+
+655
+00:19:23,620 --> 00:19:25,260
+greater what's an example of a program
+that has effects there talk about this
+
+656
+00:19:25,260 --> 00:19:25,270
+that has effects there talk about this
+ 
+
+657
+00:19:25,270 --> 00:20:05,900
+that has effects there talk about this
+for a minute
+
+658
+00:20:05,900 --> 00:20:05,910
+
+
+659
+00:20:05,910 --> 00:20:08,640
+okay so here's here's one of the here's
+
+660
+00:20:08,640 --> 00:20:08,650
+okay so here's here's one of the here's
+ 
+
+661
+00:20:08,650 --> 00:20:10,289
+okay so here's here's one of the here's
+sort of one of the simpler examples I
+
+662
+00:20:10,289 --> 00:20:10,299
+sort of one of the simpler examples I
+ 
+
+663
+00:20:10,299 --> 00:20:13,320
+sort of one of the simpler examples I
+can think of to illustrate this or at
+
+664
+00:20:13,320 --> 00:20:13,330
+can think of to illustrate this or at
+ 
+
+665
+00:20:13,330 --> 00:20:15,930
+can think of to illustrate this or at
+least the shortest what if we have a
+
+666
+00:20:15,930 --> 00:20:15,940
+least the shortest what if we have a
+ 
+
+667
+00:20:15,940 --> 00:20:27,390
+least the shortest what if we have a
+program like this
+
+668
+00:20:27,390 --> 00:20:27,400
+
+
+669
+00:20:27,400 --> 00:20:30,430
+we're a program that adds the result of
+
+670
+00:20:30,430 --> 00:20:30,440
+we're a program that adds the result of
+ 
+
+671
+00:20:30,440 --> 00:20:31,779
+we're a program that adds the result of
+greater than on printing some
+
+672
+00:20:31,779 --> 00:20:31,789
+greater than on printing some
+ 
+
+673
+00:20:31,789 --> 00:20:36,850
+greater than on printing some
+expressions now this would mean that if
+
+674
+00:20:36,850 --> 00:20:36,860
+expressions now this would mean that if
+ 
+
+675
+00:20:36,860 --> 00:20:39,610
+expressions now this would mean that if
+we ran on an unauthorized compiler this
+
+676
+00:20:39,610 --> 00:20:39,620
+we ran on an unauthorized compiler this
+ 
+
+677
+00:20:39,620 --> 00:20:41,710
+we ran on an unauthorized compiler this
+would print one print to compare them
+
+678
+00:20:41,710 --> 00:20:41,720
+would print one print to compare them
+ 
+
+679
+00:20:41,720 --> 00:20:43,659
+would print one print to compare them
+for greater than and then error on the
+
+680
+00:20:43,659 --> 00:20:43,669
+for greater than and then error on the
+ 
+
+681
+00:20:43,669 --> 00:20:45,340
+for greater than and then error on the
+plus I thought it's what this program
+
+682
+00:20:45,340 --> 00:20:45,350
+plus I thought it's what this program
+ 
+
+683
+00:20:45,350 --> 00:20:46,750
+plus I thought it's what this program
+would do if we ran it on the unoptimized
+
+684
+00:20:46,750 --> 00:20:46,760
+would do if we ran it on the unoptimized
+ 
+
+685
+00:20:46,760 --> 00:20:49,510
+would do if we ran it on the unoptimized
+compiler if our optimization sort of
+
+686
+00:20:49,510 --> 00:20:49,520
+compiler if our optimization sort of
+ 
+
+687
+00:20:49,520 --> 00:20:52,299
+compiler if our optimization sort of
+took that out or took out that operation
+
+688
+00:20:52,299 --> 00:20:52,309
+took that out or took out that operation
+ 
+
+689
+00:20:52,309 --> 00:20:54,340
+took that out or took out that operation
+or just failed in the beginning we would
+
+690
+00:20:54,340 --> 00:20:54,350
+or just failed in the beginning we would
+
+691
+00:20:54,350 --> 00:20:56,260
+or just failed in the beginning we would
+switch to the optimizing compiler and
+
+692
+00:20:56,260 --> 00:20:56,270
+switch to the optimizing compiler and
+ 
+
+693
+00:20:56,270 --> 00:20:58,090
+switch to the optimizing compiler and
+things would just be way different than
+
+694
+00:20:58,090 --> 00:20:58,100
+things would just be way different than
+ 
+
+695
+00:20:58,100 --> 00:21:00,520
+things would just be way different than
+they were our program wouldn't run if we
+
+696
+00:21:00,520 --> 00:21:00,530
+they were our program wouldn't run if we
+ 
+
+697
+00:21:00,530 --> 00:21:02,980
+they were our program wouldn't run if we
+just failed with here and if we skipped
+
+698
+00:21:02,980 --> 00:21:02,990
+just failed with here and if we skipped
+ 
+
+699
+00:21:02,990 --> 00:21:05,140
+just failed with here and if we skipped
+doing this operation because it was
+
+700
+00:21:05,140 --> 00:21:05,150
+doing this operation because it was
+ 
+
+701
+00:21:05,150 --> 00:21:07,600
+doing this operation because it was
+known to be an error we would just see
+
+702
+00:21:07,600 --> 00:21:07,610
+known to be an error we would just see
+ 
+
+703
+00:21:07,610 --> 00:21:09,520
+known to be an error we would just see
+different answers come out might see an
+
+704
+00:21:09,520 --> 00:21:09,530
+different answers come out might see an
+ 
+
+705
+00:21:09,530 --> 00:21:12,520
+different answers come out might see an
+answer when it used to be an error so if
+
+706
+00:21:12,520 --> 00:21:12,530
+answer when it used to be an error so if
+ 
+
+707
+00:21:12,530 --> 00:21:14,470
+answer when it used to be an error so if
+we're going to uphold this definition of
+
+708
+00:21:14,470 --> 00:21:14,480
+we're going to uphold this definition of
+ 
+
+709
+00:21:14,480 --> 00:21:16,299
+we're going to uphold this definition of
+an optimization which I'm arguing is a
+
+710
+00:21:16,299 --> 00:21:16,309
+an optimization which I'm arguing is a
+ 
+
+711
+00:21:16,309 --> 00:21:18,909
+an optimization which I'm arguing is a
+good idea we might be able to skip some
+
+712
+00:21:18,909 --> 00:21:18,919
+good idea we might be able to skip some
+ 
+
+713
+00:21:18,919 --> 00:21:21,570
+good idea we might be able to skip some
+work here like we know that if greater
+
+714
+00:21:21,570 --> 00:21:21,580
+work here like we know that if greater
+ 
+
+715
+00:21:21,580 --> 00:21:24,789
+work here like we know that if greater
+produces an answer we should eventually
+
+716
+00:21:24,789 --> 00:21:24,799
+produces an answer we should eventually
+
+717
+00:21:24,799 --> 00:21:26,860
+produces an answer we should eventually
+error right so we might be able to skip
+
+718
+00:21:26,860 --> 00:21:26,870
+error right so we might be able to skip
+ 
+
+719
+00:21:26,870 --> 00:21:28,480
+error right so we might be able to skip
+doing the actual plus because we know
+
+720
+00:21:28,480 --> 00:21:28,490
+doing the actual plus because we know
+ 
+
+721
+00:21:28,490 --> 00:21:30,399
+doing the actual plus because we know
+this is going to produce an error but we
+
+722
+00:21:30,399 --> 00:21:30,409
+this is going to produce an error but we
+ 
+
+723
+00:21:30,409 --> 00:21:32,919
+this is going to produce an error but we
+shouldn't completely avoid compiling
+
+724
+00:21:32,919 --> 00:21:32,929
+shouldn't completely avoid compiling
+
+725
+00:21:32,929 --> 00:21:36,840
+shouldn't completely avoid compiling
+this or turn it into a compile error
+
+726
+00:21:36,840 --> 00:21:36,850
+this or turn it into a compile error
+ 
+
+727
+00:21:36,850 --> 00:21:39,130
+this or turn it into a compile error
+that might be a design decision we make
+
+728
+00:21:39,130 --> 00:21:39,140
+that might be a design decision we make
+ 
+
+729
+00:21:39,140 --> 00:21:40,720
+that might be a design decision we make
+about the language to try and report
+
+730
+00:21:40,720 --> 00:21:40,730
+about the language to try and report
+ 
+
+731
+00:21:40,730 --> 00:21:42,159
+about the language to try and report
+errors like this and say now the
+
+732
+00:21:42,159 --> 00:21:42,169
+errors like this and say now the
+ 
+
+733
+00:21:42,169 --> 00:21:44,289
+errors like this and say now the
+language is changed and reports these
+
+734
+00:21:44,289 --> 00:21:44,299
+language is changed and reports these
+ 
+
+735
+00:21:44,299 --> 00:21:46,210
+language is changed and reports these
+kinds of errors in the compiler but we
+
+736
+00:21:46,210 --> 00:21:46,220
+kinds of errors in the compiler but we
+ 
+
+737
+00:21:46,220 --> 00:21:48,549
+kinds of errors in the compiler but we
+should not have the optimizer changing
+
+738
+00:21:48,549 --> 00:21:48,559
+should not have the optimizer changing
+ 
+
+739
+00:21:48,559 --> 00:21:51,010
+should not have the optimizer changing
+the behavior of the program the program
+
+740
+00:21:51,010 --> 00:21:51,020
+the behavior of the program the program
+ 
+
+741
+00:21:51,020 --> 00:21:52,810
+the behavior of the program the program
+used to print something out when it's
+
+742
+00:21:52,810 --> 00:21:52,820
+used to print something out when it's
+ 
+
+743
+00:21:52,820 --> 00:21:54,399
+used to print something out when it's
+optimized it should still print the same
+
+744
+00:21:54,399 --> 00:21:54,409
+optimized it should still print the same
+ 
+
+745
+00:21:54,409 --> 00:21:58,990
+optimized it should still print the same
+thing okay so this overall idea this
+
+746
+00:21:58,990 --> 00:21:59,000
+thing okay so this overall idea this
+ 
+
+747
+00:21:59,000 --> 00:22:01,930
+thing okay so this overall idea this
+overall idea which shows up in our
+
+748
+00:22:01,930 --> 00:22:01,940
+overall idea which shows up in our
+
+749
+00:22:01,940 --> 00:22:03,789
+overall idea which shows up in our
+compiler as these detailed pattern
+
+750
+00:22:03,789 --> 00:22:03,799
+compiler as these detailed pattern
+
+751
+00:22:03,799 --> 00:22:05,560
+compiler as these detailed pattern
+matches and using information from these
+
+752
+00:22:05,560 --> 00:22:05,570
+matches and using information from these
+ 
+
+753
+00:22:05,570 --> 00:22:07,510
+matches and using information from these
+detailed pattern matches to make better
+
+754
+00:22:07,510 --> 00:22:07,520
+detailed pattern matches to make better
+ 
+
+755
+00:22:07,520 --> 00:22:08,169
+detailed pattern matches to make better
+decisions
+
+756
+00:22:08,169 --> 00:22:08,179
+decisions
+ 
+
+757
+00:22:08,179 --> 00:22:10,750
+decisions
+it's called instruction selection and
+
+758
+00:22:10,750 --> 00:22:10,760
+it's called instruction selection and
+ 
+
+759
+00:22:10,760 --> 00:22:12,549
+it's called instruction selection and
+there's sort of a visual way to think
+
+760
+00:22:12,549 --> 00:22:12,559
+there's sort of a visual way to think
+ 
+
+761
+00:22:12,559 --> 00:22:14,710
+there's sort of a visual way to think
+about it so if we take one of our if
+
+762
+00:22:14,710 --> 00:22:14,720
+about it so if we take one of our if
+ 
+
+763
+00:22:14,720 --> 00:22:22,550
+about it so if we take one of our if
+programs from above we can think of the
+
+764
+00:22:22,550 --> 00:22:22,560
+
+
+765
+00:22:22,560 --> 00:22:28,580
+programs were writing and we've done
+
+766
+00:22:28,580 --> 00:22:28,590
+programs were writing and we've done
+ 
+
+767
+00:22:28,590 --> 00:22:30,440
+programs were writing and we've done
+this you can think about this for any
+
+768
+00:22:30,440 --> 00:22:30,450
+this you can think about this for any
+ 
+
+769
+00:22:30,450 --> 00:22:32,230
+this you can think about this for any
+kind of recursive data structure like
+
+770
+00:22:32,230 --> 00:22:32,240
+kind of recursive data structure like
+ 
+
+771
+00:22:32,240 --> 00:22:35,090
+kind of recursive data structure like
+like our abstract syntax trees and we
+
+772
+00:22:35,090 --> 00:22:35,100
+like our abstract syntax trees and we
+ 
+
+773
+00:22:35,100 --> 00:22:36,500
+like our abstract syntax trees and we
+don't usually draw them this way in this
+
+774
+00:22:36,500 --> 00:22:36,510
+don't usually draw them this way in this
+
+775
+00:22:36,510 --> 00:22:38,180
+don't usually draw them this way in this
+class but it's useful to draw them this
+
+776
+00:22:38,180 --> 00:22:38,190
+class but it's useful to draw them this
+ 
+
+777
+00:22:38,190 --> 00:22:41,960
+class but it's useful to draw them this
+way sometimes so let's just a imagine
+
+778
+00:22:41,960 --> 00:22:41,970
+way sometimes so let's just a imagine
+ 
+
+779
+00:22:41,970 --> 00:22:45,980
+way sometimes so let's just a imagine
+drawing this if expression out is a tree
+
+780
+00:22:45,980 --> 00:22:45,990
+drawing this if expression out is a tree
+ 
+
+781
+00:22:45,990 --> 00:22:47,840
+drawing this if expression out is a tree
+so the ifs that we were matching on in
+
+782
+00:22:47,840 --> 00:22:47,850
+so the ifs that we were matching on in
+ 
+
+783
+00:22:47,850 --> 00:22:49,850
+so the ifs that we were matching on in
+detail had an if at the root then a
+
+784
+00:22:49,850 --> 00:22:49,860
+detail had an if at the root then a
+ 
+
+785
+00:22:49,860 --> 00:22:52,340
+detail had an if at the root then a
+greater than a that's a less than sign
+
+786
+00:22:52,340 --> 00:22:52,350
+greater than a that's a less than sign
+ 
+
+787
+00:22:52,350 --> 00:22:55,280
+greater than a that's a less than sign
+and then a greater than on this side and
+
+788
+00:22:55,280 --> 00:22:55,290
+and then a greater than on this side and
+ 
+
+789
+00:22:55,290 --> 00:22:57,050
+and then a greater than on this side and
+then there were two expressions and in
+
+790
+00:22:57,050 --> 00:22:57,060
+then there were two expressions and in
+ 
+
+791
+00:22:57,060 --> 00:22:59,690
+then there were two expressions and in
+Noah's of an an else expression and E 1
+
+792
+00:22:59,690 --> 00:22:59,700
+Noah's of an an else expression and E 1
+ 
+
+793
+00:22:59,700 --> 00:23:03,560
+Noah's of an an else expression and E 1
+and E 2 and then an else we can think of
+
+794
+00:23:03,560 --> 00:23:03,570
+and E 2 and then an else we can think of
+ 
+
+795
+00:23:03,570 --> 00:23:05,240
+and E 2 and then an else we can think of
+as being full sub trees because those
+
+796
+00:23:05,240 --> 00:23:05,250
+as being full sub trees because those
+ 
+
+797
+00:23:05,250 --> 00:23:11,270
+as being full sub trees because those
+could be whole sub expressions so the
+
+798
+00:23:11,270 --> 00:23:11,280
+could be whole sub expressions so the
+ 
+
+799
+00:23:11,280 --> 00:23:14,210
+could be whole sub expressions so the
+the overall if match right the if match
+
+800
+00:23:14,210 --> 00:23:14,220
+the overall if match right the if match
+ 
+
+801
+00:23:14,220 --> 00:23:16,730
+the overall if match right the if match
+that matched any possible expression we
+
+802
+00:23:16,730 --> 00:23:16,740
+that matched any possible expression we
+ 
+
+803
+00:23:16,740 --> 00:23:19,280
+that matched any possible expression we
+could think of that as just handling
+
+804
+00:23:19,280 --> 00:23:19,290
+could think of that as just handling
+ 
+
+805
+00:23:19,290 --> 00:23:21,740
+could think of that as just handling
+this node of the tree and then it
+
+806
+00:23:21,740 --> 00:23:21,750
+this node of the tree and then it
+ 
+
+807
+00:23:21,750 --> 00:23:26,960
+this node of the tree and then it
+handled everything else this entire left
+
+808
+00:23:26,960 --> 00:23:26,970
+handled everything else this entire left
+ 
+
+809
+00:23:26,970 --> 00:23:29,540
+handled everything else this entire left
+hand side sub tree and these two sub
+
+810
+00:23:29,540 --> 00:23:29,550
+hand side sub tree and these two sub
+ 
+
+811
+00:23:29,550 --> 00:23:33,680
+hand side sub tree and these two sub
+trees separately and then these separate
+
+812
+00:23:33,680 --> 00:23:33,690
+trees separately and then these separate
+ 
+
+813
+00:23:33,690 --> 00:23:35,330
+trees separately and then these separate
+sub trees would get broken up by other
+
+814
+00:23:35,330 --> 00:23:35,340
+sub trees would get broken up by other
+ 
+
+815
+00:23:35,340 --> 00:23:37,160
+sub trees would get broken up by other
+naturals that's sort of what our
+
+816
+00:23:37,160 --> 00:23:37,170
+naturals that's sort of what our
+ 
+
+817
+00:23:37,170 --> 00:23:38,990
+naturals that's sort of what our
+compilers are doing now every time we
+
+818
+00:23:38,990 --> 00:23:39,000
+compilers are doing now every time we
+ 
+
+819
+00:23:39,000 --> 00:23:41,090
+compilers are doing now every time we
+look at this tree we look at one node in
+
+820
+00:23:41,090 --> 00:23:41,100
+look at this tree we look at one node in
+ 
+
+821
+00:23:41,100 --> 00:23:43,520
+look at this tree we look at one node in
+the tree figure out what to do with that
+
+822
+00:23:43,520 --> 00:23:43,530
+the tree figure out what to do with that
+ 
+
+823
+00:23:43,530 --> 00:23:45,920
+the tree figure out what to do with that
+one node and then recursively handle all
+
+824
+00:23:45,920 --> 00:23:45,930
+one node and then recursively handle all
+ 
+
+825
+00:23:45,930 --> 00:23:47,840
+one node and then recursively handle all
+the sub trees better there is some
+
+826
+00:23:47,840 --> 00:23:47,850
+the sub trees better there is some
+ 
+
+827
+00:23:47,850 --> 00:24:06,790
+the sub trees better there is some
+expressions our more detailed match
+
+828
+00:24:06,790 --> 00:24:06,800
+
+
+829
+00:24:06,800 --> 00:24:11,240
+is picking a larger chunk of the tree at
+
+830
+00:24:11,240 --> 00:24:11,250
+is picking a larger chunk of the tree at
+ 
+
+831
+00:24:11,250 --> 00:24:15,740
+is picking a larger chunk of the tree at
+a time to handle picking a larger chunk
+
+832
+00:24:15,740 --> 00:24:15,750
+a time to handle picking a larger chunk
+ 
+
+833
+00:24:15,750 --> 00:24:17,510
+a time to handle picking a larger chunk
+of the tree at a time to handle and you
+
+834
+00:24:17,510 --> 00:24:17,520
+of the tree at a time to handle and you
+ 
+
+835
+00:24:17,520 --> 00:24:19,850
+of the tree at a time to handle and you
+can think of everything I did above with
+
+836
+00:24:19,850 --> 00:24:19,860
+can think of everything I did above with
+ 
+
+837
+00:24:19,860 --> 00:24:21,590
+can think of everything I did above with
+the plus expression this matching on the
+
+838
+00:24:21,590 --> 00:24:21,600
+the plus expression this matching on the
+ 
+
+839
+00:24:21,600 --> 00:24:24,590
+the plus expression this matching on the
+plus expression to be different parts of
+
+840
+00:24:24,590 --> 00:24:24,600
+plus expression to be different parts of
+ 
+
+841
+00:24:24,600 --> 00:24:26,780
+plus expression to be different parts of
+the expression starting at the root that
+
+842
+00:24:26,780 --> 00:24:26,790
+the expression starting at the root that
+ 
+
+843
+00:24:26,790 --> 00:24:29,360
+the expression starting at the root that
+are matched and then recursive pieces
+
+844
+00:24:29,360 --> 00:24:29,370
+are matched and then recursive pieces
+ 
+
+845
+00:24:29,370 --> 00:24:31,669
+are matched and then recursive pieces
+end up getting handled by doing
+
+846
+00:24:31,669 --> 00:24:31,679
+end up getting handled by doing
+
+847
+00:24:31,679 --> 00:24:36,049
+end up getting handled by doing
+recursive calls so one of the things
+
+848
+00:24:36,049 --> 00:24:36,059
+recursive calls so one of the things
+ 
+
+849
+00:24:36,059 --> 00:24:38,510
+recursive calls so one of the things
+you'll see in literature on instruction
+
+850
+00:24:38,510 --> 00:24:38,520
+you'll see in literature on instruction
+
+851
+00:24:38,520 --> 00:24:40,850
+you'll see in literature on instruction
+selection and I'm going to not go too in
+
+852
+00:24:40,850 --> 00:24:40,860
+selection and I'm going to not go too in
+ 
+
+853
+00:24:40,860 --> 00:24:42,470
+selection and I'm going to not go too in
+depth into this I want to point out to
+
+854
+00:24:42,470 --> 00:24:42,480
+depth into this I want to point out to
+ 
+
+855
+00:24:42,480 --> 00:24:44,720
+depth into this I want to point out to
+you that this exists but we have finite
+
+856
+00:24:44,720 --> 00:24:44,730
+you that this exists but we have finite
+ 
+
+857
+00:24:44,730 --> 00:24:49,160
+you that this exists but we have finite
+time in 131 1 this picture gets at this
+
+858
+00:24:49,160 --> 00:24:49,170
+time in 131 1 this picture gets at this
+ 
+
+859
+00:24:49,170 --> 00:24:53,090
+time in 131 1 this picture gets at this
+idea in instruction selection that what
+
+860
+00:24:53,090 --> 00:24:53,100
+idea in instruction selection that what
+ 
+
+861
+00:24:53,100 --> 00:24:55,400
+idea in instruction selection that what
+we are doing and I'm going to just move
+
+862
+00:24:55,400 --> 00:24:55,410
+we are doing and I'm going to just move
+ 
+
+863
+00:24:55,410 --> 00:24:57,560
+we are doing and I'm going to just move
+this example down so I can get this
+
+864
+00:24:57,560 --> 00:24:57,570
+this example down so I can get this
+ 
+
+865
+00:24:57,570 --> 00:24:59,810
+this example down so I can get this
+picture next to this picture what we are
+
+866
+00:24:59,810 --> 00:24:59,820
+picture next to this picture what we are
+ 
+
+867
+00:24:59,820 --> 00:25:02,750
+picture next to this picture what we are
+doing when we select instructions is we
+
+868
+00:25:02,750 --> 00:25:02,760
+doing when we select instructions is we
+ 
+
+869
+00:25:02,760 --> 00:25:05,240
+doing when we select instructions is we
+have some tree that represents our
+
+870
+00:25:05,240 --> 00:25:05,250
+have some tree that represents our
+ 
+
+871
+00:25:05,250 --> 00:25:12,320
+have some tree that represents our
+program and we've got all of these
+
+872
+00:25:12,320 --> 00:25:12,330
+program and we've got all of these
+ 
+
+873
+00:25:12,330 --> 00:25:13,700
+program and we've got all of these
+different ways and I'm just going to
+
+874
+00:25:13,700 --> 00:25:13,710
+different ways and I'm just going to
+ 
+
+875
+00:25:13,710 --> 00:25:15,290
+different ways and I'm just going to
+draw them as these abstract shapes off
+
+876
+00:25:15,290 --> 00:25:15,300
+draw them as these abstract shapes off
+ 
+
+877
+00:25:15,300 --> 00:25:19,700
+draw them as these abstract shapes off
+to the side to compile subsets of nodes
+
+878
+00:25:19,700 --> 00:25:19,710
+to the side to compile subsets of nodes
+ 
+
+879
+00:25:19,710 --> 00:25:21,620
+to the side to compile subsets of nodes
+in the tree into useful assembly
+
+880
+00:25:21,620 --> 00:25:21,630
+in the tree into useful assembly
+ 
+
+881
+00:25:21,630 --> 00:25:23,419
+in the tree into useful assembly
+instructions into useful target machine
+
+882
+00:25:23,419 --> 00:25:23,429
+instructions into useful target machine
+ 
+
+883
+00:25:23,429 --> 00:25:26,240
+instructions into useful target machine
+instructions and what our compiler is
+
+884
+00:25:26,240 --> 00:25:26,250
+instructions and what our compiler is
+
+885
+00:25:26,250 --> 00:25:28,040
+instructions and what our compiler is
+trying to do one way to view what our
+
+886
+00:25:28,040 --> 00:25:28,050
+trying to do one way to view what our
+
+887
+00:25:28,050 --> 00:25:32,470
+trying to do one way to view what our
+compilers job is is to find a complete
+
+888
+00:25:32,470 --> 00:25:32,480
+compilers job is is to find a complete
+ 
+
+889
+00:25:32,480 --> 00:25:35,450
+compilers job is is to find a complete
+covering tiling of this tree with
+
+890
+00:25:35,450 --> 00:25:35,460
+covering tiling of this tree with
+ 
+
+891
+00:25:35,460 --> 00:25:36,980
+covering tiling of this tree with
+different ways we know how to compile
+
+892
+00:25:36,980 --> 00:25:36,990
+different ways we know how to compile
+ 
+
+893
+00:25:36,990 --> 00:25:40,400
+different ways we know how to compile
+notes so there might be one tiling that
+
+894
+00:25:40,400 --> 00:25:40,410
+notes so there might be one tiling that
+ 
+
+895
+00:25:40,410 --> 00:25:44,169
+notes so there might be one tiling that
+involves grabbing these with this color
+
+896
+00:25:44,169 --> 00:25:44,179
+involves grabbing these with this color
+
+897
+00:25:44,179 --> 00:25:47,690
+involves grabbing these with this color
+grabbing these with this color grabbing
+
+898
+00:25:47,690 --> 00:25:47,700
+grabbing these with this color grabbing
+ 
+
+899
+00:25:47,700 --> 00:25:49,970
+grabbing these with this color grabbing
+these with this color and then these
+
+900
+00:25:49,970 --> 00:25:49,980
+these with this color and then these
+ 
+
+901
+00:25:49,980 --> 00:25:52,580
+these with this color and then these
+down here that might be one possible way
+
+902
+00:25:52,580 --> 00:25:52,590
+down here that might be one possible way
+ 
+
+903
+00:25:52,590 --> 00:25:56,210
+down here that might be one possible way
+to think about tiling this entire tree
+
+904
+00:25:56,210 --> 00:25:56,220
+to think about tiling this entire tree
+
+905
+00:25:56,220 --> 00:25:58,820
+to think about tiling this entire tree
+with ways we know to turn nodes into
+
+906
+00:25:58,820 --> 00:25:58,830
+with ways we know to turn nodes into
+ 
+
+907
+00:25:58,830 --> 00:26:02,210
+with ways we know to turn nodes into
+instructions and if you squint at our
+
+908
+00:26:02,210 --> 00:26:02,220
+instructions and if you squint at our
+ 
+
+909
+00:26:02,220 --> 00:26:03,680
+instructions and if you squint at our
+pattern matches you could imagine that
+
+910
+00:26:03,680 --> 00:26:03,690
+pattern matches you could imagine that
+
+911
+00:26:03,690 --> 00:26:07,130
+pattern matches you could imagine that
+the the purple region here and the red
+
+912
+00:26:07,130 --> 00:26:07,140
+the the purple region here and the red
+ 
+
+913
+00:26:07,140 --> 00:26:10,460
+the the purple region here and the red
+region here our nested matches where we
+
+914
+00:26:10,460 --> 00:26:10,470
+region here our nested matches where we
+ 
+
+915
+00:26:10,470 --> 00:26:12,280
+region here our nested matches where we
+matched on more information and then
+
+916
+00:26:12,280 --> 00:26:12,290
+matched on more information and then
+ 
+
+917
+00:26:12,290 --> 00:26:14,710
+matched on more information and then
+the bottom most leaf nodes are things
+
+918
+00:26:14,710 --> 00:26:14,720
+the bottom most leaf nodes are things
+ 
+
+919
+00:26:14,720 --> 00:26:16,510
+the bottom most leaf nodes are things
+like numbers and boolean's that we just
+
+920
+00:26:16,510 --> 00:26:16,520
+like numbers and boolean's that we just
+ 
+
+921
+00:26:16,520 --> 00:26:20,500
+like numbers and boolean's that we just
+compile very directly and the strategy
+
+922
+00:26:20,500 --> 00:26:20,510
+compile very directly and the strategy
+ 
+
+923
+00:26:20,510 --> 00:26:23,110
+compile very directly and the strategy
+we have implemented in our compiler is a
+
+924
+00:26:23,110 --> 00:26:23,120
+we have implemented in our compiler is a
+ 
+
+925
+00:26:23,120 --> 00:26:25,570
+we have implemented in our compiler is a
+greedy strategy that starts from the
+
+926
+00:26:25,570 --> 00:26:25,580
+greedy strategy that starts from the
+ 
+
+927
+00:26:25,580 --> 00:26:29,800
+greedy strategy that starts from the
+root what our compiler does is greedily
+
+928
+00:26:29,800 --> 00:26:29,810
+root what our compiler does is greedily
+
+929
+00:26:29,810 --> 00:26:31,570
+root what our compiler does is greedily
+matches things starting from the root
+
+930
+00:26:31,570 --> 00:26:31,580
+matches things starting from the root
+
+931
+00:26:31,580 --> 00:26:33,760
+matches things starting from the root
+picking picking what it can find from
+
+932
+00:26:33,760 --> 00:26:33,770
+picking picking what it can find from
+ 
+
+933
+00:26:33,770 --> 00:26:35,740
+picking picking what it can find from
+the root and in recurring on pieces and
+
+934
+00:26:35,740 --> 00:26:35,750
+the root and in recurring on pieces and
+ 
+
+935
+00:26:35,750 --> 00:26:38,680
+the root and in recurring on pieces and
+there is an entire body of literature if
+
+936
+00:26:38,680 --> 00:26:38,690
+there is an entire body of literature if
+ 
+
+937
+00:26:38,690 --> 00:26:39,940
+there is an entire body of literature if
+you took if you think like a graduate
+
+938
+00:26:39,940 --> 00:26:39,950
+you took if you think like a graduate
+ 
+
+939
+00:26:39,950 --> 00:26:42,760
+you took if you think like a graduate
+course in compilers or look into deeper
+
+940
+00:26:42,760 --> 00:26:42,770
+course in compilers or look into deeper
+ 
+
+941
+00:26:42,770 --> 00:26:44,890
+course in compilers or look into deeper
+compiler optimizations there's an entire
+
+942
+00:26:44,890 --> 00:26:44,900
+compiler optimizations there's an entire
+ 
+
+943
+00:26:44,900 --> 00:26:46,990
+compiler optimizations there's an entire
+body of literature on ways of thinking
+
+944
+00:26:46,990 --> 00:26:47,000
+body of literature on ways of thinking
+ 
+
+945
+00:26:47,000 --> 00:26:49,140
+body of literature on ways of thinking
+about this as a tiling problem
+
+946
+00:26:49,140 --> 00:26:49,150
+about this as a tiling problem
+ 
+
+947
+00:26:49,150 --> 00:26:51,040
+about this as a tiling problem
+expressing the different ways you know
+
+948
+00:26:51,040 --> 00:26:51,050
+expressing the different ways you know
+ 
+
+949
+00:26:51,050 --> 00:26:52,870
+expressing the different ways you know
+how to compile subsets of nodes and
+
+950
+00:26:52,870 --> 00:26:52,880
+how to compile subsets of nodes and
+ 
+
+951
+00:26:52,880 --> 00:26:55,150
+how to compile subsets of nodes and
+trying to come up with an optimal tiling
+
+952
+00:26:55,150 --> 00:26:55,160
+trying to come up with an optimal tiling
+ 
+
+953
+00:26:55,160 --> 00:26:58,480
+trying to come up with an optimal tiling
+of this tree and that's a an interesting
+
+954
+00:26:58,480 --> 00:26:58,490
+of this tree and that's a an interesting
+ 
+
+955
+00:26:58,490 --> 00:27:02,440
+of this tree and that's a an interesting
+way to go forward with this a reasonably
+
+956
+00:27:02,440 --> 00:27:02,450
+way to go forward with this a reasonably
+ 
+
+957
+00:27:02,450 --> 00:27:04,180
+way to go forward with this a reasonably
+straightforward way to implement this
+
+958
+00:27:04,180 --> 00:27:04,190
+straightforward way to implement this
+ 
+
+959
+00:27:04,190 --> 00:27:06,730
+straightforward way to implement this
+and this is also related to how GCC does
+
+960
+00:27:06,730 --> 00:27:06,740
+and this is also related to how GCC does
+ 
+
+961
+00:27:06,740 --> 00:27:10,150
+and this is also related to how GCC does
+this is have a bunch of handwritten
+
+962
+00:27:10,150 --> 00:27:10,160
+this is have a bunch of handwritten
+ 
+
+963
+00:27:10,160 --> 00:27:12,430
+this is have a bunch of handwritten
+greedy rules that start at the root and
+
+964
+00:27:12,430 --> 00:27:12,440
+greedy rules that start at the root and
+ 
+
+965
+00:27:12,440 --> 00:27:14,440
+greedy rules that start at the root and
+go down that's really what our pattern
+
+966
+00:27:14,440 --> 00:27:14,450
+go down that's really what our pattern
+ 
+
+967
+00:27:14,450 --> 00:27:17,380
+go down that's really what our pattern
+matches are in the compile function and
+
+968
+00:27:17,380 --> 00:27:17,390
+matches are in the compile function and
+
+969
+00:27:17,390 --> 00:27:19,930
+matches are in the compile function and
+this is what GCC does for a decent chunk
+
+970
+00:27:19,930 --> 00:27:19,940
+this is what GCC does for a decent chunk
+ 
+
+971
+00:27:19,940 --> 00:27:23,590
+this is what GCC does for a decent chunk
+of its instruction selection and so I
+
+972
+00:27:23,590 --> 00:27:23,600
+of its instruction selection and so I
+
+973
+00:27:23,600 --> 00:27:26,230
+of its instruction selection and so I
+just want to put this picture up here to
+
+974
+00:27:26,230 --> 00:27:26,240
+just want to put this picture up here to
+ 
+
+975
+00:27:26,240 --> 00:27:28,120
+just want to put this picture up here to
+show you that there's this thing that
+
+976
+00:27:28,120 --> 00:27:28,130
+show you that there's this thing that
+ 
+
+977
+00:27:28,130 --> 00:27:31,120
+show you that there's this thing that
+we're doing is one implementation
+
+978
+00:27:31,120 --> 00:27:31,130
+we're doing is one implementation
+ 
+
+979
+00:27:31,130 --> 00:27:33,850
+we're doing is one implementation
+strategy and there's a whole sort of
+
+980
+00:27:33,850 --> 00:27:33,860
+strategy and there's a whole sort of
+ 
+
+981
+00:27:33,860 --> 00:27:35,680
+strategy and there's a whole sort of
+graduate course in compilers you could
+
+982
+00:27:35,680 --> 00:27:35,690
+graduate course in compilers you could
+ 
+
+983
+00:27:35,690 --> 00:27:37,600
+graduate course in compilers you could
+take talking about this people write the
+
+984
+00:27:37,600 --> 00:27:37,610
+take talking about this people write the
+ 
+
+985
+00:27:37,610 --> 00:27:39,190
+take talking about this people write the
+dissertations on how to do clever
+
+986
+00:27:39,190 --> 00:27:39,200
+dissertations on how to do clever
+
+987
+00:27:39,200 --> 00:27:42,280
+dissertations on how to do clever
+instruction selection but well we're we
+
+988
+00:27:42,280 --> 00:27:42,290
+instruction selection but well we're we
+ 
+
+989
+00:27:42,290 --> 00:27:44,380
+instruction selection but well we're we
+can get pretty far with this greedy
+
+990
+00:27:44,380 --> 00:27:44,390
+can get pretty far with this greedy
+ 
+
+991
+00:27:44,390 --> 00:27:46,270
+can get pretty far with this greedy
+strategy starting from the root using a
+
+992
+00:27:46,270 --> 00:27:46,280
+strategy starting from the root using a
+ 
+
+993
+00:27:46,280 --> 00:27:47,640
+strategy starting from the root using a
+little more information
+
+994
+00:27:47,640 --> 00:27:47,650
+little more information
+ 
+
+995
+00:27:47,650 --> 00:27:49,870
+little more information
+so that's instruction selection and
+
+996
+00:27:49,870 --> 00:27:49,880
+so that's instruction selection and
+ 
+
+997
+00:27:49,880 --> 00:27:53,170
+so that's instruction selection and
+that's one way we can take we can see
+
+998
+00:27:53,170 --> 00:27:53,180
+that's one way we can take we can see
+ 
+
+999
+00:27:53,180 --> 00:27:56,830
+that's one way we can take we can see
+from our existing compiler and implement
+
+1000
+00:27:56,830 --> 00:27:56,840
+from our existing compiler and implement
+ 
+
+1001
+00:27:56,840 --> 00:27:59,110
+from our existing compiler and implement
+it ourselves how to do a little bit
+
+1002
+00:27:59,110 --> 00:27:59,120
+it ourselves how to do a little bit
+ 
+
+1003
+00:27:59,120 --> 00:28:03,040
+it ourselves how to do a little bit
+better in generating assembly code any
+
+1004
+00:28:03,040 --> 00:28:03,050
+better in generating assembly code any
+ 
+
+1005
+00:28:03,050 --> 00:28:04,750
+better in generating assembly code any
+questions about that idea about
+
+1006
+00:28:04,750 --> 00:28:04,760
+questions about that idea about
+ 
+
+1007
+00:28:04,760 --> 00:28:12,909
+questions about that idea about
+high-level idea
+
+1008
+00:28:12,909 --> 00:28:12,919
+
+
+1009
+00:28:12,919 --> 00:28:19,310
+okay so one okay so I'm gonna put up
+
+1010
+00:28:19,310 --> 00:28:19,320
+okay so one okay so I'm gonna put up
+ 
+
+1011
+00:28:19,320 --> 00:28:21,860
+okay so one okay so I'm gonna put up
+some assembly code
+
+1012
+00:28:21,860 --> 00:28:21,870
+some assembly code
+ 
+
+1013
+00:28:21,870 --> 00:28:24,710
+some assembly code
+I just want to highlight I actually only
+
+1014
+00:28:24,710 --> 00:28:24,720
+I just want to highlight I actually only
+ 
+
+1015
+00:28:24,720 --> 00:28:26,690
+I just want to highlight I actually only
+want to highlight one piece of this as I
+
+1016
+00:28:26,690 --> 00:28:26,700
+want to highlight one piece of this as I
+ 
+
+1017
+00:28:26,700 --> 00:28:28,009
+want to highlight one piece of this as I
+want it because I want to get through
+
+1018
+00:28:28,009 --> 00:28:28,019
+want it because I want to get through
+ 
+
+1019
+00:28:28,019 --> 00:28:29,389
+want it because I want to get through
+all three ideas today so wanna highlight
+
+1020
+00:28:29,389 --> 00:28:29,399
+all three ideas today so wanna highlight
+ 
+
+1021
+00:28:29,399 --> 00:28:31,430
+all three ideas today so wanna highlight
+just one small piece of this I mean this
+
+1022
+00:28:31,430 --> 00:28:31,440
+just one small piece of this I mean this
+ 
+
+1023
+00:28:31,440 --> 00:28:32,899
+just one small piece of this I mean this
+is similar to the code that I had up on
+
+1024
+00:28:32,899 --> 00:28:32,909
+is similar to the code that I had up on
+ 
+
+1025
+00:28:32,909 --> 00:28:37,450
+is similar to the code that I had up on
+Monday the piece I want to highlight is
+
+1026
+00:28:37,450 --> 00:28:37,460
+Monday the piece I want to highlight is
+ 
+
+1027
+00:28:37,460 --> 00:28:44,360
+Monday the piece I want to highlight is
+right here and this is code that you
+
+1028
+00:28:44,360 --> 00:28:44,370
+right here and this is code that you
+ 
+
+1029
+00:28:44,370 --> 00:28:45,950
+right here and this is code that you
+have probably seen in the generated code
+
+1030
+00:28:45,950 --> 00:28:45,960
+have probably seen in the generated code
+ 
+
+1031
+00:28:45,960 --> 00:28:49,129
+have probably seen in the generated code
+of your compilers a lot but the pattern
+
+1032
+00:28:49,129 --> 00:28:49,139
+of your compilers a lot but the pattern
+ 
+
+1033
+00:28:49,139 --> 00:28:50,990
+of your compilers a lot but the pattern
+that comes up over and over again
+
+1034
+00:28:50,990 --> 00:28:51,000
+that comes up over and over again
+ 
+
+1035
+00:28:51,000 --> 00:28:53,090
+that comes up over and over again
+in the generated codes of our compiler
+
+1036
+00:28:53,090 --> 00:28:53,100
+in the generated codes of our compiler
+ 
+
+1037
+00:28:53,100 --> 00:28:55,190
+in the generated codes of our compiler
+we take the value in the ax we move it
+
+1038
+00:28:55,190 --> 00:28:55,200
+we take the value in the ax we move it
+ 
+
+1039
+00:28:55,200 --> 00:28:56,629
+we take the value in the ax we move it
+onto the stack and then we take the
+
+1040
+00:28:56,629 --> 00:28:56,639
+onto the stack and then we take the
+ 
+
+1041
+00:28:56,639 --> 00:28:58,250
+onto the stack and then we take the
+value at that stack address and move it
+
+1042
+00:28:58,250 --> 00:28:58,260
+value at that stack address and move it
+ 
+
+1043
+00:28:58,260 --> 00:29:02,000
+value at that stack address and move it
+back into EAX and and much rejoicing was
+
+1044
+00:29:02,000 --> 00:29:02,010
+back into EAX and and much rejoicing was
+ 
+
+1045
+00:29:02,010 --> 00:29:07,909
+back into EAX and and much rejoicing was
+had at that extra work so there is an
+
+1046
+00:29:07,909 --> 00:29:07,919
+had at that extra work so there is an
+ 
+
+1047
+00:29:07,919 --> 00:29:12,350
+had at that extra work so there is an
+extremely sort of blunt straightforward
+
+1048
+00:29:12,350 --> 00:29:12,360
+extremely sort of blunt straightforward
+ 
+
+1049
+00:29:12,360 --> 00:29:14,779
+extremely sort of blunt straightforward
+approach to handling this kind of
+
+1050
+00:29:14,779 --> 00:29:14,789
+approach to handling this kind of
+ 
+
+1051
+00:29:14,789 --> 00:29:21,320
+approach to handling this kind of
+problem in compiled output this is about
+
+1052
+00:29:21,320 --> 00:29:21,330
+problem in compiled output this is about
+ 
+
+1053
+00:29:21,330 --> 00:29:25,490
+problem in compiled output this is about
+as I don't know about if it's worth
+
+1054
+00:29:25,490 --> 00:29:25,500
+as I don't know about if it's worth
+ 
+
+1055
+00:29:25,500 --> 00:29:27,440
+as I don't know about if it's worth
+calling it brute force but it's like
+
+1056
+00:29:27,440 --> 00:29:27,450
+calling it brute force but it's like
+ 
+
+1057
+00:29:27,450 --> 00:29:31,159
+calling it brute force but it's like
+this is a solution that is clever maybe
+
+1058
+00:29:31,159 --> 00:29:31,169
+this is a solution that is clever maybe
+ 
+
+1059
+00:29:31,169 --> 00:29:34,539
+this is a solution that is clever maybe
+only in its simplicity so one way to
+
+1060
+00:29:34,539 --> 00:29:34,549
+only in its simplicity so one way to
+ 
+
+1061
+00:29:34,549 --> 00:29:37,820
+only in its simplicity so one way to
+talk about making this better avoiding
+
+1062
+00:29:37,820 --> 00:29:37,830
+talk about making this better avoiding
+ 
+
+1063
+00:29:37,830 --> 00:29:40,250
+talk about making this better avoiding
+this case and compiled output is let's
+
+1064
+00:29:40,250 --> 00:29:40,260
+this case and compiled output is let's
+ 
+
+1065
+00:29:40,260 --> 00:29:55,410
+this case and compiled output is let's
+imagine writing a function called
+
+1066
+00:29:55,410 --> 00:29:55,420
+
+
+1067
+00:29:55,420 --> 00:29:58,530
+improve instructions that takes an
+
+1068
+00:29:58,530 --> 00:29:58,540
+improve instructions that takes an
+ 
+
+1069
+00:29:58,540 --> 00:30:00,720
+improve instructions that takes an
+instruction list and it's going to
+
+1070
+00:30:00,720 --> 00:30:00,730
+instruction list and it's going to
+ 
+
+1071
+00:30:00,730 --> 00:30:02,490
+instruction list and it's going to
+produce a new instruction list so it's
+
+1072
+00:30:02,490 --> 00:30:02,500
+produce a new instruction list so it's
+ 
+
+1073
+00:30:02,500 --> 00:30:04,230
+produce a new instruction list so it's
+going to just make your instructions
+
+1074
+00:30:04,230 --> 00:30:04,240
+going to just make your instructions
+ 
+
+1075
+00:30:04,240 --> 00:30:16,260
+going to just make your instructions
+better and this the idea here is that
+
+1076
+00:30:16,260 --> 00:30:16,270
+better and this the idea here is that
+ 
+
+1077
+00:30:16,270 --> 00:30:18,420
+better and this the idea here is that
+improve instructions would go in the
+
+1078
+00:30:18,420 --> 00:30:18,430
+improve instructions would go in the
+ 
+
+1079
+00:30:18,430 --> 00:30:20,610
+improve instructions would go in the
+compiler right before you print out all
+
+1080
+00:30:20,610 --> 00:30:20,620
+compiler right before you print out all
+ 
+
+1081
+00:30:20,620 --> 00:30:22,440
+compiler right before you print out all
+the instructions right so how do our
+
+1082
+00:30:22,440 --> 00:30:22,450
+the instructions right so how do our
+ 
+
+1083
+00:30:22,450 --> 00:30:24,480
+the instructions right so how do our
+compilers work we parse we compile to
+
+1084
+00:30:24,480 --> 00:30:24,490
+compilers work we parse we compile to
+ 
+
+1085
+00:30:24,490 --> 00:30:25,980
+compilers work we parse we compile to
+get an instruction list and then we
+
+1086
+00:30:25,980 --> 00:30:25,990
+get an instruction list and then we
+
+1087
+00:30:25,990 --> 00:30:27,540
+get an instruction list and then we
+print out all the instructions right
+
+1088
+00:30:27,540 --> 00:30:27,550
+print out all the instructions right
+ 
+
+1089
+00:30:27,550 --> 00:30:29,460
+print out all the instructions right
+that's the last step so let's imagine we
+
+1090
+00:30:29,460 --> 00:30:29,470
+that's the last step so let's imagine we
+ 
+
+1091
+00:30:29,470 --> 00:30:31,770
+that's the last step so let's imagine we
+improved the instruction list before
+
+1092
+00:30:31,770 --> 00:30:31,780
+improved the instruction list before
+ 
+
+1093
+00:30:31,780 --> 00:30:33,030
+improved the instruction list before
+printing it out let's just make it a
+
+1094
+00:30:33,030 --> 00:30:33,040
+printing it out let's just make it a
+ 
+
+1095
+00:30:33,040 --> 00:30:37,350
+printing it out let's just make it a
+better instruction list so one way to do
+
+1096
+00:30:37,350 --> 00:30:37,360
+better instruction list so one way to do
+ 
+
+1097
+00:30:37,360 --> 00:30:42,740
+better instruction list so one way to do
+this and this is where this is almost a
+
+1098
+00:30:42,740 --> 00:30:42,750
+this and this is where this is almost a
+ 
+
+1099
+00:30:42,750 --> 00:30:45,060
+this and this is where this is almost a
+lot of what I'm telling you is the
+
+1100
+00:30:45,060 --> 00:30:45,070
+lot of what I'm telling you is the
+ 
+
+1101
+00:30:45,070 --> 00:30:47,280
+lot of what I'm telling you is the
+simple thing is done in practice and
+
+1102
+00:30:47,280 --> 00:30:47,290
+simple thing is done in practice and
+ 
+
+1103
+00:30:47,290 --> 00:30:51,150
+simple thing is done in practice and
+works so let's match the instruction the
+
+1104
+00:30:51,150 --> 00:30:51,160
+works so let's match the instruction the
+ 
+
+1105
+00:30:51,160 --> 00:30:55,440
+works so let's match the instruction the
+instructions with and let's imagine that
+
+1106
+00:30:55,440 --> 00:30:55,450
+instructions with and let's imagine that
+ 
+
+1107
+00:30:55,450 --> 00:30:57,750
+instructions with and let's imagine that
+at the front of the instruction list we
+
+1108
+00:30:57,750 --> 00:30:57,760
+at the front of the instruction list we
+ 
+
+1109
+00:30:57,760 --> 00:31:06,830
+at the front of the instruction list we
+have an eye move of a reg offset with
+
+1110
+00:31:06,830 --> 00:31:06,840
+have an eye move of a reg offset with
+ 
+
+1111
+00:31:06,840 --> 00:31:16,580
+have an eye move of a reg offset with
+EBP and some number N and the Reg ya X
+
+1112
+00:31:16,580 --> 00:31:16,590
+EBP and some number N and the Reg ya X
+ 
+
+1113
+00:31:16,590 --> 00:31:26,220
+EBP and some number N and the Reg ya X
+followed by an eye move of reg ax and a
+
+1114
+00:31:26,220 --> 00:31:26,230
+followed by an eye move of reg ax and a
+ 
+
+1115
+00:31:26,230 --> 00:31:29,430
+followed by an eye move of reg ax and a
+reg offset with the same the same number
+
+1116
+00:31:29,430 --> 00:31:29,440
+reg offset with the same the same number
+ 
+
+1117
+00:31:29,440 --> 00:31:38,270
+reg offset with the same the same number
+there
+
+1118
+00:31:38,270 --> 00:31:38,280
+
+
+1119
+00:31:38,280 --> 00:31:40,770
+and let me write this in the right
+
+1120
+00:31:40,770 --> 00:31:40,780
+and let me write this in the right
+ 
+
+1121
+00:31:40,780 --> 00:31:43,200
+and let me write this in the right
+pattern ratcheting style okay so this
+
+1122
+00:31:43,200 --> 00:31:43,210
+pattern ratcheting style okay so this
+ 
+
+1123
+00:31:43,210 --> 00:31:48,930
+pattern ratcheting style okay so this
+thing linked on to this thing linked on
+
+1124
+00:31:48,930 --> 00:31:48,940
+thing linked on to this thing linked on
+ 
+
+1125
+00:31:48,940 --> 00:31:59,430
+thing linked on to this thing linked on
+to the rest of the instructions well if
+
+1126
+00:31:59,430 --> 00:31:59,440
+to the rest of the instructions well if
+
+1127
+00:31:59,440 --> 00:32:02,160
+to the rest of the instructions well if
+we're moving EAX on to the stack and
+
+1128
+00:32:02,160 --> 00:32:02,170
+we're moving EAX on to the stack and
+ 
+
+1129
+00:32:02,170 --> 00:32:03,870
+we're moving EAX on to the stack and
+then we're moving the value off the
+
+1130
+00:32:03,870 --> 00:32:03,880
+then we're moving the value off the
+ 
+
+1131
+00:32:03,880 --> 00:32:06,870
+then we're moving the value off the
+stack back into EAX we know that which
+
+1132
+00:32:06,870 --> 00:32:06,880
+stack back into EAX we know that which
+ 
+
+1133
+00:32:06,880 --> 00:32:08,340
+stack back into EAX we know that which
+instruction is redundant which
+
+1134
+00:32:08,340 --> 00:32:08,350
+instruction is redundant which
+ 
+
+1135
+00:32:08,350 --> 00:32:09,690
+instruction is redundant which
+instruction is redundant the first
+
+1136
+00:32:09,690 --> 00:32:09,700
+instruction is redundant the first
+
+1137
+00:32:09,700 --> 00:32:11,390
+instruction is redundant the first
+instruction of the second instruction
+
+1138
+00:32:11,390 --> 00:32:11,400
+instruction of the second instruction
+ 
+
+1139
+00:32:11,400 --> 00:32:13,920
+instruction of the second instruction
+the second right we have to move it onto
+
+1140
+00:32:13,920 --> 00:32:13,930
+the second right we have to move it onto
+ 
+
+1141
+00:32:13,930 --> 00:32:15,150
+the second right we have to move it onto
+the stack because we might look it up
+
+1142
+00:32:15,150 --> 00:32:15,160
+the stack because we might look it up
+ 
+
+1143
+00:32:15,160 --> 00:32:16,890
+the stack because we might look it up
+later we definitely don't need to move
+
+1144
+00:32:16,890 --> 00:32:16,900
+later we definitely don't need to move
+ 
+
+1145
+00:32:16,900 --> 00:32:18,960
+later we definitely don't need to move
+it back out of the stack into EAX right
+
+1146
+00:32:18,960 --> 00:32:18,970
+it back out of the stack into EAX right
+ 
+
+1147
+00:32:18,970 --> 00:32:24,330
+it back out of the stack into EAX right
+now so we could take this and just turn
+
+1148
+00:32:24,330 --> 00:32:24,340
+now so we could take this and just turn
+ 
+
+1149
+00:32:24,340 --> 00:32:28,800
+now so we could take this and just turn
+it into the first instruction here so
+
+1150
+00:32:28,800 --> 00:32:28,810
+it into the first instruction here so
+ 
+
+1151
+00:32:28,810 --> 00:32:35,160
+it into the first instruction here so
+the I move with the Reg offset the first
+
+1152
+00:32:35,160 --> 00:32:35,170
+the I move with the Reg offset the first
+ 
+
+1153
+00:32:35,170 --> 00:32:40,230
+the I move with the Reg offset the first
+one
+
+1154
+00:32:40,230 --> 00:32:40,240
+
+
+1155
+00:32:40,240 --> 00:32:44,010
+linked on to rest instructions link
+
+1156
+00:32:44,010 --> 00:32:44,020
+linked on to rest instructions link
+ 
+
+1157
+00:32:44,020 --> 00:32:45,780
+linked on to rest instructions link
+intereste answer so just drop the second
+
+1158
+00:32:45,780 --> 00:32:45,790
+intereste answer so just drop the second
+ 
+
+1159
+00:32:45,790 --> 00:32:47,580
+intereste answer so just drop the second
+instruction in the instruction list
+
+1160
+00:32:47,580 --> 00:32:47,590
+instruction in the instruction list
+ 
+
+1161
+00:32:47,590 --> 00:32:52,350
+instruction in the instruction list
+before printing should tweak this at all
+
+1162
+00:32:52,350 --> 00:32:52,360
+before printing should tweak this at all
+ 
+
+1163
+00:32:52,360 --> 00:32:54,810
+before printing should tweak this at all
+to make it more useful like one tweak
+
+1164
+00:32:54,810 --> 00:32:54,820
+to make it more useful like one tweak
+ 
+
+1165
+00:32:54,820 --> 00:32:55,890
+to make it more useful like one tweak
+here I could do to make this a little
+
+1166
+00:32:55,890 --> 00:32:55,900
+here I could do to make this a little
+ 
+
+1167
+00:32:55,900 --> 00:33:00,810
+here I could do to make this a little
+more useful yeah call improve
+
+1168
+00:33:00,810 --> 00:33:00,820
+more useful yeah call improve
+ 
+
+1169
+00:33:00,820 --> 00:33:02,910
+more useful yeah call improve
+instructions again right so I could
+
+1170
+00:33:02,910 --> 00:33:02,920
+instructions again right so I could
+ 
+
+1171
+00:33:02,920 --> 00:33:04,710
+instructions again right so I could
+recursively call improve instructions
+
+1172
+00:33:04,710 --> 00:33:04,720
+recursively call improve instructions
+
+1173
+00:33:04,720 --> 00:33:07,380
+recursively call improve instructions
+just on the rest just on the rest so
+
+1174
+00:33:07,380 --> 00:33:07,390
+just on the rest just on the rest so
+ 
+
+1175
+00:33:07,390 --> 00:33:14,880
+just on the rest just on the rest so
+here I could do improve instructions on
+
+1176
+00:33:14,880 --> 00:33:14,890
+here I could do improve instructions on
+ 
+
+1177
+00:33:14,890 --> 00:33:23,130
+here I could do improve instructions on
+the rest of the instructions yeah yeah
+
+1178
+00:33:23,130 --> 00:33:23,140
+the rest of the instructions yeah yeah
+ 
+
+1179
+00:33:23,140 --> 00:33:33,990
+the rest of the instructions yeah yeah
+go for it ah interesting yet so yeah why
+
+1180
+00:33:33,990 --> 00:33:34,000
+go for it ah interesting yet so yeah why
+ 
+
+1181
+00:33:34,000 --> 00:33:35,760
+go for it ah interesting yet so yeah why
+why is it that I didn't say anything
+
+1182
+00:33:35,760 --> 00:33:35,770
+why is it that I didn't say anything
+ 
+
+1183
+00:33:35,770 --> 00:33:37,410
+why is it that I didn't say anything
+about these lead-up instructions so
+
+1184
+00:33:37,410 --> 00:33:37,420
+about these lead-up instructions so
+ 
+
+1185
+00:33:37,420 --> 00:33:39,210
+about these lead-up instructions so
+what's going on here as I'm saying
+
+1186
+00:33:39,210 --> 00:33:39,220
+what's going on here as I'm saying
+ 
+
+1187
+00:33:39,220 --> 00:33:41,070
+what's going on here as I'm saying
+and it's coming up in this recursive
+
+1188
+00:33:41,070 --> 00:33:41,080
+and it's coming up in this recursive
+ 
+
+1189
+00:33:41,080 --> 00:33:42,780
+and it's coming up in this recursive
+call is we're saying we're just going to
+
+1190
+00:33:42,780 --> 00:33:42,790
+call is we're saying we're just going to
+ 
+
+1191
+00:33:42,790 --> 00:33:44,400
+call is we're saying we're just going to
+process the instructions from the front
+
+1192
+00:33:44,400 --> 00:33:44,410
+process the instructions from the front
+ 
+
+1193
+00:33:44,410 --> 00:33:47,910
+process the instructions from the front
+and if we get a prefix of instructions
+
+1194
+00:33:47,910 --> 00:33:47,920
+and if we get a prefix of instructions
+
+1195
+00:33:47,920 --> 00:33:50,400
+and if we get a prefix of instructions
+here that we recognize that we can make
+
+1196
+00:33:50,400 --> 00:33:50,410
+here that we recognize that we can make
+ 
+
+1197
+00:33:50,410 --> 00:33:52,650
+here that we recognize that we can make
+better we'll just we'll chop them off
+
+1198
+00:33:52,650 --> 00:33:52,660
+better we'll just we'll chop them off
+ 
+
+1199
+00:33:52,660 --> 00:33:54,870
+better we'll just we'll chop them off
+we'll chop them off that answer your
+
+1200
+00:33:54,870 --> 00:33:54,880
+we'll chop them off that answer your
+ 
+
+1201
+00:33:54,880 --> 00:34:03,299
+we'll chop them off that answer your
+question yeah so so we're talking about
+
+1202
+00:34:03,299 --> 00:34:03,309
+question yeah so so we're talking about
+ 
+
+1203
+00:34:03,309 --> 00:34:05,220
+question yeah so so we're talking about
+this recursive call right now which I'm
+
+1204
+00:34:05,220 --> 00:34:05,230
+this recursive call right now which I'm
+ 
+
+1205
+00:34:05,230 --> 00:34:06,900
+this recursive call right now which I'm
+sort of saying well okay so we're gonna
+
+1206
+00:34:06,900 --> 00:34:06,910
+sort of saying well okay so we're gonna
+ 
+
+1207
+00:34:06,910 --> 00:34:09,060
+sort of saying well okay so we're gonna
+do this recursive call on the rest then
+
+1208
+00:34:09,060 --> 00:34:09,070
+do this recursive call on the rest then
+ 
+
+1209
+00:34:09,070 --> 00:34:10,530
+do this recursive call on the rest then
+there is this question of like are we
+
+1210
+00:34:10,530 --> 00:34:10,540
+there is this question of like are we
+ 
+
+1211
+00:34:10,540 --> 00:34:12,300
+there is this question of like are we
+dropping the first instructions what's
+
+1212
+00:34:12,300 --> 00:34:12,310
+dropping the first instructions what's
+
+1213
+00:34:12,310 --> 00:34:13,740
+dropping the first instructions what's
+happening to the first instructions
+
+1214
+00:34:13,740 --> 00:34:13,750
+happening to the first instructions
+
+1215
+00:34:13,750 --> 00:34:15,389
+happening to the first instructions
+right we have to talk about the
+
+1216
+00:34:15,389 --> 00:34:15,399
+right we have to talk about the
+ 
+
+1217
+00:34:15,399 --> 00:34:16,770
+right we have to talk about the
+structure of this function a little bit
+
+1218
+00:34:16,770 --> 00:34:16,780
+structure of this function a little bit
+ 
+
+1219
+00:34:16,780 --> 00:34:19,080
+structure of this function a little bit
+more so we're definitely going to recur
+
+1220
+00:34:19,080 --> 00:34:19,090
+more so we're definitely going to recur
+ 
+
+1221
+00:34:19,090 --> 00:34:21,210
+more so we're definitely going to recur
+so that we can loop what else what else
+
+1222
+00:34:21,210 --> 00:34:21,220
+so that we can loop what else what else
+ 
+
+1223
+00:34:21,220 --> 00:34:27,870
+so that we can loop what else what else
+we need to worry about yeah yeah
+
+1224
+00:34:27,870 --> 00:34:27,880
+
+
+1225
+00:34:27,880 --> 00:34:30,010
+so we maybe could call improve
+
+1226
+00:34:30,010 --> 00:34:30,020
+so we maybe could call improve
+ 
+
+1227
+00:34:30,020 --> 00:34:32,200
+so we maybe could call improve
+instructions on the whole thing right
+
+1228
+00:34:32,200 --> 00:34:32,210
+instructions on the whole thing right
+ 
+
+1229
+00:34:32,210 --> 00:34:33,669
+instructions on the whole thing right
+because we might have crunched two
+
+1230
+00:34:33,669 --> 00:34:33,679
+because we might have crunched two
+ 
+
+1231
+00:34:33,679 --> 00:34:35,800
+because we might have crunched two
+instructions together at the front that
+
+1232
+00:34:35,800 --> 00:34:35,810
+instructions together at the front that
+ 
+
+1233
+00:34:35,810 --> 00:34:38,110
+instructions together at the front that
+then make another pattern match that we
+
+1234
+00:34:38,110 --> 00:34:38,120
+then make another pattern match that we
+ 
+
+1235
+00:34:38,120 --> 00:34:39,760
+then make another pattern match that we
+could also improve right we might be
+
+1236
+00:34:39,760 --> 00:34:39,770
+could also improve right we might be
+ 
+
+1237
+00:34:39,770 --> 00:34:41,169
+could also improve right we might be
+able to do that so maybe another
+
+1238
+00:34:41,169 --> 00:34:41,179
+able to do that so maybe another
+ 
+
+1239
+00:34:41,179 --> 00:34:50,950
+able to do that so maybe another
+approach here is to call is to call
+
+1240
+00:34:50,950 --> 00:34:50,960
+approach here is to call is to call
+ 
+
+1241
+00:34:50,960 --> 00:34:54,870
+approach here is to call is to call
+improve instructions on this whole thing
+
+1242
+00:34:54,870 --> 00:34:54,880
+improve instructions on this whole thing
+ 
+
+1243
+00:34:54,880 --> 00:34:58,360
+improve instructions on this whole thing
+right so let's we definitely are making
+
+1244
+00:34:58,360 --> 00:34:58,370
+right so let's we definitely are making
+ 
+
+1245
+00:34:58,370 --> 00:34:59,770
+right so let's we definitely are making
+the list smaller when we do this so we
+
+1246
+00:34:59,770 --> 00:34:59,780
+the list smaller when we do this so we
+
+1247
+00:34:59,780 --> 00:35:00,910
+the list smaller when we do this so we
+don't have to worry about it being an
+
+1248
+00:35:00,910 --> 00:35:00,920
+don't have to worry about it being an
+ 
+
+1249
+00:35:00,920 --> 00:35:02,800
+don't have to worry about it being an
+infinite loop because we as long as we
+
+1250
+00:35:02,800 --> 00:35:02,810
+infinite loop because we as long as we
+ 
+
+1251
+00:35:02,810 --> 00:35:04,330
+infinite loop because we as long as we
+keep making a list smaller eventually
+
+1252
+00:35:04,330 --> 00:35:04,340
+keep making a list smaller eventually
+ 
+
+1253
+00:35:04,340 --> 00:35:06,970
+keep making a list smaller eventually
+we'll get down to an empty list or some
+
+1254
+00:35:06,970 --> 00:35:06,980
+we'll get down to an empty list or some
+ 
+
+1255
+00:35:06,980 --> 00:35:08,800
+we'll get down to an empty list or some
+list of the fixed size um but we could
+
+1256
+00:35:08,800 --> 00:35:08,810
+list of the fixed size um but we could
+ 
+
+1257
+00:35:08,810 --> 00:35:09,850
+list of the fixed size um but we could
+just call it on this whole thing
+
+1258
+00:35:09,850 --> 00:35:09,860
+just call it on this whole thing
+ 
+
+1259
+00:35:09,860 --> 00:35:11,290
+just call it on this whole thing
+maybe that shows some new pattern that
+
+1260
+00:35:11,290 --> 00:35:11,300
+maybe that shows some new pattern that
+
+1261
+00:35:11,300 --> 00:35:13,660
+maybe that shows some new pattern that
+will work the real question here is what
+
+1262
+00:35:13,660 --> 00:35:13,670
+will work the real question here is what
+ 
+
+1263
+00:35:13,670 --> 00:35:15,460
+will work the real question here is what
+to do if no pattern match but I think is
+
+1264
+00:35:15,460 --> 00:35:15,470
+to do if no pattern match but I think is
+ 
+
+1265
+00:35:15,470 --> 00:35:16,960
+to do if no pattern match but I think is
+which i think is actually what's
+
+1266
+00:35:16,960 --> 00:35:16,970
+which i think is actually what's
+ 
+
+1267
+00:35:16,970 --> 00:35:19,000
+which i think is actually what's
+underlying your question right because
+
+1268
+00:35:19,000 --> 00:35:19,010
+underlying your question right because
+ 
+
+1269
+00:35:19,010 --> 00:35:20,650
+underlying your question right because
+what are we gonna do if we ran this
+
+1270
+00:35:20,650 --> 00:35:20,660
+what are we gonna do if we ran this
+ 
+
+1271
+00:35:20,660 --> 00:35:22,990
+what are we gonna do if we ran this
+function on just this whole list it
+
+1272
+00:35:22,990 --> 00:35:23,000
+function on just this whole list it
+ 
+
+1273
+00:35:23,000 --> 00:35:24,700
+function on just this whole list it
+would just say okay nope no matches
+
+1274
+00:35:24,700 --> 00:35:24,710
+would just say okay nope no matches
+ 
+
+1275
+00:35:24,710 --> 00:35:27,280
+would just say okay nope no matches
+worked right you said it says move EBP
+
+1276
+00:35:27,280 --> 00:35:27,290
+worked right you said it says move EBP
+ 
+
+1277
+00:35:27,290 --> 00:35:29,080
+worked right you said it says move EBP
+ESP at the top that has nothing to do
+
+1278
+00:35:29,080 --> 00:35:29,090
+ESP at the top that has nothing to do
+ 
+
+1279
+00:35:29,090 --> 00:35:31,930
+ESP at the top that has nothing to do
+with the matches you suggested so the
+
+1280
+00:35:31,930 --> 00:35:31,940
+with the matches you suggested so the
+ 
+
+1281
+00:35:31,940 --> 00:35:33,610
+with the matches you suggested so the
+thing we have to do is we need we might
+
+1282
+00:35:33,610 --> 00:35:33,620
+thing we have to do is we need we might
+ 
+
+1283
+00:35:33,620 --> 00:35:35,140
+thing we have to do is we need we might
+have more cases where we know how to
+
+1284
+00:35:35,140 --> 00:35:35,150
+have more cases where we know how to
+ 
+
+1285
+00:35:35,150 --> 00:35:38,080
+have more cases where we know how to
+improve the instructions here but we
+
+1286
+00:35:38,080 --> 00:35:38,090
+improve the instructions here but we
+ 
+
+1287
+00:35:38,090 --> 00:35:40,210
+improve the instructions here but we
+need some ending case where we have some
+
+1288
+00:35:40,210 --> 00:35:40,220
+need some ending case where we have some
+ 
+
+1289
+00:35:40,220 --> 00:35:42,760
+need some ending case where we have some
+instruction linked on to the rest of the
+
+1290
+00:35:42,760 --> 00:35:42,770
+instruction linked on to the rest of the
+ 
+
+1291
+00:35:42,770 --> 00:35:44,620
+instruction linked on to the rest of the
+instructions and we say all right
+
+1292
+00:35:44,620 --> 00:35:44,630
+instructions and we say all right
+ 
+
+1293
+00:35:44,630 --> 00:35:46,840
+instructions and we say all right
+nothing matched let's move forward in
+
+1294
+00:35:46,840 --> 00:35:46,850
+nothing matched let's move forward in
+ 
+
+1295
+00:35:46,850 --> 00:35:49,510
+nothing matched let's move forward in
+the list so let's turn this into I
+
+1296
+00:35:49,510 --> 00:35:49,520
+the list so let's turn this into I
+ 
+
+1297
+00:35:49,520 --> 00:35:57,420
+the list so let's turn this into I
+linked on to improve instructions unrest
+
+1298
+00:35:57,420 --> 00:35:57,430
+linked on to improve instructions unrest
+ 
+
+1299
+00:35:57,430 --> 00:35:59,790
+linked on to improve instructions unrest
+because we're not going to be able to do
+
+1300
+00:35:59,790 --> 00:35:59,800
+because we're not going to be able to do
+ 
+
+1301
+00:35:59,800 --> 00:36:01,870
+because we're not going to be able to do
+anything with that if it didn't match
+
+1302
+00:36:01,870 --> 00:36:01,880
+anything with that if it didn't match
+ 
+
+1303
+00:36:01,880 --> 00:36:03,730
+anything with that if it didn't match
+any of the patterns that we could work
+
+1304
+00:36:03,730 --> 00:36:03,740
+any of the patterns that we could work
+ 
+
+1305
+00:36:03,740 --> 00:36:06,400
+any of the patterns that we could work
+with so the idea here is exactly that
+
+1306
+00:36:06,400 --> 00:36:06,410
+with so the idea here is exactly that
+ 
+
+1307
+00:36:06,410 --> 00:36:07,900
+with so the idea here is exactly that
+we'll loop through this whole list of
+
+1308
+00:36:07,900 --> 00:36:07,910
+we'll loop through this whole list of
+ 
+
+1309
+00:36:07,910 --> 00:36:10,090
+we'll loop through this whole list of
+instructions and every time we find the
+
+1310
+00:36:10,090 --> 00:36:10,100
+instructions and every time we find the
+ 
+
+1311
+00:36:10,100 --> 00:36:11,590
+instructions and every time we find the
+little prefix of them that we know how
+
+1312
+00:36:11,590 --> 00:36:11,600
+little prefix of them that we know how
+ 
+
+1313
+00:36:11,600 --> 00:36:13,690
+little prefix of them that we know how
+to improve we'll shrink that and then
+
+1314
+00:36:13,690 --> 00:36:13,700
+to improve we'll shrink that and then
+ 
+
+1315
+00:36:13,700 --> 00:36:14,860
+to improve we'll shrink that and then
+we'll see if we can do any better on
+
+1316
+00:36:14,860 --> 00:36:14,870
+we'll see if we can do any better on
+ 
+
+1317
+00:36:14,870 --> 00:36:19,000
+we'll see if we can do any better on
+what's remaining so this is a very
+
+1318
+00:36:19,000 --> 00:36:19,010
+what's remaining so this is a very
+ 
+
+1319
+00:36:19,010 --> 00:36:23,320
+what's remaining so this is a very
+specific very sort of like I guess blunt
+
+1320
+00:36:23,320 --> 00:36:23,330
+specific very sort of like I guess blunt
+ 
+
+1321
+00:36:23,330 --> 00:36:25,030
+specific very sort of like I guess blunt
+is a good word for it there's a list of
+
+1322
+00:36:25,030 --> 00:36:25,040
+is a good word for it there's a list of
+ 
+
+1323
+00:36:25,040 --> 00:36:26,500
+is a good word for it there's a list of
+instructions and we see instructions
+
+1324
+00:36:26,500 --> 00:36:26,510
+instructions and we see instructions
+ 
+
+1325
+00:36:26,510 --> 00:36:27,760
+instructions and we see instructions
+next to each other that we can improve
+
+1326
+00:36:27,760 --> 00:36:27,770
+next to each other that we can improve
+ 
+
+1327
+00:36:27,770 --> 00:36:29,980
+next to each other that we can improve
+let's improve them and put the new the
+
+1328
+00:36:29,980 --> 00:36:29,990
+let's improve them and put the new the
+ 
+
+1329
+00:36:29,990 --> 00:36:32,620
+let's improve them and put the new the
+better instructions in place and the
+
+1330
+00:36:32,620 --> 00:36:32,630
+better instructions in place and the
+ 
+
+1331
+00:36:32,630 --> 00:36:34,800
+better instructions in place and the
+idea here is that we're running a little
+
+1332
+00:36:34,800 --> 00:36:34,810
+idea here is that we're running a little
+ 
+
+1333
+00:36:34,810 --> 00:36:39,359
+idea here is that we're running a little
+window we can think of this as a little
+
+1334
+00:36:39,359 --> 00:36:39,369
+
+
+1335
+00:36:39,369 --> 00:36:46,049
+a little window along the sequence of
+
+1336
+00:36:46,049 --> 00:36:46,059
+a little window along the sequence of
+ 
+
+1337
+00:36:46,059 --> 00:36:48,299
+a little window along the sequence of
+instructions and that's a little spot
+
+1338
+00:36:48,299 --> 00:36:48,309
+instructions and that's a little spot
+ 
+
+1339
+00:36:48,309 --> 00:36:54,870
+instructions and that's a little spot
+where we're peeping in and trying to use
+
+1340
+00:36:54,870 --> 00:36:54,880
+where we're peeping in and trying to use
+ 
+
+1341
+00:36:54,880 --> 00:36:57,239
+where we're peeping in and trying to use
+very very local information just about
+
+1342
+00:36:57,239 --> 00:36:57,249
+very very local information just about
+ 
+
+1343
+00:36:57,249 --> 00:36:58,890
+very very local information just about
+two or three or four instructions at a
+
+1344
+00:36:58,890 --> 00:36:58,900
+two or three or four instructions at a
+ 
+
+1345
+00:36:58,900 --> 00:37:01,680
+two or three or four instructions at a
+time to make things better just a little
+
+1346
+00:37:01,680 --> 00:37:01,690
+time to make things better just a little
+ 
+
+1347
+00:37:01,690 --> 00:37:06,289
+time to make things better just a little
+bit and this idea has the name peephole
+
+1348
+00:37:06,289 --> 00:37:06,299
+bit and this idea has the name peephole
+ 
+
+1349
+00:37:06,299 --> 00:37:15,599
+bit and this idea has the name peephole
+optimization and this is this is a super
+
+1350
+00:37:15,599 --> 00:37:15,609
+optimization and this is this is a super
+ 
+
+1351
+00:37:15,609 --> 00:37:20,279
+optimization and this is this is a super
+common it's also relatively one nice
+
+1352
+00:37:20,279 --> 00:37:20,289
+common it's also relatively one nice
+ 
+
+1353
+00:37:20,289 --> 00:37:22,289
+common it's also relatively one nice
+feature of this is that it doesn't
+
+1354
+00:37:22,289 --> 00:37:22,299
+feature of this is that it doesn't
+ 
+
+1355
+00:37:22,299 --> 00:37:24,690
+feature of this is that it doesn't
+require understanding the entire rest of
+
+1356
+00:37:24,690 --> 00:37:24,700
+require understanding the entire rest of
+ 
+
+1357
+00:37:24,700 --> 00:37:27,150
+require understanding the entire rest of
+the compiler some of those knows nested
+
+1358
+00:37:27,150 --> 00:37:27,160
+the compiler some of those knows nested
+ 
+
+1359
+00:37:27,160 --> 00:37:28,890
+the compiler some of those knows nested
+matches required understanding a lot
+
+1360
+00:37:28,890 --> 00:37:28,900
+matches required understanding a lot
+
+1361
+00:37:28,900 --> 00:37:31,380
+matches required understanding a lot
+about what each expression is supposed
+
+1362
+00:37:31,380 --> 00:37:31,390
+about what each expression is supposed
+ 
+
+1363
+00:37:31,390 --> 00:37:33,029
+about what each expression is supposed
+to do and what errors it could have and
+
+1364
+00:37:33,029 --> 00:37:33,039
+to do and what errors it could have and
+ 
+
+1365
+00:37:33,039 --> 00:37:35,460
+to do and what errors it could have and
+what tags it could have this you can
+
+1366
+00:37:35,460 --> 00:37:35,470
+what tags it could have this you can
+
+1367
+00:37:35,470 --> 00:37:38,220
+what tags it could have this you can
+implement just by knowing what x86 is
+
+1368
+00:37:38,220 --> 00:37:38,230
+implement just by knowing what x86 is
+ 
+
+1369
+00:37:38,230 --> 00:37:40,049
+implement just by knowing what x86 is
+supposed to do right you only need to
+
+1370
+00:37:40,049 --> 00:37:40,059
+supposed to do right you only need to
+ 
+
+1371
+00:37:40,059 --> 00:37:42,239
+supposed to do right you only need to
+know about x86 to do this because you
+
+1372
+00:37:42,239 --> 00:37:42,249
+know about x86 to do this because you
+ 
+
+1373
+00:37:42,249 --> 00:37:44,009
+know about x86 to do this because you
+just need to know that that can't this
+
+1374
+00:37:44,009 --> 00:37:44,019
+just need to know that that can't this
+ 
+
+1375
+00:37:44,019 --> 00:37:45,720
+just need to know that that can't this
+second instruction can't possibly be
+
+1376
+00:37:45,720 --> 00:37:45,730
+second instruction can't possibly be
+
+1377
+00:37:45,730 --> 00:37:47,779
+second instruction can't possibly be
+useful because it's just doing
+
+1378
+00:37:47,779 --> 00:37:47,789
+useful because it's just doing
+ 
+
+1379
+00:37:47,789 --> 00:37:51,479
+useful because it's just doing
+unnecessary work so it's sort of
+
+1380
+00:37:51,479 --> 00:37:51,489
+unnecessary work so it's sort of
+ 
+
+1381
+00:37:51,489 --> 00:37:53,069
+unnecessary work so it's sort of
+independent of the rest of the compiler
+
+1382
+00:37:53,069 --> 00:37:53,079
+independent of the rest of the compiler
+ 
+
+1383
+00:37:53,079 --> 00:37:56,609
+independent of the rest of the compiler
+which is nice and it's a pretty much
+
+1384
+00:37:56,609 --> 00:37:56,619
+which is nice and it's a pretty much
+ 
+
+1385
+00:37:56,619 --> 00:37:58,829
+which is nice and it's a pretty much
+just a loop over over the instructions
+
+1386
+00:37:58,829 --> 00:37:58,839
+just a loop over over the instructions
+
+1387
+00:37:58,839 --> 00:38:00,269
+just a loop over over the instructions
+looking at a few that are next to each
+
+1388
+00:38:00,269 --> 00:38:00,279
+looking at a few that are next to each
+ 
+
+1389
+00:38:00,279 --> 00:38:11,630
+looking at a few that are next to each
+other at a time yeah
+
+1390
+00:38:11,630 --> 00:38:11,640
+
+
+1391
+00:38:11,640 --> 00:38:14,549
+so so let's keep in mind let's keep in
+
+1392
+00:38:14,549 --> 00:38:14,559
+so so let's keep in mind let's keep in
+ 
+
+1393
+00:38:14,559 --> 00:38:16,109
+so so let's keep in mind let's keep in
+mind so your comment is accurate right
+
+1394
+00:38:16,109 --> 00:38:16,119
+mind so your comment is accurate right
+ 
+
+1395
+00:38:16,119 --> 00:38:17,700
+mind so your comment is accurate right
+which is maybe we go through this whole
+
+1396
+00:38:17,700 --> 00:38:17,710
+which is maybe we go through this whole
+ 
+
+1397
+00:38:17,710 --> 00:38:19,950
+which is maybe we go through this whole
+list and we don't find any instructions
+
+1398
+00:38:19,950 --> 00:38:19,960
+list and we don't find any instructions
+ 
+
+1399
+00:38:19,960 --> 00:38:22,380
+list and we don't find any instructions
+to improve but I want to point out that
+
+1400
+00:38:22,380 --> 00:38:22,390
+to improve but I want to point out that
+ 
+
+1401
+00:38:22,390 --> 00:38:25,680
+to improve but I want to point out that
+the time spent there is compile time not
+
+1402
+00:38:25,680 --> 00:38:25,690
+the time spent there is compile time not
+ 
+
+1403
+00:38:25,690 --> 00:38:27,900
+the time spent there is compile time not
+run time right and that's pretty that's
+
+1404
+00:38:27,900 --> 00:38:27,910
+run time right and that's pretty that's
+ 
+
+1405
+00:38:27,910 --> 00:38:29,309
+run time right and that's pretty that's
+that's actually an important distinction
+
+1406
+00:38:29,309 --> 00:38:29,319
+that's actually an important distinction
+ 
+
+1407
+00:38:29,319 --> 00:38:32,069
+that's actually an important distinction
+in in all of this right that these
+
+1408
+00:38:32,069 --> 00:38:32,079
+in in all of this right that these
+ 
+
+1409
+00:38:32,079 --> 00:38:34,019
+in in all of this right that these
+optimizations like matching more doing
+
+1410
+00:38:34,019 --> 00:38:34,029
+optimizations like matching more doing
+
+1411
+00:38:34,029 --> 00:38:36,420
+optimizations like matching more doing
+something fancy with the tiling or doing
+
+1412
+00:38:36,420 --> 00:38:36,430
+something fancy with the tiling or doing
+ 
+
+1413
+00:38:36,430 --> 00:38:38,700
+something fancy with the tiling or doing
+this people optimization is all costing
+
+1414
+00:38:38,700 --> 00:38:38,710
+this people optimization is all costing
+
+1415
+00:38:38,710 --> 00:38:40,410
+this people optimization is all costing
+compile time and we're trading that
+
+1416
+00:38:40,410 --> 00:38:40,420
+compile time and we're trading that
+ 
+
+1417
+00:38:40,420 --> 00:38:42,210
+compile time and we're trading that
+effort so that then the eventual program
+
+1418
+00:38:42,210 --> 00:38:42,220
+effort so that then the eventual program
+ 
+
+1419
+00:38:42,220 --> 00:38:46,799
+effort so that then the eventual program
+runs faster the the example I often give
+
+1420
+00:38:46,799 --> 00:38:46,809
+runs faster the the example I often give
+ 
+
+1421
+00:38:46,809 --> 00:38:49,140
+runs faster the the example I often give
+for this is if you were you know the
+
+1422
+00:38:49,140 --> 00:38:49,150
+for this is if you were you know the
+ 
+
+1423
+00:38:49,150 --> 00:38:52,950
+for this is if you were you know the
+project manager for Firefox right you
+
+1424
+00:38:52,950 --> 00:38:52,960
+project manager for Firefox right you
+ 
+
+1425
+00:38:52,960 --> 00:38:55,710
+project manager for Firefox right you
+would you should you can and should make
+
+1426
+00:38:55,710 --> 00:38:55,720
+would you should you can and should make
+ 
+
+1427
+00:38:55,720 --> 00:38:57,630
+would you should you can and should make
+the trade-off that if you if someone
+
+1428
+00:38:57,630 --> 00:38:57,640
+the trade-off that if you if someone
+ 
+
+1429
+00:38:57,640 --> 00:38:59,309
+the trade-off that if you if someone
+gave you an optimizing compiler that
+
+1430
+00:38:59,309 --> 00:38:59,319
+gave you an optimizing compiler that
+ 
+
+1431
+00:38:59,319 --> 00:39:02,400
+gave you an optimizing compiler that
+took a week to run but made Firefox so
+
+1432
+00:39:02,400 --> 00:39:02,410
+took a week to run but made Firefox so
+ 
+
+1433
+00:39:02,410 --> 00:39:05,910
+took a week to run but made Firefox so
+fast you can and should hire out servers
+
+1434
+00:39:05,910 --> 00:39:05,920
+fast you can and should hire out servers
+ 
+
+1435
+00:39:05,920 --> 00:39:08,549
+fast you can and should hire out servers
+to compile Firefox for a week and then
+
+1436
+00:39:08,549 --> 00:39:08,559
+to compile Firefox for a week and then
+
+1437
+00:39:08,559 --> 00:39:10,769
+to compile Firefox for a week and then
+the release that binary once that's
+
+1438
+00:39:10,769 --> 00:39:10,779
+the release that binary once that's
+ 
+
+1439
+00:39:10,779 --> 00:39:12,599
+the release that binary once that's
+faster for your millions of users right
+
+1440
+00:39:12,599 --> 00:39:12,609
+faster for your millions of users right
+ 
+
+1441
+00:39:12,609 --> 00:39:14,940
+faster for your millions of users right
+so that's your question is really good
+
+1442
+00:39:14,940 --> 00:39:14,950
+so that's your question is really good
+ 
+
+1443
+00:39:14,950 --> 00:39:15,809
+so that's your question is really good
+because it gets it exactly that
+
+1444
+00:39:15,809 --> 00:39:15,819
+because it gets it exactly that
+ 
+
+1445
+00:39:15,819 --> 00:39:18,089
+because it gets it exactly that
+trade-off right Mozilla should be happy
+
+1446
+00:39:18,089 --> 00:39:18,099
+trade-off right Mozilla should be happy
+ 
+
+1447
+00:39:18,099 --> 00:39:20,009
+trade-off right Mozilla should be happy
+to run the fanciest peephole optimizer
+
+1448
+00:39:20,009 --> 00:39:20,019
+to run the fanciest peephole optimizer
+ 
+
+1449
+00:39:20,019 --> 00:39:22,319
+to run the fanciest peephole optimizer
+in the world for a day if it saves me a
+
+1450
+00:39:22,319 --> 00:39:22,329
+in the world for a day if it saves me a
+ 
+
+1451
+00:39:22,329 --> 00:39:24,390
+in the world for a day if it saves me a
+second right because I'm one of millions
+
+1452
+00:39:24,390 --> 00:39:24,400
+second right because I'm one of millions
+ 
+
+1453
+00:39:24,400 --> 00:39:30,720
+second right because I'm one of millions
+of users all right so let's see so last
+
+1454
+00:39:30,720 --> 00:39:30,730
+of users all right so let's see so last
+ 
+
+1455
+00:39:30,730 --> 00:39:32,930
+of users all right so let's see so last
+idea last idea I want to talk about
+
+1456
+00:39:32,930 --> 00:39:32,940
+idea last idea I want to talk about
+ 
+
+1457
+00:39:32,940 --> 00:39:38,880
+idea last idea I want to talk about
+today is something that I think several
+
+1458
+00:39:38,880 --> 00:39:38,890
+today is something that I think several
+ 
+
+1459
+00:39:38,890 --> 00:39:41,670
+today is something that I think several
+different areas of the room brought up
+
+1460
+00:39:41,670 --> 00:39:41,680
+different areas of the room brought up
+ 
+
+1461
+00:39:41,680 --> 00:39:45,420
+different areas of the room brought up
+on on Monday when we were just talking
+
+1462
+00:39:45,420 --> 00:39:45,430
+on on Monday when we were just talking
+ 
+
+1463
+00:39:45,430 --> 00:39:47,279
+on on Monday when we were just talking
+sort of brainstorming ways to improve
+
+1464
+00:39:47,279 --> 00:39:47,289
+sort of brainstorming ways to improve
+
+1465
+00:39:47,289 --> 00:39:51,299
+sort of brainstorming ways to improve
+improve the compiler and there were
+
+1466
+00:39:51,299 --> 00:39:51,309
+improve the compiler and there were
+ 
+
+1467
+00:39:51,309 --> 00:39:53,640
+improve the compiler and there were
+things like well like and this is
+
+1468
+00:39:53,640 --> 00:39:53,650
+things like well like and this is
+ 
+
+1469
+00:39:53,650 --> 00:39:54,930
+things like well like and this is
+something that's come up in examples
+
+1470
+00:39:54,930 --> 00:39:54,940
+something that's come up in examples
+ 
+
+1471
+00:39:54,940 --> 00:39:58,109
+something that's come up in examples
+I've drawn in class so the very first
+
+1472
+00:39:58,109 --> 00:39:58,119
+I've drawn in class so the very first
+
+1473
+00:39:58,119 --> 00:40:10,130
+I've drawn in class so the very first
+programs we wrote were things like
+
+1474
+00:40:10,130 --> 00:40:10,140
+
+
+1475
+00:40:10,140 --> 00:40:13,350
+and this was like back in week two or
+
+1476
+00:40:13,350 --> 00:40:13,360
+and this was like back in week two or
+ 
+
+1477
+00:40:13,360 --> 00:40:16,800
+and this was like back in week two or
+three and a lot of you were like Joe I
+
+1478
+00:40:16,800 --> 00:40:16,810
+three and a lot of you were like Joe I
+ 
+
+1479
+00:40:16,810 --> 00:40:20,880
+three and a lot of you were like Joe I
+know that that produces eight why did we
+
+1480
+00:40:20,880 --> 00:40:20,890
+know that that produces eight why did we
+ 
+
+1481
+00:40:20,890 --> 00:40:24,510
+know that that produces eight why did we
+compile a binary right like that's not
+
+1482
+00:40:24,510 --> 00:40:24,520
+compile a binary right like that's not
+ 
+
+1483
+00:40:24,520 --> 00:40:27,210
+compile a binary right like that's not
+you didn't accomplish much there by
+
+1484
+00:40:27,210 --> 00:40:27,220
+you didn't accomplish much there by
+ 
+
+1485
+00:40:27,220 --> 00:40:29,160
+you didn't accomplish much there by
+compiling that program and then running
+
+1486
+00:40:29,160 --> 00:40:29,170
+compiling that program and then running
+ 
+
+1487
+00:40:29,170 --> 00:40:32,820
+compiling that program and then running
+it and there's two observations to make
+
+1488
+00:40:32,820 --> 00:40:32,830
+it and there's two observations to make
+ 
+
+1489
+00:40:32,830 --> 00:40:36,030
+it and there's two observations to make
+about this program one is that there's
+
+1490
+00:40:36,030 --> 00:40:36,040
+about this program one is that there's
+ 
+
+1491
+00:40:36,040 --> 00:40:40,280
+about this program one is that there's
+an expression in here which is the
+
+1492
+00:40:40,280 --> 00:40:40,290
+an expression in here which is the
+ 
+
+1493
+00:40:40,290 --> 00:40:54,240
+an expression in here which is the
+addition of two constants and there's
+
+1494
+00:40:54,240 --> 00:40:54,250
+addition of two constants and there's
+ 
+
+1495
+00:40:54,250 --> 00:40:56,550
+addition of two constants and there's
+another slightly more subtle thing going
+
+1496
+00:40:56,550 --> 00:40:56,560
+another slightly more subtle thing going
+ 
+
+1497
+00:40:56,560 --> 00:41:03,870
+another slightly more subtle thing going
+on here which is this is a use of a
+
+1498
+00:41:03,870 --> 00:41:03,880
+on here which is this is a use of a
+ 
+
+1499
+00:41:03,880 --> 00:41:16,650
+on here which is this is a use of a
+variable whose value we know and I'm
+
+1500
+00:41:16,650 --> 00:41:16,660
+variable whose value we know and I'm
+
+1501
+00:41:16,660 --> 00:41:19,020
+variable whose value we know and I'm
+putting know in quotes because we as
+
+1502
+00:41:19,020 --> 00:41:19,030
+putting know in quotes because we as
+ 
+
+1503
+00:41:19,030 --> 00:41:21,780
+putting know in quotes because we as
+people did a lot of reasoning about this
+
+1504
+00:41:21,780 --> 00:41:21,790
+people did a lot of reasoning about this
+ 
+
+1505
+00:41:21,790 --> 00:41:24,360
+people did a lot of reasoning about this
+to make sure we understood that we were
+
+1506
+00:41:24,360 --> 00:41:24,370
+to make sure we understood that we were
+ 
+
+1507
+00:41:24,370 --> 00:41:26,100
+to make sure we understood that we were
+adding one in three that's not gonna do
+
+1508
+00:41:26,100 --> 00:41:26,110
+adding one in three that's not gonna do
+ 
+
+1509
+00:41:26,110 --> 00:41:28,560
+adding one in three that's not gonna do
+anything like overflow right but X is
+
+1510
+00:41:28,560 --> 00:41:28,570
+anything like overflow right but X is
+ 
+
+1511
+00:41:28,570 --> 00:41:30,390
+anything like overflow right but X is
+some variable and we know that its value
+
+1512
+00:41:30,390 --> 00:41:30,400
+some variable and we know that its value
+ 
+
+1513
+00:41:30,400 --> 00:41:31,950
+some variable and we know that its value
+is going to be four there's no way its
+
+1514
+00:41:31,950 --> 00:41:31,960
+is going to be four there's no way its
+ 
+
+1515
+00:41:31,960 --> 00:41:34,140
+is going to be four there's no way its
+value would not be four when we run this
+
+1516
+00:41:34,140 --> 00:41:34,150
+value would not be four when we run this
+ 
+
+1517
+00:41:34,150 --> 00:41:35,610
+value would not be four when we run this
+program so there's two different things
+
+1518
+00:41:35,610 --> 00:41:35,620
+program so there's two different things
+ 
+
+1519
+00:41:35,620 --> 00:41:38,840
+program so there's two different things
+going on here that we used as as
+
+1520
+00:41:38,840 --> 00:41:38,850
+going on here that we used as as
+ 
+
+1521
+00:41:38,850 --> 00:41:41,100
+going on here that we used as as
+intelligent people to know that this
+
+1522
+00:41:41,100 --> 00:41:41,110
+intelligent people to know that this
+ 
+
+1523
+00:41:41,110 --> 00:41:42,450
+intelligent people to know that this
+program is going to produce this answer
+
+1524
+00:41:42,450 --> 00:41:42,460
+program is going to produce this answer
+ 
+
+1525
+00:41:42,460 --> 00:41:46,320
+program is going to produce this answer
+in fact one thing that sometimes happens
+
+1526
+00:41:46,320 --> 00:41:46,330
+in fact one thing that sometimes happens
+ 
+
+1527
+00:41:46,330 --> 00:41:47,850
+in fact one thing that sometimes happens
+in the first couple programming
+
+1528
+00:41:47,850 --> 00:41:47,860
+in the first couple programming
+ 
+
+1529
+00:41:47,860 --> 00:41:50,970
+in the first couple programming
+assignments in this course is folks
+
+1530
+00:41:50,970 --> 00:41:50,980
+assignments in this course is folks
+
+1531
+00:41:50,980 --> 00:41:53,250
+assignments in this course is folks
+write compilers that are sophisticated
+
+1532
+00:41:53,250 --> 00:41:53,260
+write compilers that are sophisticated
+ 
+
+1533
+00:41:53,260 --> 00:41:55,920
+write compilers that are sophisticated
+enough and they do this because they
+
+1534
+00:41:55,920 --> 00:41:55,930
+enough and they do this because they
+ 
+
+1535
+00:41:55,930 --> 00:41:57,750
+enough and they do this because they
+probably implemented an interpreter in
+
+1536
+00:41:57,750 --> 00:41:57,760
+probably implemented an interpreter in
+ 
+
+1537
+00:41:57,760 --> 00:42:01,590
+probably implemented an interpreter in
+CS c130 where if they compiled this
+
+1538
+00:42:01,590 --> 00:42:01,600
+CS c130 where if they compiled this
+ 
+
+1539
+00:42:01,600 --> 00:42:03,480
+CS c130 where if they compiled this
+program let's just call this program P
+
+1540
+00:42:03,480 --> 00:42:03,490
+program let's just call this program P
+ 
+
+1541
+00:42:03,490 --> 00:42:07,350
+program let's just call this program P
+for now
+
+1542
+00:42:07,350 --> 00:42:07,360
+
+
+1543
+00:42:07,360 --> 00:42:10,950
+we compiled P sort of in the sense of
+
+1544
+00:42:10,950 --> 00:42:10,960
+we compiled P sort of in the sense of
+ 
+
+1545
+00:42:10,960 --> 00:42:12,600
+we compiled P sort of in the sense of
+what's the best we can do for compiling
+
+1546
+00:42:12,600 --> 00:42:12,610
+what's the best we can do for compiling
+ 
+
+1547
+00:42:12,610 --> 00:42:15,060
+what's the best we can do for compiling
+this program well it would be nice if we
+
+1548
+00:42:15,060 --> 00:42:15,070
+this program well it would be nice if we
+ 
+
+1549
+00:42:15,070 --> 00:42:22,160
+this program well it would be nice if we
+could compile this program into move EA
+
+1550
+00:42:22,160 --> 00:42:22,170
+
+
+1551
+00:42:22,170 --> 00:42:23,940
+x17 right because that's the
+
+1552
+00:42:23,940 --> 00:42:23,950
+x17 right because that's the
+ 
+
+1553
+00:42:23,950 --> 00:42:28,200
+x17 right because that's the
+representation of of eight that would be
+
+1554
+00:42:28,200 --> 00:42:28,210
+representation of of eight that would be
+ 
+
+1555
+00:42:28,210 --> 00:42:30,480
+representation of of eight that would be
+cool if when we compiled this program it
+
+1556
+00:42:30,480 --> 00:42:30,490
+cool if when we compiled this program it
+ 
+
+1557
+00:42:30,490 --> 00:42:33,780
+cool if when we compiled this program it
+just turned into moving the answer into
+
+1558
+00:42:33,780 --> 00:42:33,790
+just turned into moving the answer into
+ 
+
+1559
+00:42:33,790 --> 00:42:36,210
+just turned into moving the answer into
+EAX and there was actually a few of you
+
+1560
+00:42:36,210 --> 00:42:36,220
+EAX and there was actually a few of you
+ 
+
+1561
+00:42:36,220 --> 00:42:38,040
+EAX and there was actually a few of you
+who did something like this I was kind
+
+1562
+00:42:38,040 --> 00:42:38,050
+who did something like this I was kind
+ 
+
+1563
+00:42:38,050 --> 00:42:41,070
+who did something like this I was kind
+of it was actually kind of slowed you
+
+1564
+00:42:41,070 --> 00:42:41,080
+of it was actually kind of slowed you
+ 
+
+1565
+00:42:41,080 --> 00:42:43,230
+of it was actually kind of slowed you
+down when you got to parse a handling
+
+1566
+00:42:43,230 --> 00:42:43,240
+down when you got to parse a handling
+
+1567
+00:42:43,240 --> 00:42:45,120
+down when you got to parse a handling
+input because you couldn't handle all of
+
+1568
+00:42:45,120 --> 00:42:45,130
+input because you couldn't handle all of
+ 
+
+1569
+00:42:45,130 --> 00:42:47,310
+input because you couldn't handle all of
+the unknown values that could be coming
+
+1570
+00:42:47,310 --> 00:42:47,320
+the unknown values that could be coming
+ 
+
+1571
+00:42:47,320 --> 00:42:49,230
+the unknown values that could be coming
+into a program but for a program with
+
+1572
+00:42:49,230 --> 00:42:49,240
+into a program but for a program with
+ 
+
+1573
+00:42:49,240 --> 00:42:51,510
+into a program but for a program with
+all known values we can actually write
+
+1574
+00:42:51,510 --> 00:42:51,520
+all known values we can actually write
+ 
+
+1575
+00:42:51,520 --> 00:42:54,600
+all known values we can actually write
+into our compiler enough smarts so that
+
+1576
+00:42:54,600 --> 00:42:54,610
+into our compiler enough smarts so that
+ 
+
+1577
+00:42:54,610 --> 00:42:56,310
+into our compiler enough smarts so that
+it can figure out what these constants
+
+1578
+00:42:56,310 --> 00:42:56,320
+it can figure out what these constants
+ 
+
+1579
+00:42:56,320 --> 00:42:58,200
+it can figure out what these constants
+should be and generate much better code
+
+1580
+00:42:58,200 --> 00:42:58,210
+should be and generate much better code
+ 
+
+1581
+00:42:58,210 --> 00:43:04,530
+should be and generate much better code
+for some of these cases and one way we
+
+1582
+00:43:04,530 --> 00:43:04,540
+for some of these cases and one way we
+ 
+
+1583
+00:43:04,540 --> 00:43:05,880
+for some of these cases and one way we
+could do this is there a way we could do
+
+1584
+00:43:05,880 --> 00:43:05,890
+could do this is there a way we could do
+ 
+
+1585
+00:43:05,890 --> 00:43:08,160
+could do this is there a way we could do
+this based on what we know so far way we
+
+1586
+00:43:08,160 --> 00:43:08,170
+this based on what we know so far way we
+ 
+
+1587
+00:43:08,170 --> 00:43:10,050
+this based on what we know so far way we
+could do let's say maybe the green stuff
+
+1588
+00:43:10,050 --> 00:43:10,060
+could do let's say maybe the green stuff
+
+1589
+00:43:10,060 --> 00:43:17,390
+could do let's say maybe the green stuff
+the +1 3 based on what we know so far
+
+1590
+00:43:17,390 --> 00:43:17,400
+
+
+1591
+00:43:17,400 --> 00:43:29,900
+yeah
+
+1592
+00:43:29,900 --> 00:43:29,910
+
+
+1593
+00:43:29,910 --> 00:43:37,590
+right so one idea one idea is is a good
+
+1594
+00:43:37,590 --> 00:43:37,600
+right so one idea one idea is is a good
+ 
+
+1595
+00:43:37,600 --> 00:43:42,510
+right so one idea one idea is is a good
+idea to do instruction selection right
+
+1596
+00:43:42,510 --> 00:43:42,520
+idea to do instruction selection right
+ 
+
+1597
+00:43:42,520 --> 00:43:49,530
+idea to do instruction selection right
+and we could say e prim to of + with an
+
+1598
+00:43:49,530 --> 00:43:49,540
+and we could say e prim to of + with an
+ 
+
+1599
+00:43:49,540 --> 00:43:53,910
+and we could say e prim to of + with an
+Eden um and an enum this gets a special
+
+1600
+00:43:53,910 --> 00:43:53,920
+Eden um and an enum this gets a special
+ 
+
+1601
+00:43:53,920 --> 00:43:56,040
+Eden um and an enum this gets a special
+compilation right maybe that just adds
+
+1602
+00:43:56,040 --> 00:43:56,050
+compilation right maybe that just adds
+ 
+
+1603
+00:43:56,050 --> 00:43:57,750
+compilation right maybe that just adds
+the two numbers together and compiles to
+
+1604
+00:43:57,750 --> 00:43:57,760
+the two numbers together and compiles to
+ 
+
+1605
+00:43:57,760 --> 00:44:00,150
+the two numbers together and compiles to
+a single move instruction so that's one
+
+1606
+00:44:00,150 --> 00:44:00,160
+a single move instruction so that's one
+ 
+
+1607
+00:44:00,160 --> 00:44:03,540
+a single move instruction so that's one
+idea but it doesn't help us with this
+
+1608
+00:44:03,540 --> 00:44:03,550
+idea but it doesn't help us with this
+ 
+
+1609
+00:44:03,550 --> 00:44:08,640
+idea but it doesn't help us with this
+other issue of this X variable whose
+
+1610
+00:44:08,640 --> 00:44:08,650
+other issue of this X variable whose
+ 
+
+1611
+00:44:08,650 --> 00:44:10,410
+other issue of this X variable whose
+value we know so one of these things
+
+1612
+00:44:10,410 --> 00:44:10,420
+value we know so one of these things
+ 
+
+1613
+00:44:10,420 --> 00:44:11,910
+value we know so one of these things
+seems like it might be an instruction
+
+1614
+00:44:11,910 --> 00:44:11,920
+seems like it might be an instruction
+ 
+
+1615
+00:44:11,920 --> 00:44:13,590
+seems like it might be an instruction
+selection kind of thing but the other
+
+1616
+00:44:13,590 --> 00:44:13,600
+selection kind of thing but the other
+ 
+
+1617
+00:44:13,600 --> 00:44:15,030
+selection kind of thing but the other
+one doesn't seem like it can be an
+
+1618
+00:44:15,030 --> 00:44:15,040
+one doesn't seem like it can be an
+ 
+
+1619
+00:44:15,040 --> 00:44:16,500
+one doesn't seem like it can be an
+instruction selection kind of thing
+
+1620
+00:44:16,500 --> 00:44:16,510
+instruction selection kind of thing
+
+1621
+00:44:16,510 --> 00:44:18,930
+instruction selection kind of thing
+especially if that X the use of that X
+
+1622
+00:44:18,930 --> 00:44:18,940
+especially if that X the use of that X
+ 
+
+1623
+00:44:18,940 --> 00:44:20,760
+especially if that X the use of that X
+is sort of far away from where it's
+
+1624
+00:44:20,760 --> 00:44:20,770
+is sort of far away from where it's
+ 
+
+1625
+00:44:20,770 --> 00:44:25,380
+is sort of far away from where it's
+defined but these are related ideas
+
+1626
+00:44:25,380 --> 00:44:25,390
+defined but these are related ideas
+ 
+
+1627
+00:44:25,390 --> 00:44:27,510
+defined but these are related ideas
+because they both have to do with values
+
+1628
+00:44:27,510 --> 00:44:27,520
+because they both have to do with values
+ 
+
+1629
+00:44:27,520 --> 00:44:30,390
+because they both have to do with values
+that we we know when we're compiling the
+
+1630
+00:44:30,390 --> 00:44:30,400
+that we we know when we're compiling the
+ 
+
+1631
+00:44:30,400 --> 00:44:33,600
+that we we know when we're compiling the
+program have to be a particular value we
+
+1632
+00:44:33,600 --> 00:44:33,610
+program have to be a particular value we
+ 
+
+1633
+00:44:33,610 --> 00:44:35,040
+program have to be a particular value we
+don't need to wait and run the program
+
+1634
+00:44:35,040 --> 00:44:35,050
+don't need to wait and run the program
+ 
+
+1635
+00:44:35,050 --> 00:44:40,880
+don't need to wait and run the program
+to figure out what value they are so the
+
+1636
+00:44:40,880 --> 00:44:40,890
+to figure out what value they are so the
+ 
+
+1637
+00:44:40,890 --> 00:44:43,620
+to figure out what value they are so the
+the there's an idea here that we can use
+
+1638
+00:44:43,620 --> 00:44:43,630
+the there's an idea here that we can use
+ 
+
+1639
+00:44:43,630 --> 00:44:48,570
+the there's an idea here that we can use
+which is instead of writing instead of
+
+1640
+00:44:48,570 --> 00:44:48,580
+which is instead of writing instead of
+ 
+
+1641
+00:44:48,580 --> 00:44:50,900
+which is instead of writing instead of
+making this part of the compile function
+
+1642
+00:44:50,900 --> 00:44:50,910
+making this part of the compile function
+
+1643
+00:44:50,910 --> 00:44:55,970
+making this part of the compile function
+and in the spirit of what we just did
+
+1644
+00:44:55,970 --> 00:44:55,980
+and in the spirit of what we just did
+ 
+
+1645
+00:44:55,980 --> 00:45:00,270
+and in the spirit of what we just did
+for people optimizations let's imagine a
+
+1646
+00:45:00,270 --> 00:45:00,280
+for people optimizations let's imagine a
+ 
+
+1647
+00:45:00,280 --> 00:45:02,880
+for people optimizations let's imagine a
+function called improve expression that
+
+1648
+00:45:02,880 --> 00:45:02,890
+function called improve expression that
+ 
+
+1649
+00:45:02,890 --> 00:45:09,420
+function called improve expression that
+takes an expression and produces an
+
+1650
+00:45:09,420 --> 00:45:09,430
+takes an expression and produces an
+
+1651
+00:45:09,430 --> 00:45:12,570
+takes an expression and produces an
+expression that is better that is
+
+1652
+00:45:12,570 --> 00:45:12,580
+expression that is better that is
+ 
+
+1653
+00:45:12,580 --> 00:45:15,270
+expression that is better that is
+shorter or has less fewer sub
+
+1654
+00:45:15,270 --> 00:45:15,280
+shorter or has less fewer sub
+ 
+
+1655
+00:45:15,280 --> 00:45:18,300
+shorter or has less fewer sub
+expressions or does less work somehow
+
+1656
+00:45:18,300 --> 00:45:18,310
+expressions or does less work somehow
+
+1657
+00:45:18,310 --> 00:45:22,220
+expressions or does less work somehow
+let's imagine we could write that
+
+1658
+00:45:22,220 --> 00:45:22,230
+
+
+1659
+00:45:22,230 --> 00:45:32,329
+improve expression
+
+1660
+00:45:32,329 --> 00:45:32,339
+
+
+1661
+00:45:32,339 --> 00:45:34,039
+the first case here is the one you
+
+1662
+00:45:34,039 --> 00:45:34,049
+the first case here is the one you
+ 
+
+1663
+00:45:34,049 --> 00:45:35,359
+the first case here is the one you
+suggested that would be like the
+
+1664
+00:45:35,359 --> 00:45:35,369
+suggested that would be like the
+ 
+
+1665
+00:45:35,369 --> 00:45:36,799
+suggested that would be like the
+instruction selection version of this
+
+1666
+00:45:36,799 --> 00:45:36,809
+instruction selection version of this
+
+1667
+00:45:36,809 --> 00:45:38,839
+instruction selection version of this
+right which is well if we want to
+
+1668
+00:45:38,839 --> 00:45:38,849
+right which is well if we want to
+ 
+
+1669
+00:45:38,849 --> 00:45:42,440
+right which is well if we want to
+improve EEPROM tools that have a plus in
+
+1670
+00:45:42,440 --> 00:45:42,450
+improve EEPROM tools that have a plus in
+ 
+
+1671
+00:45:42,450 --> 00:45:45,259
+improve EEPROM tools that have a plus in
+the first position and then an eID numb
+
+1672
+00:45:45,259 --> 00:45:45,269
+the first position and then an eID numb
+ 
+
+1673
+00:45:45,269 --> 00:45:53,479
+the first position and then an eID numb
+and 1 and E numb and - what's a better
+
+1674
+00:45:53,479 --> 00:45:53,489
+and 1 and E numb and - what's a better
+ 
+
+1675
+00:45:53,489 --> 00:45:57,890
+and 1 and E numb and - what's a better
+version of this expression memory should
+
+1676
+00:45:57,890 --> 00:45:57,900
+version of this expression memory should
+ 
+
+1677
+00:45:57,900 --> 00:45:59,420
+version of this expression memory should
+have type expression that's a better
+
+1678
+00:45:59,420 --> 00:45:59,430
+have type expression that's a better
+ 
+
+1679
+00:45:59,430 --> 00:46:02,989
+have type expression that's a better
+version of this expression a better
+
+1680
+00:46:02,989 --> 00:46:02,999
+version of this expression a better
+ 
+
+1681
+00:46:02,999 --> 00:46:05,359
+version of this expression a better
+expression to use than this one
+
+1682
+00:46:05,359 --> 00:46:05,369
+expression to use than this one
+ 
+
+1683
+00:46:05,369 --> 00:46:09,499
+expression to use than this one
+we wanted a faster shorter way to get
+
+1684
+00:46:09,499 --> 00:46:09,509
+we wanted a faster shorter way to get
+ 
+
+1685
+00:46:09,509 --> 00:46:18,920
+we wanted a faster shorter way to get
+the same result yeah so one suggestion
+
+1686
+00:46:18,920 --> 00:46:18,930
+the same result yeah so one suggestion
+
+1687
+00:46:18,930 --> 00:46:25,430
+the same result yeah so one suggestion
+is move into EAX the + 1 + + 2 with some
+
+1688
+00:46:25,430 --> 00:46:25,440
+is move into EAX the + 1 + + 2 with some
+ 
+
+1689
+00:46:25,440 --> 00:46:28,489
+is move into EAX the + 1 + + 2 with some
+string string fill in what's the issue
+
+1690
+00:46:28,489 --> 00:46:28,499
+string string fill in what's the issue
+ 
+
+1691
+00:46:28,499 --> 00:46:29,479
+string string fill in what's the issue
+with that what's the issue with that
+
+1692
+00:46:29,479 --> 00:46:29,489
+with that what's the issue with that
+ 
+
+1693
+00:46:29,489 --> 00:46:31,130
+with that what's the issue with that
+it's not a bad idea it's sort of the
+
+1694
+00:46:31,130 --> 00:46:31,140
+it's not a bad idea it's sort of the
+ 
+
+1695
+00:46:31,140 --> 00:46:32,509
+it's not a bad idea it's sort of the
+same idea as the instruction selection
+
+1696
+00:46:32,509 --> 00:46:32,519
+same idea as the instruction selection
+ 
+
+1697
+00:46:32,519 --> 00:46:37,430
+same idea as the instruction selection
+idea yeah yeah maybe there's some
+
+1698
+00:46:37,430 --> 00:46:37,440
+idea yeah yeah maybe there's some
+
+1699
+00:46:37,440 --> 00:46:42,589
+idea yeah yeah maybe there's some
+shifting to do to it yeah what about
+
+1700
+00:46:42,589 --> 00:46:42,599
+shifting to do to it yeah what about
+ 
+
+1701
+00:46:42,599 --> 00:46:44,630
+shifting to do to it yeah what about
+overflow are there other things anything
+
+1702
+00:46:44,630 --> 00:46:44,640
+overflow are there other things anything
+ 
+
+1703
+00:46:44,640 --> 00:46:46,099
+overflow are there other things anything
+there's something there's something more
+
+1704
+00:46:46,099 --> 00:46:46,109
+there's something there's something more
+ 
+
+1705
+00:46:46,109 --> 00:46:49,279
+there's something there's something more
+about how I decided to write this this
+
+1706
+00:46:49,279 --> 00:46:49,289
+about how I decided to write this this
+ 
+
+1707
+00:46:49,289 --> 00:46:52,459
+about how I decided to write this this
+improve expression function I should
+
+1708
+00:46:52,459 --> 00:46:52,469
+improve expression function I should
+ 
+
+1709
+00:46:52,469 --> 00:46:58,910
+improve expression function I should
+bother you about this yeah yeah we
+
+1710
+00:46:58,910 --> 00:46:58,920
+bother you about this yeah yeah we
+ 
+
+1711
+00:46:58,920 --> 00:47:00,440
+bother you about this yeah yeah we
+simply wanted to return an expression
+
+1712
+00:47:00,440 --> 00:47:00,450
+simply wanted to return an expression
+ 
+
+1713
+00:47:00,450 --> 00:47:01,700
+simply wanted to return an expression
+and if we start turning this into
+
+1714
+00:47:01,700 --> 00:47:01,710
+and if we start turning this into
+ 
+
+1715
+00:47:01,710 --> 00:47:03,950
+and if we start turning this into
+instructions that's just gonna be like a
+
+1716
+00:47:03,950 --> 00:47:03,960
+instructions that's just gonna be like a
+ 
+
+1717
+00:47:03,960 --> 00:47:05,779
+instructions that's just gonna be like a
+no camel level type error so I'm getting
+
+1718
+00:47:05,779 --> 00:47:05,789
+no camel level type error so I'm getting
+
+1719
+00:47:05,789 --> 00:47:08,120
+no camel level type error so I'm getting
+it a different idea here than the idea
+
+1720
+00:47:08,120 --> 00:47:08,130
+it a different idea here than the idea
+ 
+
+1721
+00:47:08,130 --> 00:47:10,880
+it a different idea here than the idea
+of picking instructions based on this I
+
+1722
+00:47:10,880 --> 00:47:10,890
+of picking instructions based on this I
+ 
+
+1723
+00:47:10,890 --> 00:47:12,829
+of picking instructions based on this I
+want an expression I want something of
+
+1724
+00:47:12,829 --> 00:47:12,839
+want an expression I want something of
+ 
+
+1725
+00:47:12,839 --> 00:47:20,959
+want an expression I want something of
+type expression yeah enum of + 1 + + -
+
+1726
+00:47:20,959 --> 00:47:20,969
+type expression yeah enum of + 1 + + -
+ 
+
+1727
+00:47:20,969 --> 00:47:24,200
+type expression yeah enum of + 1 + + -
+that's pretty interesting right that's
+
+1728
+00:47:24,200 --> 00:47:24,210
+that's pretty interesting right that's
+ 
+
+1729
+00:47:24,210 --> 00:47:26,809
+that's pretty interesting right that's
+pretty interesting I can take in an
+
+1730
+00:47:26,809 --> 00:47:26,819
+pretty interesting I can take in an
+ 
+
+1731
+00:47:26,819 --> 00:47:28,940
+pretty interesting I can take in an
+expression and you know we'll do some
+
+1732
+00:47:28,940 --> 00:47:28,950
+expression and you know we'll do some
+ 
+
+1733
+00:47:28,950 --> 00:47:30,709
+expression and you know we'll do some
+we'll do the usual recursive thing on
+
+1734
+00:47:30,709 --> 00:47:30,719
+we'll do the usual recursive thing on
+ 
+
+1735
+00:47:30,719 --> 00:47:32,329
+we'll do the usual recursive thing on
+expression so we'll find any sub
+
+1736
+00:47:32,329 --> 00:47:32,339
+expression so we'll find any sub
+ 
+
+1737
+00:47:32,339 --> 00:47:34,459
+expression so we'll find any sub
+expressions in other match cases here
+
+1738
+00:47:34,459 --> 00:47:34,469
+expressions in other match cases here
+ 
+
+1739
+00:47:34,469 --> 00:47:36,380
+expressions in other match cases here
+but if we find something that's a
+
+1740
+00:47:36,380 --> 00:47:36,390
+but if we find something that's a
+ 
+
+1741
+00:47:36,390 --> 00:47:38,390
+but if we find something that's a
+primitive that's a plus on it on two
+
+1742
+00:47:38,390 --> 00:47:38,400
+primitive that's a plus on it on two
+ 
+
+1743
+00:47:38,400 --> 00:47:40,519
+primitive that's a plus on it on two
+numbers we can just replace that
+
+1744
+00:47:40,519 --> 00:47:40,529
+numbers we can just replace that
+ 
+
+1745
+00:47:40,529 --> 00:47:42,499
+numbers we can just replace that
+expression with the number that's the
+
+1746
+00:47:42,499 --> 00:47:42,509
+expression with the number that's the
+ 
+
+1747
+00:47:42,509 --> 00:47:45,079
+expression with the number that's the
+addition of those two things you just
+
+1748
+00:47:45,079 --> 00:47:45,089
+addition of those two things you just
+ 
+
+1749
+00:47:45,089 --> 00:47:47,530
+addition of those two things you just
+replace it
+
+1750
+00:47:47,530 --> 00:47:47,540
+replace it
+ 
+
+1751
+00:47:47,540 --> 00:47:49,609
+replace it
+we do have to worry a little bit about
+
+1752
+00:47:49,609 --> 00:47:49,619
+we do have to worry a little bit about
+ 
+
+1753
+00:47:49,619 --> 00:47:51,200
+we do have to worry a little bit about
+overflow we might need to turn this into
+
+1754
+00:47:51,200 --> 00:47:51,210
+overflow we might need to turn this into
+ 
+
+1755
+00:47:51,210 --> 00:47:52,819
+overflow we might need to turn this into
+something at an expression that throws
+
+1756
+00:47:52,819 --> 00:47:52,829
+something at an expression that throws
+ 
+
+1757
+00:47:52,829 --> 00:47:56,210
+something at an expression that throws
+an overflow error if they overflowed but
+
+1758
+00:47:56,210 --> 00:47:56,220
+an overflow error if they overflowed but
+ 
+
+1759
+00:47:56,220 --> 00:47:58,099
+an overflow error if they overflowed but
+if they don't overflow this is
+
+1760
+00:47:58,099 --> 00:47:58,109
+if they don't overflow this is
+ 
+
+1761
+00:47:58,109 --> 00:47:59,359
+if they don't overflow this is
+definitely going to produce the same
+
+1762
+00:47:59,359 --> 00:47:59,369
+definitely going to produce the same
+ 
+
+1763
+00:47:59,369 --> 00:48:02,690
+definitely going to produce the same
+answer that's pretty interesting that's
+
+1764
+00:48:02,690 --> 00:48:02,700
+answer that's pretty interesting that's
+ 
+
+1765
+00:48:02,700 --> 00:48:07,640
+answer that's pretty interesting that's
+pretty interesting so what about this
+
+1766
+00:48:07,640 --> 00:48:07,650
+pretty interesting so what about this
+ 
+
+1767
+00:48:07,650 --> 00:48:10,609
+pretty interesting so what about this
+other case this other case we talked
+
+1768
+00:48:10,609 --> 00:48:10,619
+other case this other case we talked
+
+1769
+00:48:10,619 --> 00:48:18,620
+other case this other case we talked
+about and I'm going to make it a
+
+1770
+00:48:18,620 --> 00:48:18,630
+about and I'm going to make it a
+ 
+
+1771
+00:48:18,630 --> 00:48:24,560
+about and I'm going to make it a
+slightly simpler case just to I'm gonna
+
+1772
+00:48:24,560 --> 00:48:24,570
+slightly simpler case just to I'm gonna
+ 
+
+1773
+00:48:24,570 --> 00:48:27,710
+slightly simpler case just to I'm gonna
+imagine that there's a number in the
+
+1774
+00:48:27,710 --> 00:48:27,720
+imagine that there's a number in the
+ 
+
+1775
+00:48:27,720 --> 00:48:29,660
+imagine that there's a number in the
+left not not some compound expression
+
+1776
+00:48:29,660 --> 00:48:29,670
+left not not some compound expression
+ 
+
+1777
+00:48:29,670 --> 00:48:32,930
+left not not some compound expression
+but a number in the left let binding
+
+1778
+00:48:32,930 --> 00:48:32,940
+but a number in the left let binding
+ 
+
+1779
+00:48:32,940 --> 00:48:35,890
+but a number in the left let binding
+position how could we improve that
+
+1780
+00:48:35,890 --> 00:48:35,900
+position how could we improve that
+
+1781
+00:48:35,900 --> 00:48:38,930
+position how could we improve that
+expression how could we improve that
+
+1782
+00:48:38,930 --> 00:48:38,940
+expression how could we improve that
+ 
+
+1783
+00:48:38,940 --> 00:48:40,400
+expression how could we improve that
+expression we know there's a number
+
+1784
+00:48:40,400 --> 00:48:40,410
+expression we know there's a number
+ 
+
+1785
+00:48:40,410 --> 00:48:43,490
+expression we know there's a number
+there for X can we do to make that
+
+1786
+00:48:43,490 --> 00:48:43,500
+there for X can we do to make that
+ 
+
+1787
+00:48:43,500 --> 00:49:05,370
+there for X can we do to make that
+better
+
+1788
+00:49:05,370 --> 00:49:05,380
+
+
+1789
+00:49:05,380 --> 00:49:12,640
+yeah
+
+1790
+00:49:12,640 --> 00:49:12,650
+
+
+1791
+00:49:12,650 --> 00:49:15,500
+so the suggestion is and we'll have to
+
+1792
+00:49:15,500 --> 00:49:15,510
+so the suggestion is and we'll have to
+ 
+
+1793
+00:49:15,510 --> 00:49:17,210
+so the suggestion is and we'll have to
+think of the types make sense let's
+
+1794
+00:49:17,210 --> 00:49:17,220
+think of the types make sense let's
+ 
+
+1795
+00:49:17,220 --> 00:49:21,770
+think of the types make sense let's
+imagine we have some helper you want to
+
+1796
+00:49:21,770 --> 00:49:21,780
+imagine we have some helper you want to
+ 
+
+1797
+00:49:21,780 --> 00:49:25,730
+imagine we have some helper you want to
+replace all the instances of X with enum
+
+1798
+00:49:25,730 --> 00:49:25,740
+replace all the instances of X with enum
+ 
+
+1799
+00:49:25,740 --> 00:49:32,840
+replace all the instances of X with enum
+of N in body where replace is going to
+
+1800
+00:49:32,840 --> 00:49:32,850
+of N in body where replace is going to
+ 
+
+1801
+00:49:32,850 --> 00:49:34,640
+of N in body where replace is going to
+have to be some other helper function we
+
+1802
+00:49:34,640 --> 00:49:34,650
+have to be some other helper function we
+
+1803
+00:49:34,650 --> 00:49:50,970
+have to be some other helper function we
+right
+
+1804
+00:49:50,970 --> 00:49:50,980
+
+
+1805
+00:49:50,980 --> 00:49:52,930
+that's interesting
+
+1806
+00:49:52,930 --> 00:49:52,940
+that's interesting
+
+1807
+00:49:52,940 --> 00:49:55,000
+that's interesting
+so that suggests that maybe we have this
+
+1808
+00:49:55,000 --> 00:49:55,010
+so that suggests that maybe we have this
+ 
+
+1809
+00:49:55,010 --> 00:49:59,070
+so that suggests that maybe we have this
+other transformation we can do on
+
+1810
+00:49:59,070 --> 00:49:59,080
+other transformation we can do on
+ 
+
+1811
+00:49:59,080 --> 00:50:02,230
+other transformation we can do on
+expressions which is if we know that a
+
+1812
+00:50:02,230 --> 00:50:02,240
+expressions which is if we know that a
+ 
+
+1813
+00:50:02,240 --> 00:50:05,770
+expressions which is if we know that a
+particular identifier is always going to
+
+1814
+00:50:05,770 --> 00:50:05,780
+particular identifier is always going to
+ 
+
+1815
+00:50:05,780 --> 00:50:09,670
+particular identifier is always going to
+be bound to the same value we could just
+
+1816
+00:50:09,670 --> 00:50:09,680
+be bound to the same value we could just
+ 
+
+1817
+00:50:09,680 --> 00:50:11,440
+be bound to the same value we could just
+substitute it for that value everywhere
+
+1818
+00:50:11,440 --> 00:50:11,450
+substitute it for that value everywhere
+ 
+
+1819
+00:50:11,450 --> 00:50:14,890
+substitute it for that value everywhere
+and we don't need the let anymore that
+
+1820
+00:50:14,890 --> 00:50:14,900
+and we don't need the let anymore that
+ 
+
+1821
+00:50:14,900 --> 00:50:17,170
+and we don't need the let anymore that
+the job of the variable in the let was
+
+1822
+00:50:17,170 --> 00:50:17,180
+the job of the variable in the let was
+ 
+
+1823
+00:50:17,180 --> 00:50:19,090
+the job of the variable in the let was
+to have a place for the value to live
+
+1824
+00:50:19,090 --> 00:50:19,100
+to have a place for the value to live
+ 
+
+1825
+00:50:19,100 --> 00:50:20,860
+to have a place for the value to live
+after we evaluated it so we could look
+
+1826
+00:50:20,860 --> 00:50:20,870
+after we evaluated it so we could look
+
+1827
+00:50:20,870 --> 00:50:23,020
+after we evaluated it so we could look
+it up multiple times but if we know what
+
+1828
+00:50:23,020 --> 00:50:23,030
+it up multiple times but if we know what
+ 
+
+1829
+00:50:23,030 --> 00:50:24,730
+it up multiple times but if we know what
+value it is there's no reason to go
+
+1830
+00:50:24,730 --> 00:50:24,740
+value it is there's no reason to go
+ 
+
+1831
+00:50:24,740 --> 00:50:26,290
+value it is there's no reason to go
+storing it and looking it up multiple
+
+1832
+00:50:26,290 --> 00:50:26,300
+storing it and looking it up multiple
+ 
+
+1833
+00:50:26,300 --> 00:50:28,330
+storing it and looking it up multiple
+times we just use that value when we get
+
+1834
+00:50:28,330 --> 00:50:28,340
+times we just use that value when we get
+ 
+
+1835
+00:50:28,340 --> 00:50:31,510
+times we just use that value when we get
+to it so if we can replace all the
+
+1836
+00:50:31,510 --> 00:50:31,520
+to it so if we can replace all the
+ 
+
+1837
+00:50:31,520 --> 00:50:35,350
+to it so if we can replace all the
+instances of Eid X in the body with that
+
+1838
+00:50:35,350 --> 00:50:35,360
+instances of Eid X in the body with that
+ 
+
+1839
+00:50:35,360 --> 00:50:38,320
+instances of Eid X in the body with that
+with that number expression then we get
+
+1840
+00:50:38,320 --> 00:50:38,330
+with that number expression then we get
+ 
+
+1841
+00:50:38,330 --> 00:50:40,360
+with that number expression then we get
+to save time on looking up that variable
+
+1842
+00:50:40,360 --> 00:50:40,370
+to save time on looking up that variable
+ 
+
+1843
+00:50:40,370 --> 00:50:41,860
+to save time on looking up that variable
+every time it's encountered and we never
+
+1844
+00:50:41,860 --> 00:50:41,870
+every time it's encountered and we never
+ 
+
+1845
+00:50:41,870 --> 00:50:43,210
+every time it's encountered and we never
+have to store the variable in the first
+
+1846
+00:50:43,210 --> 00:50:43,220
+have to store the variable in the first
+ 
+
+1847
+00:50:43,220 --> 00:50:44,670
+have to store the variable in the first
+place
+
+1848
+00:50:44,670 --> 00:50:44,680
+place
+ 
+
+1849
+00:50:44,680 --> 00:50:47,290
+place
+so just to give the definition of these
+
+1850
+00:50:47,290 --> 00:50:47,300
+so just to give the definition of these
+ 
+
+1851
+00:50:47,300 --> 00:50:48,550
+so just to give the definition of these
+things I think I'll talk a little bit
+
+1852
+00:50:48,550 --> 00:50:48,560
+things I think I'll talk a little bit
+ 
+
+1853
+00:50:48,560 --> 00:50:51,910
+things I think I'll talk a little bit
+more about them on Friday this case is
+
+1854
+00:50:51,910 --> 00:50:51,920
+more about them on Friday this case is
+ 
+
+1855
+00:50:51,920 --> 00:50:54,760
+more about them on Friday this case is
+called and mainly so if you want to look
+
+1856
+00:50:54,760 --> 00:50:54,770
+called and mainly so if you want to look
+ 
+
+1857
+00:50:54,770 --> 00:50:57,100
+called and mainly so if you want to look
+them up this case is called constant
+
+1858
+00:50:57,100 --> 00:50:57,110
+them up this case is called constant
+ 
+
+1859
+00:50:57,110 --> 00:50:59,470
+them up this case is called constant
+propagation you take constants and move
+
+1860
+00:50:59,470 --> 00:50:59,480
+propagation you take constants and move
+ 
+
+1861
+00:50:59,480 --> 00:51:01,990
+propagation you take constants and move
+them to the
+
