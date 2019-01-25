@@ -5,7 +5,7 @@
 https://xiaomifirmwareupdater.com/#weekly
 - DM Verity & Force Encrypt disabler: https://drive.google.com/file/d/1CqEOK1mOkxeVbj2S3TBz10IutBl4FZBI/view?usp=drive_open
 - Pixel 3 ROM (2019-01-09): 
-https://drive.google.com/uc?id=1smRh...xport=download
+https://drive.google.com/uc?id=1smRhV3H51GsYJ9_XkkEjJyw9WuNOohlu&export=download
 
 ## installation
 0. reboot to twrp
