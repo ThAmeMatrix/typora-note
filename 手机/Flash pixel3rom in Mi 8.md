@@ -1,5 +1,11 @@
 # How to flash pixel 3 rom in Mi 8:
 
+## Official Introduction
+https://forum.xda-developers.com/mi-8/development/rom-google-pixelrom-v3-0sep-mi-8-t3843356
+
+## Prepare
+- Unlock your bootloader and flash twrp: https://bbs.letitfly.me/d/743
+
 ## Download
 - MIUI Global Firmware 8.11.x from: 
 https://xiaomifirmwareupdater.com/#weekly
@@ -7,8 +13,8 @@ https://xiaomifirmwareupdater.com/#weekly
 - Pixel 3 ROM (2019-01-09): 
 https://drive.google.com/uc?id=1smRhV3H51GsYJ9_XkkEjJyw9WuNOohlu&export=download
 
-## installation
-0. reboot to twrp
+## Installation
+0. Reboot to twrp
 1. Wipe data, cache, system, then format data
 2. Flash MIUI Firmware
 3. Wipe system, data, chache
