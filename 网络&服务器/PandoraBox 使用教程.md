@@ -2,6 +2,16 @@
 
 # PandoraBox 使用教程
 
+## 路由器刷入 Pandora 固件
+
+要在路由器刷入 PandoraBox 固件，可以参考：
+
+[https://github.com/ShiroCheng/typora-note/blob/master/%E7%BD%91%E7%BB%9C%26%E6%9C%8D%E5%8A%A1%E5%99%A8/%E6%96%90%E8%AE%AFK2%E5%88%B7breed%2C%20%E5%9B%BA%E4%BB%B6%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95.md](https://github.com/ShiroCheng/typora-note/blob/master/网络%26服务器/斐讯K2刷breed%2C 固件过程记录.md)
+
+该方法在 **2019.05.09** 测试成功.
+
+
+
 ## 路由器默认信息
 
 SSID（Wifi 名）：PDCN
@@ -20,7 +30,7 @@ Wifi 密码： 1234567890
 
 将刷好 Pandra 固件的路由器连接上电源，网线一端连接到路由器的 wan 口(橘黄色的端口)，另一端连接到寝室墙壁上的网口。
 
-约20秒后路由器启动，在手机和电脑上就能搜索到路由器的Wi-Fi：**PDCN** 和 **PDCN_5G**，连接任意一个Wi-Fi。
+约20秒后路由器启动，在手机和电脑上就能搜索到路由器的Wi-Fi：**PDCN** 和 **PDCN_5G**，连接任意一个Wi-Fi，初始密码为 **1234567890**
 
 但连接后会发现，目前的 Wi-Fi 是无法访问互联网的，这是因为运营商对高校网络进行了限制，移动和电信在设备连接网线后还需要登陆其账号，才能访问互联网。因此在路由器里，我们同样需要设置访问运营商网络的用户信息。
 
