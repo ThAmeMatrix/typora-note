@@ -67,7 +67,13 @@ Backup your data !
 重启系统，进入登录画面
 
 ## 5. 跳过开机验证
-由于原生系统首次开机时需要向 Google 发送本机验证消息，但此时并没有科学辅助工具。解决方案：https://vitan.me/2018/05/04/Win10-Share-WiFI/
+由于原生系统首次开机时需要向 Google 发送本机验证消息，但此时并没有科学辅助工具。
+
+解决方案1：https://vitan.me/2018/05/04/Win10-Share-WiFI/
+
+(2019.05.13 更新)解决方案2：https://www.v2ex.com/t/485478
+
+即在 TWRP 中挂载system分区，用 vi 编辑 build.prop ，加一句 ro.setupwizard.mode=DISABLED
 
 进入系统之后就开始享受吧… 
 
