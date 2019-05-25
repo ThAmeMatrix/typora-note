@@ -6,7 +6,7 @@
 
 要在路由器刷入 PandoraBox 固件，可以参考：
 
-[https://github.com/ShiroCheng/typora-note/blob/master/%E7%BD%91%E7%BB%9C%26%E6%9C%8D%E5%8A%A1%E5%99%A8/PandoraBox%20%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md](https://github.com/ShiroCheng/typora-note/blob/master/网络%26服务器/PandoraBox 使用教程.md)
+[https://github.com/ShiroCheng/typora-note/blob/master/网络%26服务器/斐讯K2刷breed%2C%20固件过程记录.md](https://github.com/ShiroCheng/typora-note/blob/master/网络%26服务器/斐讯K2刷breed%2C 固件过程记录.md)
 
 该方法在 **2019.05.09** 测试成功.
 
