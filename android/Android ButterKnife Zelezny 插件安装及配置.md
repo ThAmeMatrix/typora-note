@@ -21,3 +21,4 @@ ButterKnife属于更新比较频繁的框架，注解型框架，从6.1.0到8.0.
 然后点击Sync Now
 
 4、打开Activity的class文件，鼠标放在R.layout.activity_main上点击鼠标右键→Generate即可看到Generate ButterKnife Injections
+
