@@ -2,9 +2,37 @@
 
 来源：<https://zhuanlan.zhihu.com/p/22678445>
 
-量化投资，R/Python，旅行
+MacOS 安装 miniconda:
 
-113 人赞同了该文章
+```
+$ brew cask install miniconda
+```
+
+注：
+
+MacOS 安装了 conda 后，前面会有一个 (base)，为了将其去掉，查了不少资料，觉得不错的解决方案：
+
+```
+$ conda config --set auto_activate_base false
+```
+
+原因：
+
+安装 conda 后，每次启动终端，都会自动启动 conda 的 base 环境，conda 的环境可以用 conda env list 查看
+
+手动命令如下：
+
+开启
+
+```
+$ conda activate base 
+```
+
+关闭
+
+```
+$ conda deactivate
+```
 
 ## 一、动机
 
